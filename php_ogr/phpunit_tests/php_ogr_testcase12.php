@@ -14,10 +14,10 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
     function tearDown() {
     }
 /***********************************************************************
-*                            testOGR_G_CreateGeometry()                       
+*                            testOGR_G_CreateDestroyGeometry()              
 ************************************************************************/
 
-    function testOGR_G_CreateGeometry() {
+    function testOGR_G_CreateDestroyGeometry() {
         $eType = wkbPoint;
         $hGeometry = OGR_G_CreateGeometry($eType);
         $this->AssertNotNull($hGeometry, "Problem with ".
@@ -25,8 +25,18 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
                                        "handle is not supposed to be NULL.");
 
         OGR_G_DestroyGeometry($hGeometry);
-        $this->AssertNull($hGeometry, "Problem with OGR_G_DestroyGeometry(): ".
-                                       "handle is supposed to be NULL.");
+
+
+        $expected = "Unknown";
+
+        $actual = get_resource_type($hGeometry);
+
+
+        $this->assertEquals($expected, $actual, "Problem with ".
+                          "OGR_G_DestroyGeometry():  ".
+                          "Geometry resource is supposed to be freed ".
+                          "after OGR_G_DestroyGeometry().\n");
+
     }
 /***********************************************************************
 *                            testOGR_G_GetDimension()
@@ -133,7 +143,6 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
 
         $expected = 3;
         $nCoordinateDimension = OGR_G_GetCoordinateDimension($hGeometry);
-        printf("dim=%d\n",$nCoordinateDimension);
         $this->AssertEquals($expected, $nCoordinateDimension, "Problem with ".
                        "OGR_G_GetCoordinateDimension(): supposed to be a ".
                        "two dimensions space.");
