@@ -3,20 +3,53 @@
                              
 require_once 'php_ogr_testcase1.php';
 require_once 'php_ogr_testcase2.php';
+require_once 'php_ogr_testcase3.php';
+require_once 'php_ogr_testcase4.php';
 require_once 'phpunit-0.5/phpunit.php';
 
-printf("in php_ogr_test \n");
+/*
+printf("-----------Beginning suite 1--------- \n");
 
-$suite = new PHPUnit_TestSuite("OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest");
-$suite->addTest(new PHPUnit_TestSuite
+$suite1 = new PHPUnit_TestSuite("OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest");
+$suite1->addTest(new PHPUnit_TestSuite
                 ("OGRSFDriverPathSetBadhOGRSFDriverSetToNULLTest"));
-$suite->addTest(new PHPUnit_TestSuite
+$suite1->addTest(new PHPUnit_TestSuite
                 ("OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest"));
-$suite->addTest(new PHPUnit_TestSuite("OGRSFDriverMiscellaneousTest"));
-printf("-----------Beginning--------- \n");
+$suite1->addTest(new PHPUnit_TestSuite
+                ("OGRSFDriverMiscellaneousTest1"));
 
-$result = PHPUnit::run($suite);
+
+$result = PHPUnit::run($suite1);
+
+echo $result -> toString();
+
+
+printf("-----------Beginning suite 2--------- \n");
+
+$suite2 = new PHPUnit_TestSuite("OGRDataSourceTest1");
+
+$result = PHPUnit::run($suite2);
+
+echo $result -> toString();
+*/
+
+
+printf("-----------Beginning suite 3--------- \n");
+
+$suite3 = new PHPUnit_TestSuite("OGRLayerTest1");
+
+$result = PHPUnit::run($suite3);
 
 echo $result -> toString();
 
 ?> 
+
+
+
+
+
+
+
+
+
+
