@@ -250,18 +250,17 @@ function OGRSetGetStringList($hFeatureIn, $iField, $value)
    OGR_F_Destroy($hFeature);
 
    if ($eErr != OGRERR_NONE)
-      printf("Warning %s\n", $eErr);
+   {
+      printf("Some errors were reported (error %d)\n", $eErr);
+   }
    else
-      return OGRERR_NONE;
+   {
+      printf("ogr_write completed with no errors.\n");
+   }
+
 ?>
 
 </PRE>
 </BODY>
 </HTML>
-
-
-
-
-
-
 
