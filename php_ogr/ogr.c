@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.5  2003/03/19 00:47:42  nsavard
+ * Corrected some bugs and cleaned up.
+ *
  * Revision 1.4  2003/03/17 20:03:00  nsavard
  * Corrected some bugs.  Enabling NULL parameters in some zend_parse_parameters
  * functions with "!" option.
@@ -86,6 +89,7 @@ static int le_FeatureDefnRef;
 static int le_Feature;
 
 
+/*Force some resource arguments to be passed as reference.*/
 static unsigned char five_args_third_fourth_fifth_args_force_ref[] = { 5,  BYREF_NONE, BYREF_NONE, BYREF_FORCE, BYREF_FORCE, BYREF_FORCE };
 
 static unsigned char three_args_first_arg_force_ref[] = { 3, BYREF_FORCE, BYREF_NONE, BYREF_NONE };
@@ -94,13 +98,11 @@ static unsigned char three_args_second_arg_force_ref[] = { 3, BYREF_NONE, BYREF_
 static unsigned char two_args_first_arg_force_ref[] = { 2, BYREF_FORCE, BYREF_NONE };
 
 
-
 /* {{{ ogr_functions[]
  *
  * Every user visible function must have an entry in ogr_functions[].
  */
 function_entry ogr_functions[] = {
-    PHP_FE(confirm_ogr_compiled,    NULL)       /* For testing, remove later. */
     PHP_FE(ogr_g_createfromwkb, NULL)
     PHP_FE(ogr_g_createfromwkt, NULL)
     PHP_FE(ogr_g_destroygeometry, NULL)
@@ -141,7 +143,9 @@ function_entry ogr_functions[] = {
     PHP_FE(ogr_g_getgeometrycount,  NULL)
     PHP_FE(ogr_g_getgeometryref,    NULL)
     PHP_FE(ogr_g_addgeometry,   NULL)
+#ifdef CONSTRUCT_FLAG
     PHP_FE(ogr_g_addgeometrydirectly,   NULL)
+#endif
     PHP_FE(ogr_g_removegeometry,    NULL)
     PHP_FE(ogrbuildpolygonfromedges,    NULL)
     PHP_FE(ogr_fld_create,  NULL)
@@ -173,7 +177,9 @@ function_entry ogr_functions[] = {
     PHP_FE(ogr_f_create,    NULL)
     PHP_FE(ogr_f_destroy,   NULL)
     PHP_FE(ogr_f_getdefnref,    NULL)
+#ifdef CONSTRUCT_FLAG
     PHP_FE(ogr_f_setgeometrydirectly,   NULL)
+#endif
     PHP_FE(ogr_f_setgeometry,   NULL)
     PHP_FE(ogr_f_getgeometryref,    NULL)
     PHP_FE(ogr_f_clone, NULL)
@@ -287,6 +293,8 @@ static void php_ogr_init_globals(zend_ogr_globals *ogr_globals)
 }
 */
 
+
+/*Resource destructors function.*/
 /* }}} */
 
 /* {{{ ogr_free_Datasource() */
@@ -460,7 +468,6 @@ ogr_free_Feature(zend_rsrc_list_entry *rsrc TSRMLS_DC)
     OGR_F_Destroy( hFeature ); 
 
 }
-
 
 
 /* }}} */
@@ -666,29 +673,24 @@ static void php_report_ogr_error(int nErrLevel)
 }
 
 
-/* Remove the following function when you have succesfully modified config.m4
-   so that your module can be compiled into PHP, it exists only for testing
-   purposes. */
-
-/* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_ogr_compiled(string arg)
-   Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_ogr_compiled)
+static char **  php_array2string(char **papszStrList, zval *refastrvalues)
 {
-    char *arg = NULL;
-    int arg_len, len;
-    char string[256];
+    int numelems = 0;
+    zval **tmp = NULL;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &arg, &arg_len) == FAILURE) {
-        return;
-    }
+	numelems = zend_hash_num_elements(Z_ARRVAL_P(refastrvalues));
 
-    len = sprintf(string, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "ogr", arg);
-    RETURN_STRINGL(string, len, 1);
+	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refastrvalues));
+	while (zend_hash_get_current_data(Z_ARRVAL_P(refastrvalues), 
+										 (void **) &tmp) == SUCCESS) {
+		convert_to_string_ex(tmp);
+
+        papszStrList = (char **)CSLAddString(papszStrList, (char *)tmp);
+
+		zend_hash_move_forward(Z_ARRVAL_P(refastrvalues));
+	}
+    return papszStrList;
 }
-
-
-
 
 /* }}} */
 /* The previous line is meant for vim and emacs, so it can correctly fold and 
@@ -730,7 +732,6 @@ PHP_FUNCTION(ogr_g_createfromwkb)
 
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_createfromwkt(string refadata, resource hsrs, resource refhnewgeom)
@@ -765,8 +766,6 @@ PHP_FUNCTION(ogr_g_createfromwkt)
     RETURN_LONG(eErr);
 }
 
-
-
 /* }}} */
 
 /* {{{ proto void ogr_g_destroygeometry(resource hgeom)
@@ -788,8 +787,6 @@ PHP_FUNCTION(ogr_g_destroygeometry)
         zend_list_delete(hgeom->value.lval);
 }
 
-
-
 /* }}} */
 
 /* {{{ proto resource ogr_g_creategeometry(int igeometrytype)
@@ -809,7 +806,6 @@ PHP_FUNCTION(ogr_g_creategeometry)
         ZEND_REGISTER_RESOURCE(return_value, hGeometry, le_Geometry);
     }
 }
-
 
 /* }}} */
 
@@ -833,7 +829,6 @@ PHP_FUNCTION(ogr_g_getdimension)
     }
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_getcoordinatedimension(resource hgeom)
@@ -854,7 +849,6 @@ PHP_FUNCTION(ogr_g_getcoordinatedimension)
     if (hGeometry)
         RETURN_LONG(OGR_G_GetCoordinateDimension(hGeometry)); 
 }
-
 
 /* }}} */
 
@@ -885,7 +879,7 @@ PHP_FUNCTION(ogr_g_clone)
 
 /* }}} */
 
-/* {{{ proto object ogr_g_getenvelope(resource hgeom, object oenvel)
+/* {{{ proto void ogr_g_getenvelope(resource hgeom, object oenvel)
     */
 PHP_FUNCTION(ogr_g_getenvelope)
 {
@@ -954,7 +948,6 @@ PHP_FUNCTION(ogr_g_importfromwkb)
 
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_exporttowkb(resource hgeom, int ibyteorder, array abydata)
@@ -989,6 +982,7 @@ PHP_FUNCTION(ogr_g_exporttowkb)
 }
 
 #endif
+
 /* }}} */
 
 /* {{{ proto int ogr_g_wkbsize(resource hgeom)
@@ -1047,7 +1041,6 @@ PHP_FUNCTION(ogr_g_importfromwkt)
 
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_exporttowkt(resource hgeom, array refadsttext)
@@ -1083,6 +1076,7 @@ PHP_FUNCTION(ogr_g_exporttowkt)
 
 #endif
 
+
 /* }}} */
 
 /* {{{ proto int ogr_g_getgeometrytype(resource hgeom)
@@ -1104,7 +1098,6 @@ PHP_FUNCTION(ogr_g_getgeometrytype)
         RETURN_LONG(OGR_G_GetGeometryType(hGeometry));
     }
 }
-
 
 /* }}} */
 
@@ -1180,7 +1173,6 @@ PHP_FUNCTION(ogr_g_flattento2d)
 
 }
 
-
 /* }}} */
 
 /* {{{ proto void ogr_g_assignspatialreference(resource hgeom, resource hsrs)
@@ -1237,7 +1229,6 @@ PHP_FUNCTION(ogr_g_getspatialreference)
         ZEND_REGISTER_RESOURCE(return_value, hSpatialReference, le_SpatialReference);
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_transform(resource hgeom, resource hct)
@@ -1271,7 +1262,6 @@ PHP_FUNCTION(ogr_g_transform)
     }
         RETURN_LONG(eErr);
 }
-
 
 /* }}} */
 
@@ -1307,7 +1297,6 @@ PHP_FUNCTION(ogr_g_transformto)
     RETURN_LONG(eErr);
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_intersect(resource hgeom, resource hothergeom )
@@ -1322,7 +1311,7 @@ PHP_FUNCTION(ogr_g_intersect)
     OGRGeometryH hGeometry = NULL, hOtherGeometry =NULL;
 
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom, &hothergeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom) == FAILURE) 
         return;
 
     if (hgeom) {
@@ -1335,7 +1324,6 @@ PHP_FUNCTION(ogr_g_intersect)
         RETURN_LONG(OGR_G_Intersect(hGeometry, hOtherGeometry));
     }
 }
-
 
 /* }}} */
 
@@ -1350,7 +1338,7 @@ PHP_FUNCTION(ogr_g_equal)
     zval *hothergeom = NULL;
     OGRGeometryH hGeometry = NULL, hOtherGeometry =NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom, &hothergeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom) == FAILURE) 
         return;
 
     if (hgeom) {
@@ -1386,7 +1374,6 @@ PHP_FUNCTION(ogr_g_empty)
         OGR_G_Empty(hGeometry);
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_getpointcount(resource hgeom)
@@ -1408,7 +1395,6 @@ PHP_FUNCTION(ogr_g_getpointcount)
         RETURN_LONG(OGR_G_GetPointCount(hGeometry));
     }
 }
-
 
 /* }}} */
 
@@ -1432,6 +1418,7 @@ PHP_FUNCTION(ogr_g_getx)
         RETURN_DOUBLE(OGR_G_GetX(hGeometry, ipoint));
     }
 }
+
 /* }}} */
 
 /* {{{ proto double ogr_g_gety(resource hgeom, int ipoint)
@@ -1454,6 +1441,7 @@ PHP_FUNCTION(ogr_g_gety)
         RETURN_DOUBLE(OGR_G_GetY(hGeometry, ipoint));
     }
 }
+
 /* }}} */
 
 /* {{{ proto double ogr_g_getz(resource hgeom, int ipoint)
@@ -1477,7 +1465,6 @@ PHP_FUNCTION(ogr_g_getz)
     }
 }
 
-
 /* }}} */
 
 /* {{{ proto void ogr_g_getpoint(resource hgeom, int ipoint, double refdfx, double refdfy, double refdfz)
@@ -1496,7 +1483,7 @@ PHP_FUNCTION(ogr_g_getpoint)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlmmm", &hgeom, &ipoint, &refdfx, &refdfy, &refdfz) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlzzz", &hgeom, &ipoint, &refdfx, &refdfy, &refdfz) == FAILURE) 
         return;
 
     if (hgeom) {
@@ -1516,7 +1503,6 @@ PHP_FUNCTION(ogr_g_getpoint)
     ZVAL_DOUBLE(refdfy, dfy);
     ZVAL_DOUBLE(refdfz, dfz);
 }
-
 
 /* }}} */
 
@@ -1543,7 +1529,6 @@ PHP_FUNCTION(ogr_g_setpoint)
         OGR_G_SetPoint(hGeometry, ipoint, dfx, dfy, dfz);
 }
 
-
 /* }}} */
 
 /* {{{ proto void ogr_g_addpoint(resource hgeom, double dfx, double dfy, double dfz)
@@ -1568,7 +1553,6 @@ PHP_FUNCTION(ogr_g_addpoint)
         OGR_G_AddPoint(hGeometry, dfx, dfy, dfz);
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_g_getgeometrycount(resource hgeom)
@@ -1590,7 +1574,6 @@ PHP_FUNCTION(ogr_g_getgeometrycount)
         RETURN_LONG(OGR_G_GetGeometryCount(hGeometry));
     }
 }
-
 
 /* }}} */
 
@@ -1619,7 +1602,6 @@ PHP_FUNCTION(ogr_g_getgeometryref)
     }
     ZEND_REGISTER_RESOURCE(return_value, hGeometryRef, le_GeometryRef);
 }
-
 
 /* }}} */
 
@@ -1654,6 +1636,7 @@ PHP_FUNCTION(ogr_g_addgeometry)
     RETURN_LONG(eErr);
 }
 
+#ifdef CONSTRUCT_FLAG
 
 /* }}} */
 
@@ -1669,7 +1652,7 @@ PHP_FUNCTION(ogr_g_addgeometrydirectly)
     OGRGeometryH hGeometry = NULL, hOtherGeometry;
     OGRErr eErr = OGRERR_NONE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom, &hothergeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom) == FAILURE) 
         return;
 
     if (hgeom) {
@@ -1688,23 +1671,23 @@ PHP_FUNCTION(ogr_g_addgeometrydirectly)
 
     RETURN_LONG(eErr);
 }
-
+#endif
 
 /* }}} */
 
-/* {{{ proto int ogr_g_removegeometry(resource hgeom, int igeom, int bdelete)
+/* {{{ proto int ogr_g_removegeometry(resource hgeom, int igeom, boolean bdelete)
     */
 PHP_FUNCTION(ogr_g_removegeometry)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
     long igeom;
-    long bdelete;
+    zend_bool bdelete;
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_NONE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rll", &hgeom, &igeom, &bdelete) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlb", &hgeom, &igeom, &bdelete) == FAILURE) 
         return;
 
     if (hgeom) {
@@ -1719,24 +1702,23 @@ PHP_FUNCTION(ogr_g_removegeometry)
     RETURN_LONG(eErr);
 }
 
-
 /* }}} */
 
-/* {{{ proto resource ogrbuildpolygonfromedges(resource hlinesascollection, int bbesteffort, int bautoclose, double dftolerance, int referr)
+/* {{{ proto resource ogrbuildpolygonfromedges(resource hlinesascollection, boolean bbesteffort, boolean bautoclose, double dftolerance, int referr)
     */
 PHP_FUNCTION(ogrbuildpolygonfromedges)
 {
     int argc = ZEND_NUM_ARGS();
     int hlinesascollection_id = -1;
-    long bbesteffort;
-    long bautoclose;
+    zend_bool bbesteffort;
+    zend_bool bautoclose;
     long eErr;
     zval *referr;
     double dftolerance;
     zval *hlinesascollection = NULL;
     OGRGeometryH hLines = NULL, hNewGeometry =NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlldm", &hlinesascollection, &bbesteffort, &bautoclose, &dftolerance, &referr) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rbbdz", &hlinesascollection, &bbesteffort, &bautoclose, &dftolerance, &referr) == FAILURE) 
         return;
 
     if (hlinesascollection) {
@@ -1753,8 +1735,6 @@ PHP_FUNCTION(ogrbuildpolygonfromedges)
     zval_dtor(referr);
     ZVAL_LONG(referr, eErr);
 }
-
-
 
 /* }}} */
 
@@ -1777,7 +1757,6 @@ PHP_FUNCTION(ogr_fld_create)
         ZEND_REGISTER_RESOURCE(return_value, hFieldDefn, le_FieldDefn);
     }
 }
-
 
 /* }}} */
 
@@ -1824,6 +1803,7 @@ PHP_FUNCTION(ogr_fld_setname)
         OGR_Fld_SetName(hFieldDefn, strnamein);
 
 }
+
 /* }}} */
 
 /* {{{ proto string ogr_fld_getnameref(resource hfieldh)
@@ -1890,6 +1870,7 @@ PHP_FUNCTION(ogr_fld_settype)
         OGR_Fld_SetType(hFieldDefn, itype);
     }
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_fld_getjustify(resource hfieldh)
@@ -1911,6 +1892,7 @@ PHP_FUNCTION(ogr_fld_getjustify)
         RETURN_LONG(OGR_Fld_GetJustify(hFieldDefn));
     }
 }
+
 /* }}} */
 
 /* {{{ proto void ogr_fld_setjustify(resource hfieldh, int ijustify)
@@ -1933,7 +1915,6 @@ PHP_FUNCTION(ogr_fld_setjustify)
         OGR_Fld_SetJustify(hFieldDefn, ijustify);
     }
 }
-
 
 /* }}} */
 
@@ -2089,6 +2070,7 @@ PHP_FUNCTION(ogr_fd_create)
     }
 
 }
+
 /* }}} */
 
 /* {{{ proto void ogr_fd_destroy(resource hdefin)
@@ -2153,6 +2135,7 @@ PHP_FUNCTION(ogr_fd_getfieldcount)
         RETURN_LONG(OGR_FD_GetFieldCount(hFeatureDefn));
     }
 }
+
 /* }}} */
 
 /* {{{ proto resource ogr_fd_getfielddefn(resource hdefin, int ifield)
@@ -2241,11 +2224,8 @@ PHP_FUNCTION(ogr_fd_getgeomtype)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-
-
     if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
         return;
-
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, hdefin_id, "OGRFeature", le_FeatureDefn, le_FeatureDefnRef);
@@ -2256,6 +2236,7 @@ PHP_FUNCTION(ogr_fd_getgeomtype)
     }
 
 }
+
 /* }}} */
 
 /* {{{ proto void ogr_fd_setgeomtype(resource hdefin, int itype)
@@ -2307,7 +2288,6 @@ PHP_FUNCTION(ogr_fd_reference)
     if (hFeatureDefn){
         RETURN_LONG(OGR_FD_Reference(hFeatureDefn));
     }
-
 }
 
 /* }}} */
@@ -2353,6 +2333,7 @@ PHP_FUNCTION(ogr_fd_getreferencecount)
         RETURN_LONG(OGR_FD_GetReferenceCount(hFeatureDefn));
     }
 }
+
 /* }}} */
 
 /* {{{ proto resource ogr_f_create(resource hdefin)
@@ -2379,6 +2360,7 @@ PHP_FUNCTION(ogr_f_create)
         ZEND_REGISTER_RESOURCE(return_value, hFeature, le_Feature);
     }
 }
+
 /* }}} */
 
 /* {{{ proto void ogr_f_destroy(resource hfeature)
@@ -2399,8 +2381,6 @@ PHP_FUNCTION(ogr_f_destroy)
     if (hFeat)
         zend_list_delete(hfeature->value.lval);
 }
-
-
 
 /* }}} */
 
@@ -2425,6 +2405,8 @@ PHP_FUNCTION(ogr_f_getdefnref)
 
     ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefnRef);
 }
+
+#ifdef CONSTRUCT_FLAG
 /* }}} */
 
 /* {{{ proto int ogr_f_setgeometrydirectly(resource hfeature, resource hgeomin)
@@ -2461,6 +2443,9 @@ PHP_FUNCTION(ogr_f_setgeometrydirectly)
 
     RETURN_LONG(eErr);
 }
+
+
+#endif
 
 /* }}} */
 
@@ -2549,6 +2534,7 @@ PHP_FUNCTION(ogr_f_clone)
     }
     ZEND_REGISTER_RESOURCE(return_value, hNewFeat, le_Feature);
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_f_equal(resource hfeature, resource hotherfeature)
@@ -2576,6 +2562,7 @@ PHP_FUNCTION(ogr_f_equal)
         RETURN_LONG(OGR_F_Equal(hFeat, hOtherFeat));
     }
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_f_getfieldcount(resource hfeature)
@@ -2597,6 +2584,7 @@ PHP_FUNCTION(ogr_f_getfieldcount)
         RETURN_LONG(OGR_F_GetFieldCount(hFeat));
     }
 }
+
 /* }}} */
 
 /* {{{ proto resource ogr_f_getfielddefnref(resource hfeature, int ifield)
@@ -2644,6 +2632,7 @@ PHP_FUNCTION(ogr_f_getfieldindex)
     if (hFeat)
         RETURN_LONG(OGR_F_GetFieldIndex(hFeat, strname));
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_f_isfieldset(resource hfeature, int ifield)
@@ -2665,6 +2654,7 @@ PHP_FUNCTION(ogr_f_isfieldset)
     if (hFeat)
         RETURN_BOOL(OGR_F_IsFieldSet(hFeat, ifield));
 }
+
 /* }}} */
 
 /* {{{ proto void ogr_f_unsetfield(resource hfeature, int ifield)
@@ -2686,8 +2676,6 @@ PHP_FUNCTION(ogr_f_unsetfield)
     if (hFeat)
         OGR_F_UnsetField(hFeat, ifield);
 }
-
-
 
 /* }}} */
 
@@ -2716,7 +2704,6 @@ PHP_FUNCTION(ogr_f_getrawfieldref)
     }
 }
 
-
 /* }}} */
 
 /* {{{ proto int ogr_f_getfieldasinteger(resource hfeature, int ifield)
@@ -2739,6 +2726,7 @@ PHP_FUNCTION(ogr_f_getfieldasinteger)
         RETURN_LONG(OGR_F_GetFieldAsInteger(hFeat, ifield));
     }
 }
+
 /* }}} */
 
 /* {{{ proto double ogr_f_getfieldasdouble(resource hfeature, int ifield)
@@ -2761,6 +2749,7 @@ PHP_FUNCTION(ogr_f_getfieldasdouble)
         RETURN_DOUBLE(OGR_F_GetFieldAsDouble(hFeat, ifield));
     }
 }
+
 /* }}} */
 
 /* {{{ proto string ogr_f_getfieldasstring(resource hfeature, int ifield)
@@ -2786,11 +2775,9 @@ PHP_FUNCTION(ogr_f_getfieldasstring)
     }
 }
 
-
-
 /* }}} */
 
-/* {{{ proto array ogr_f_getfieldasintegerlist(resource hfeature, int ifield, int refncount)
+/* {{{ proto array int ogr_f_getfieldasintegerlist(resource hfeature, int ifield, int refncount)
     */
 PHP_FUNCTION(ogr_f_getfieldasintegerlist)
 {
@@ -2831,10 +2818,9 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
     ZVAL_LONG(refncount, ncount);
 }
 
-
 /* }}} */
 
-/* {{{ proto array ogr_f_getfieldasdoublelist(resource hfeature, int ifield, int refncount)
+/* {{{ proto array double ogr_f_getfieldasdoublelist(resource hfeature, int ifield, int refncount)
     */
 PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 {
@@ -2878,7 +2864,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 
 /* }}} */
 
-/* {{{ proto array ogr_f_getfieldasstringlist(resource hfeature, int ifield)
+/* {{{ proto array string ogr_f_getfieldasstringlist(resource hfeature, int ifield)
     */
 PHP_FUNCTION(ogr_f_getfieldasstringlist)
 {
@@ -2918,11 +2904,8 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
 		RETURN_FALSE;
 	}
 
-
-//	zend_hash_internal_pointer_reset(Z_ARRVAL_P(return_value));
 	while (numelements <= ncount) {
         add_next_index_string(return_value, (char *) CSLGetField(papszStrList, numelements), 1);
-//		zend_hash_move_forward(Z_ARRVAL_P(return_value));
         numelements++;
 	}
 }
@@ -2950,6 +2933,7 @@ PHP_FUNCTION(ogr_f_setfieldinteger)
         OGR_F_SetFieldInteger(hFeat, ifield, nvalue);
     }
 }
+
 /* }}} */
 
 /* {{{ proto void ogr_f_setfielddouble(resource hfeature, int ifield, double dfvalue)
@@ -2997,7 +2981,6 @@ PHP_FUNCTION(ogr_f_setfieldstring)
         OGR_F_SetFieldString(hFeat, ifield, strvalue);
     }
 }
-
 
 /* }}} */
 
@@ -3048,13 +3031,7 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
         OGR_F_SetFieldIntegerList(hFeat, ifield, ncount, (int *)alTmp);
 
     CPLFree(alTmp);
-
-
-
-
-
 }
-
 
 /* }}} */
 
@@ -3080,21 +3057,13 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
         ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, "OGRFeature", le_Feature);
     }
 
-//	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refadfvalues));
-//
-//	while (zend_hash_get_current_data(Z_ARRVAL_P(refadfvalues), 
-//										 (void **) &tmp) == SUCCESS) {
-//        numelements++;
-//		zend_hash_move_forward(Z_ARRVAL_P(refadfvalues));
-//	}
-
-
 	numelements = zend_hash_num_elements(Z_ARRVAL_P(refadfvalues));
 
     if ((numelements != ncount) || (numelements <= 0)){
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
+
 	adfTmp = (double *) CPLMalloc(sizeof(double)*ncount);
 
     numelements = 0;
@@ -3102,7 +3071,6 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
 	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refadfvalues));
 	while (zend_hash_get_current_data(Z_ARRVAL_P(refadfvalues), 
 										 (void **) &tmp) == SUCCESS) {
-//		convert_to_double_ex(tmp);
 
         adfTmp[numelements] = Z_DVAL_PP(tmp);
         numelements++;
@@ -3128,9 +3096,7 @@ PHP_FUNCTION(ogr_f_setfieldstringlist)
     zval *hfeature = NULL;
     zval *refastrvalues = NULL;
     OGRFeatureH hFeat = NULL;
-    int numelems = 0;
     char **papszStrList = NULL;
-    zval **tmp = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hfeature, &ifield, &refastrvalues) == FAILURE) 
         return;
@@ -3139,30 +3105,12 @@ PHP_FUNCTION(ogr_f_setfieldstringlist)
         ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, "OGRFeature", le_Feature);
     }
 
-	numelems = zend_hash_num_elements(Z_ARRVAL_P(refastrvalues));
-
-
-
-	if(numelems == 0) {
-		RETURN_EMPTY_STRING();
-	}
-
-	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refastrvalues));
-	while (zend_hash_get_current_data(Z_ARRVAL_P(refastrvalues), 
-										 (void **) &tmp) == SUCCESS) {
-		convert_to_string_ex(tmp);
-
-        papszStrList = (char **)CSLAddString(papszStrList, (char *)tmp);
-
-		zend_hash_move_forward(Z_ARRVAL_P(refastrvalues));
-	}
-
+    papszStrList = php_array2string(papszStrList, refastrvalues);
 
     if (hFeat)
         OGR_F_SetFieldStringList(hFeat, ifield, papszStrList);
 
     CSLDestroy(papszStrList);
-
 }
 
 /* }}} */
@@ -3216,6 +3164,7 @@ PHP_FUNCTION(ogr_f_getfid)
         RETURN_LONG(OGR_F_GetFID(hFeat));
 
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_f_setfid(resource hfeature, int ifidin)
@@ -3428,6 +3377,7 @@ PHP_FUNCTION(ogr_l_setattributefilter)
 
     RETURN_LONG(eErr);
 }
+
 /* }}} */
 
 /* {{{ proto void ogr_l_resetreading(resource hlayer)
@@ -3472,7 +3422,6 @@ PHP_FUNCTION(ogr_l_getnextfeature)
 
     if (hFeat)
         ZEND_REGISTER_RESOURCE(return_value, hFeat, le_Feature);
-
 }
 
 /* }}} */
@@ -3501,6 +3450,7 @@ PHP_FUNCTION(ogr_l_getfeature)
         ZEND_REGISTER_RESOURCE(return_value, hFeat, le_Feature);
 
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_l_setfeature(resource hlayer, resource hfeature)
@@ -3534,6 +3484,7 @@ PHP_FUNCTION(ogr_l_setfeature)
 
     RETURN_LONG(eErr);
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_l_createfeature(resource hlayer, resource hfeature)
@@ -3568,6 +3519,7 @@ PHP_FUNCTION(ogr_l_createfeature)
     }
     RETURN_LONG(eErr);
 }
+
 /* }}} */
 
 /* {{{ proto resource ogr_l_getlayerdefn(resource hlayer)
@@ -3593,6 +3545,7 @@ PHP_FUNCTION(ogr_l_getlayerdefn)
 
     ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefnRef);
 }
+
 /* }}} */
 
 /* {{{ proto resource ogr_l_getspatialref(resource hlayer)
@@ -3681,7 +3634,6 @@ PHP_FUNCTION(ogr_l_getextent)
     add_property_double(oextent, "maxX", oEnvelope->MaxX);
     add_property_double(oextent, "minY", oEnvelope->MinY);
     add_property_double(oextent, "maxy", oEnvelope->MaxY);
-
 }
 
 /* }}} */
@@ -3707,6 +3659,7 @@ PHP_FUNCTION(ogr_l_testcapability)
         RETURN_BOOL(OGR_L_TestCapability(hLayerResource, strcapability));
     }
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_l_createfield(resource hlayer, resource hfield, boolean bapproxok)
@@ -3737,6 +3690,7 @@ PHP_FUNCTION(ogr_l_createfield)
 
     RETURN_LONG(eErr);
 }
+
 /* }}} */
 
 /* {{{ proto int ogr_l_starttransaction(resource hlayer)
@@ -3811,9 +3765,6 @@ PHP_FUNCTION(ogr_l_rollbacktransaction)
     RETURN_LONG(eErr);
 }
 
-
-
-
 /* }}} */
 
 /* {{{ proto void OGR_DS_Destroy(resource hDS)
@@ -3835,7 +3786,6 @@ PHP_FUNCTION(ogr_ds_destroy)
     if (hDataSource)
        zend_list_delete(hDS->value.lval);
 }
-
 
 /* }}} */
 
@@ -3860,8 +3810,6 @@ PHP_FUNCTION(ogr_ds_getname)
     }
 }
 
-
-
 /* }}} */
 /* {{{ proto int ogr_ds_getlayercount(resource hds)
     */
@@ -3884,7 +3832,6 @@ PHP_FUNCTION(ogr_ds_getlayercount)
         RETURN_LONG(OGR_DS_GetLayerCount(hDataSource));        
     }
 }
-
 
 /* }}} */
 
@@ -3915,9 +3862,7 @@ PHP_FUNCTION(ogr_ds_getlayer)
 
     }
         ZEND_REGISTER_RESOURCE(return_value, hLayer, le_Layer);
-
 }
-
 
 /* }}} */
 
@@ -3938,8 +3883,6 @@ PHP_FUNCTION(ogr_ds_createlayer)
     OGRDataSourceH hDataSource = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRLayerH hLayer = NULL;
-    int numelems = 0;
-	zval         **tmp;
 
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rsr!la!", &hds, &strname, &strname_len, &hsrs, &igeometrytype, &astroptions) == FAILURE)
@@ -3954,23 +3897,7 @@ PHP_FUNCTION(ogr_ds_createlayer)
 
 
     if (astroptions){
-
-        numelems = zend_hash_num_elements(Z_ARRVAL_P(astroptions));
-
-        if(numelems == 0) {
-            RETURN_EMPTY_STRING();
-        }
-
-        zend_hash_internal_pointer_reset(Z_ARRVAL_P(astroptions));
-        while (zend_hash_get_current_data(Z_ARRVAL_P(astroptions), 
-										 (void **) &tmp) == SUCCESS) {
-            convert_to_string_ex(tmp);
-            
-            papszoptions = (char **)CSLAddString(papszoptions, (char *)tmp);
-
-            zend_hash_move_forward(Z_ARRVAL_P(astroptions));
-        }
-
+        papszoptions = php_array2string(papszoptions, astroptions);
     }
 
     if (hDataSource){
@@ -3979,16 +3906,12 @@ PHP_FUNCTION(ogr_ds_createlayer)
 
     CSLDestroy(papszoptions);
 
-
-
     if (!hLayer) {
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
         ZEND_REGISTER_RESOURCE(return_value, hLayer, le_Layer);
-
 }
-
 
 /* }}} */
 
@@ -4013,7 +3936,6 @@ PHP_FUNCTION(ogr_ds_testcapability)
         RETURN_BOOL(OGR_DS_TestCapability(hDataSource, strcapability));
     }
 }
-
 
 /* }}} */
 
@@ -4053,8 +3975,6 @@ PHP_FUNCTION(ogr_ds_executesql)
     }
         ZEND_REGISTER_RESOURCE(return_value, hLayer, le_Layer);
 }
-
-
 
 /* }}} */
 
@@ -4107,9 +4027,6 @@ PHP_FUNCTION(ogr_dr_getname)
     }
 }
 
-
-
-
 /* {{{ proto resource ogr_dr_open(resource hsfdriver, string strname, boolean bupdate)
     */
 PHP_FUNCTION(ogr_dr_open)
@@ -4137,9 +4054,7 @@ PHP_FUNCTION(ogr_dr_open)
         RETURN_FALSE;
     }
         ZEND_REGISTER_RESOURCE(return_value, hDataSource, le_Datasource);
-
 }
-
 
 /* }}} */
 
@@ -4163,10 +4078,7 @@ PHP_FUNCTION(ogr_dr_testcapability)
     if (hDriver){
        RETURN_BOOL(OGR_Dr_TestCapability(hDriver, strcapability));
     }
-
-
 }
-
 
 /* }}} */
 
@@ -4183,8 +4095,6 @@ PHP_FUNCTION(ogr_dr_createdatasource)
     char **papszoptions = NULL;
     OGRSFDriverH hDriver = NULL;
     OGRDataSourceH hDataSource = NULL;
-    int numelems = 0;
-	zval **tmp;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rsa!", &hsfdriver, &strname, &strname_len, &astroptions) == FAILURE) 
         return;
@@ -4194,22 +4104,7 @@ PHP_FUNCTION(ogr_dr_createdatasource)
     }
 
     if (astroptions){
-
-        numelems = zend_hash_num_elements(Z_ARRVAL_P(astroptions));
-        if(numelems == 0) {
-            RETURN_EMPTY_STRING();
-        }
-
-        zend_hash_internal_pointer_reset(Z_ARRVAL_P(astroptions));
-        while (zend_hash_get_current_data(Z_ARRVAL_P(astroptions), 
-										 (void **) &tmp) == SUCCESS) {
-            convert_to_string_ex(tmp);
-
-            php_printf("tmp = %s\n",(char *)Z_ARRVAL_PP(tmp));
-            papszoptions = (char **)CSLAddString(papszoptions, (char *)tmp);
-
-            zend_hash_move_forward(Z_ARRVAL_P(astroptions));
-        }
+        papszoptions = php_array2string(papszoptions, astroptions);
     }
 
     if (hDriver){
@@ -4224,8 +4119,6 @@ PHP_FUNCTION(ogr_dr_createdatasource)
 
     ZEND_REGISTER_RESOURCE(return_value, hDataSource, le_Datasource);
 }
-
-
 
 /* }}} */
 
@@ -4250,7 +4143,6 @@ PHP_FUNCTION(ogropen)
         php_error(E_WARNING, "OGR drivers not registered, make sure you call OGRRegisterAll() before OGROpen()");
         RETURN_FALSE;
     }
-
 
     hFile = OGROpen(strName, bUpdate, &hDriver);
 
@@ -4290,8 +4182,6 @@ PHP_FUNCTION(ogrregisterdriver)
     }
     if (hDriver)
         OGRRegisterDriver(hDriver);
-
-
 }
 
 /* {{{ proto int ogrgetdrivercount()
@@ -4303,8 +4193,6 @@ PHP_FUNCTION(ogrgetdrivercount)
     }
     RETURN_LONG(OGRGetDriverCount());
 }
-
-
 
 /* }}} */
 
@@ -4328,7 +4216,6 @@ PHP_FUNCTION(ogrgetdriver)
     ZEND_REGISTER_RESOURCE(return_value, hDriver, le_SFDriver);
         
 }
-
 
 /* }}} */
 
