@@ -203,8 +203,6 @@ if (count($_SERVER["argv"]) >= 2)
 else
 {
 // Set your default test filename here (for use in web environment)
-// Setting a path with no extension will create a new directory as data
-// source with most drivers.
 // Creating OGR datasources can be tricky, please see the docs or ask the
 // GDAL-DEV mailing list if you need help with a specific driver.
     $strfilename ="test.mif";  
@@ -226,3 +224,4 @@ else
 </PRE>
 </BODY>
 </HTML>
+
