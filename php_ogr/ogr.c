@@ -28,6 +28,10 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.6  2003/03/19 16:56:40  nsavard
+ * Add "php_array2list" function, an array to string list function.  Corrected
+ * a few bugs.
+ *
  * Revision 1.5  2003/03/19 00:47:42  nsavard
  * Corrected some bugs and cleaned up.
  *
@@ -1187,7 +1191,7 @@ PHP_FUNCTION(ogr_g_assignspatialreference)
     OGRGeometryH hGeometry = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hsrs) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr!", &hgeom, &hsrs) == FAILURE) 
         return;
 
     if (hgeom) {
@@ -1196,7 +1200,7 @@ PHP_FUNCTION(ogr_g_assignspatialreference)
     if (hsrs) {
         ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs, hsrs_id, "OGRSpatialReference", le_SpatialReference, le_SpatialReferenceRef);
     }
-    if (hGeometry && hSpatialReference)
+    if (hGeometry)
         OGR_G_AssignSpatialReference(hGeometry,hSpatialReference);
 }
 
@@ -1222,11 +1226,11 @@ PHP_FUNCTION(ogr_g_getspatialreference)
     if (hGeometry)
         hSpatialReference = OGR_G_GetSpatialReference(hGeometry);
 
-    if (!hSpatialReference){
-        php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
-    }
-        ZEND_REGISTER_RESOURCE(return_value, hSpatialReference, le_SpatialReference);
+    if (!hSpatialReference)
+        RETURN_NULL();
+
+    ZEND_REGISTER_RESOURCE(return_value, hSpatialReference, le_SpatialReference);
+
 }
 
 /* }}} */
@@ -3319,6 +3323,9 @@ PHP_FUNCTION(ogr_l_getspatialfilter)
     if (hLayerResource) 
         hGeom = OGR_L_GetSpatialFilter(hLayerResource);
 
+    if (!hGeom)
+        RETURN_NULL();
+
         ZEND_REGISTER_RESOURCE(return_value, hGeom, le_GeometryRef);
 }
 
@@ -3542,7 +3549,6 @@ PHP_FUNCTION(ogr_l_getlayerdefn)
     if (hLayerResource)
         hFeatureDefn = OGR_L_GetLayerDefn(hLayerResource);
 
-
     ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefnRef);
 }
 
@@ -3566,6 +3572,9 @@ PHP_FUNCTION(ogr_l_getspatialref)
     }
     if (hLayerResource)
         hSpatialRef = OGR_L_GetSpatialRef(hLayerResource);
+
+    if (!hSpatialRef)
+        RETURN_NULL();
 
     ZEND_REGISTER_RESOURCE(return_value, hSpatialRef, le_SpatialReferenceRef);
 }
@@ -3891,10 +3900,10 @@ PHP_FUNCTION(ogr_ds_createlayer)
     if (hds) {
         ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, "OGRDataSource", le_Datasource);
     }
+
     if (hsrs) {
         ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs, hsrs_id, "OGRSpatialReference", le_SpatialReference, le_SpatialReferenceRef);
         }
-
 
     if (astroptions){
         papszoptions = php_array2string(papszoptions, astroptions);
@@ -3956,7 +3965,7 @@ PHP_FUNCTION(ogr_ds_executesql)
     OGRGeometryH hGeometry = NULL;
     OGRLayerH hLayer = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsrs", &hds, &strsqlcommand, &strsqlcommand_len, &hspatialfilter, &strdialect, &strdialect_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rsr!s", &hds, &strsqlcommand, &strsqlcommand_len, &hspatialfilter, &strdialect, &strdialect_len) == FAILURE) 
         return;
 
     if (hds) {
@@ -3966,13 +3975,15 @@ PHP_FUNCTION(ogr_ds_executesql)
     if (hspatialfilter) {
         ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hspatialfilter, hspatialfilter_id, "OGRSpatialFilter", le_Geometry, le_GeometryRef);
     }
-    if (hDataSource && hGeometry)
-        hLayer = OGR_DS_ExecuteSQL(hDataSource, strsqlcommand, hGeometry, strdialect);
 
+    if (hDataSource){
+        hLayer = OGR_DS_ExecuteSQL(hDataSource, strsqlcommand, hGeometry, strdialect);
+    }
     if (!hLayer) {
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
+
         ZEND_REGISTER_RESOURCE(return_value, hLayer, le_Layer);
 }
 
