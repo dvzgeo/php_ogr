@@ -32,7 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-   $eErr = OGR_SQL_main();
+   $eErr = OGRSQL_main();
 
    if ($eErr != OGRERR_NONE)
    {
@@ -68,44 +68,71 @@ function OGRSQL_main()
 
     $numArgs = count($_SERVER["argv"]);
 
-    for( $iArg = 1; $iArg < $numArgs; $iArg++ ){
+    for( $iArg = 1; $iArg < $numArgs; $iArg++ )
+    {
 
-        if( !strcasecmp($_SERVER["argv"][$iArg], "-f") && $iArg < $numArgs-1 ){
+        if( !strcasecmp($_SERVER["argv"][$iArg], "-f") && $iArg < $numArgs-1 )
+        {
             $strFormat = $_SERVER["argv"][++$iArg];
             printf("Format = %s\n", $strFormat);
         }
-        else if( $_SERVER["argv"][$iArg][0] == '-' ){
+        /* Construct a spatial filter.*/
 
-            Usage();
+        else if( $_SERVER["argv"][$iArg] == "-spat" 
+                 && $_SERVER["argv"][$iArg+1] != NULL 
+                 && $_SERVER["argv"][$iArg+2] != NULL 
+                 && $_SERVER["argv"][$iArg+3] != NULL 
+                 && $_SERVER["argv"][$iArg+4] != NULL )
+        {
+            $hSpatialFilter = OGR_G_CreateGeometry(wkbLinearRing);
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+1]),
+                           floatval($_SERVER["argv"][$iArg+2]), 0.0 );
+
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+1]),
+                           floatval($_SERVER["argv"][$iArg+4]), 0.0 );
+            OGR_G_AddPoint($hSpatialFilter,  floatval($_SERVER["argv"][$iArg+3]), 
+                           floatval($_SERVER["argv"][$iArg+4]), 0.0 );
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+3]), 
+                           floatval($_SERVER["argv"][$iArg+2]), 0.0 );
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+1]), 
+                           floatval($_SERVER["argv"][$iArg+2]), 0.0 );
+            printf("Xmin = %s Ymin = %s Xmax = %s Ymax = %s\n", 
+                   $_SERVER["argv"][$iArg+1], $_SERVER["argv"][$iArg+2],
+                   $_SERVER["argv"][$iArg+3], $_SERVER["argv"][$iArg+4]);
+
+            $iArg += 4;
         }
-        else if( $strDestDataSource == NULL ){
+
+        /* Construct an sql statement.  Example:  $strSQLStatement = "SELECT 
+           Province from CANADA WHERE Pop_1981 < 1000000 ORDER BY Pop_1981 ASC";
+         */
+
+        else if( $_SERVER["argv"][$iArg] == "-sql" 
+                 && $_SERVER["argv"][$iArg+1] != NULL )
+        {
+            $strSQLStatement = $_SERVER["argv"][++$iArg];
+            printf("SQLStatement = %s\n", $strSQLStatement);
+        }
+
+        else if( $strDestDataSource == NULL )
+        {
             $strDestDataSource = $_SERVER["argv"][$iArg];
             printf("DestDataSource = %s\n", $strDestDataSource);
         }
-        else if( $strDataSource == NULL ){
+        else if( $strDataSource == NULL )
+        {
             $strDataSource = $_SERVER["argv"][$iArg];
             printf("DataSource = %s\n", $strDataSource);
         }
-    }
+        else if( $_SERVER["argv"][$iArg][0] == '-' )
+        {
+
+            Usage();
+        }
+     }
 
     if( $strDataSource == NULL )
         Usage();
-
-/* -------------------------------------------------------------------- */
-/*      Construct a spatial filter.                                     */
-/* -------------------------------------------------------------------- */
-   $hSpatialFilter = OGR_G_CreateGeometry(wkbLinearRing);
-   OGR_G_AddPoint($hSpatialFilter, -64.0, 45.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -64.0, 47.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -62.0, 47.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -62.0, 45.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -64.0, 45.0, 0.0);
-
-
-/* -------------------------------------------------------------------- */
-/*      Construct an SQL statement.                                     */
-/* -------------------------------------------------------------------- */
-   $strSQLStatement = "SELECT Province from CANADA WHERE Pop_1981 < 1000000 ORDER BY Pop_1981 ASC";
 
 /* -------------------------------------------------------------------- */
 /*      Open data source.                                               */
@@ -179,14 +206,11 @@ function OGRSQL_main()
     if( $hODS == NULL )
         return OGRERR_FAILURE;
 
-        printf("Je suis ici\n");
 /* -------------------------------------------------------------------- */
 /*      Process each data source layer.                                 */
 /* -------------------------------------------------------------------- */
 
        $hLayer = OGR_DS_ExecuteSQL($hDS, $strSQLStatement, $hSpatialFilter, NULL /*strDialect set to default*/);
-
-        printf("sql executed\n");
 
         /*Copy datasource file to a new data source file*/
             if($hLayer != NULL)
@@ -203,20 +227,20 @@ function OGRSQL_main()
     
     return OGRERR_NONE;
 
-
+}
 /************************************************************************/
 /*                               Usage()                                */
 /************************************************************************/
 
-    function Usage()
+function Usage()
+{
+            printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
+            src_datasource_name [-spat Xmin Ymin Xmax Ymax]
+             [-sql sql_statement]\n");
 
-    {
-        printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
-             src_datasource_name\n");
-
-        return 1;
-    }
+    return 1;
 }
+
 /************************************************************************/
 /*                           TranslateLayer()                           */
 /************************************************************************/
@@ -238,10 +262,9 @@ function TranslateLayer( $hSrcDS, $hSrcLayer, $hDstDS )
     $hFDefn = OGR_L_GetLayerDefn($hSrcLayer);
 
 
-    $hSrcSpatialRef = OGR_L_GetSpatialRef($hSrcLayer);
-
-
-    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName($hFDefn),$hSrcSpatialRef, OGR_FD_GetGeomType($hFDefn),NULL );
+    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName($hFDefn),
+                                     OGR_L_GetSpatialRef($hSrcLayer), 
+                                     OGR_FD_GetGeomType($hFDefn),NULL );
     if( $hDstLayer == NULL )
         return FALSE;
 
