@@ -32,7 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-   $eErr = OGR_SpatialFilter_main();
+   $eErr = OGR2Tab_SpatialFilter_main();
 
    if ($eErr != OGRERR_NONE)
    {
@@ -44,9 +44,9 @@
    }
 
 /************************************************************************/
-/*                       OGR_SpatialFilter_main()                       */
+/*                       OGR2Tab_SpatialFilter_main()                   */
 /************************************************************************/
-function OGR_SpatialFilter_main()
+function OGR2Tab_SpatialFilter_main()
 {
    /*Assigning initial value.*/
     $strFormat = "MapInfo File";
