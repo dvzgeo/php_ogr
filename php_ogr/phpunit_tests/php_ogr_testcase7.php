@@ -27,7 +27,15 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
         $this->bUpdate = FALSE;
         $this->eGeometryType = wkbUnknown;
         $this->strDestDataSource = "DSOutput";
-        $this->strOutputLayer = "LayerOutput";
+        $this->strOutputLayer = "OutputLayer";
+
+        if (file_exists($this->strPathToOutputData)) {
+            system( "rm -R ".$this->strPathToOutputData);
+        }
+
+        mkdir($this->strPathToOutputData, 0777);
+
+        OGRRegisterAll();
     }
     // called after the test functions are executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
@@ -51,8 +59,6 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
 ************************************************************************/
     function testOGR_F_CreateDestroy0() {
 
-        OGRRegisterAll();
-
         $strStandardFile = "testOGR_F_CreateDestroy0.std";
 
         $hDriver = OGRGetDriver(5);
@@ -68,19 +74,33 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
                                      $this->eGeometryType,
                                      null /*Options*/);
 
+        if( OGR_L_CreateField( $hLayer, 
+                               OGR_Fld_Create( "NewField", OFTInteger),
+                               0 /*bApproOK*/ ) != OGRERR_NONE ){
+            return(FALSE);
+        }
+
         $hFeature = OGR_F_Create( OGR_L_GetLayerDefn($hLayer));
-        
+
+       
         $this->assertNotNull($hFeature, "OGR_F_Create(),
                      Feature handle is not supposed to be NULL.");
+
         
         OGR_F_Destroy($hFeature);
 
-        $this->assertNull($hFeature, "OGR_F_Destroy(), Feature handle is ".
-                               "supposed to be NULL.");
+        $expected = "Unknown";
+
+        $actual = get_resource_type($hFeature);
+
+
+        $this->assertEquals($expected, $actual, "Problem with ".
+                          "OGR_F_Destroy():  ".
+                          "Feature resource is supposed to be freed ".
+                          "after OGR_F_Destroy().\n");
+
 
         OGR_DS_Destroy($hODS);
-
-        system( "rm -R ".$this->strPathToOutputData.$this->strDestDataSource);
 
     }
 
@@ -140,9 +160,6 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
         $this->assertFalse($iRetval, "Problem with OGR_L_GetLayerDefn(), ".
                                      "or OGR_F_GetDefnRef(): ".
                                      "files comparison did not match.\n");
-
-        system( "rm ".$this->strPathToOutputData.$this->strTmpDumpFile);
-        
     }
 }
 ?> 
