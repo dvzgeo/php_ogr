@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.18  2003/05/20 17:30:11  nsavard
+ * Added OGR_DS_GetLayerByName() function, formating text to 80 columns.
+ *
  * Revision 1.17  2003/05/08 22:18:40  assefa
  * Correct windows compilation error.
  *
@@ -314,7 +317,7 @@ zend_module_entry ogr_module_entry = {
                            request end */
     PHP_MINFO(ogr),
 #if ZEND_MODULE_API_NO >= 20010901
-    "0.1", /* Replace with version number for your extension */
+    "1.0.0", /* Replace with version number for your extension */
 #endif
     STANDARD_MODULE_PROPERTIES
 };
