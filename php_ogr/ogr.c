@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.16  2003/04/21 07:14:39  nsavard
+ * Corrected a bug in OGR_G_GetEnvelope().
+ *
  * Revision 1.15  2003/04/02 20:27:27  nsavard
  * Clean up
  *
@@ -4391,7 +4394,7 @@ PHP_FUNCTION(ogropen)
 
     if (OGRGetDriverCount() == 0)
     {
-        php_error(E_WARNING, "OGR drivers not registered, make sure you call
+        php_error(E_WARNING, "OGR drivers not registered, make sure you call \
                               OGRRegisterAll() before OGROpen()");
         RETURN_NULL();
     }
