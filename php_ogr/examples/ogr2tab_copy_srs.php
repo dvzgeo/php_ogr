@@ -25,7 +25,7 @@ function ogr2tab_copy_srs()
     $strFormat = "MapInfo File";
 
     /*Path to existing data source to modify to fit user needs.*/
-    $strSrcDataSource = "./phpunit_tests/data/tab/mpasabe200";
+    $strSrcDataSource = "./phpunit_tests/data/tab/mpasabe200/Commune.TAB";
 
     /*Path to new data source to modify to fit user needs.*/
     $strDestDataSource = "../ogrtests/tmp/output";
@@ -33,9 +33,13 @@ function ogr2tab_copy_srs()
     /*New layer name to modify to fit user needs.*/
     $strDestLayerName = "MyNewLayer";
 
+    /*Layer selected to fetch a feature from.  If the data source name in
+      $strSrcDataSource is a "tab" file, the layer number, specified by 
+      $iLayer, to copy from must be set to zero.  Otherwise the layer 
+      number might be any number between 0 and the layer count.*/
 
-    /*Layer selected to fetch a feature from.*/
-    $iLayer = 1;
+//    $iLayer = 1;
+    $iLayer = 0;
     
 /* -------------------------------------------------------------------- */
 /*      Register format(s).                                             */
