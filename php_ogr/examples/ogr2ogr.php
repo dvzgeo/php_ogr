@@ -32,18 +32,31 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
+
+
+
+   $eErr = OGR2OGR_main();
+
+   if ($eErr != OGRERR_NONE)
+   {
+      printf("Some errors were reported (error %d)\n", $eErr);
+   }
+   else
+   {
+      printf("ogr2ogr completed with no errors.\n");
+   }
+
 /************************************************************************/
-/*                                main()                                */
+/*                                OGR2OGR_main()                        */
 /************************************************************************/
 
-/*int main( int nArgc, char ** papszArgv )
-
+function OGR2OGR_main()
 {
     $strFormat = "ESRI Shapefile";
     $strDataSource = NULL;
     $strDestDataSource = NULL;
     $astrLayers = NULL;
-*/    
+    
 /* -------------------------------------------------------------------- */
 /*      Register format(s).                                             */
 /* -------------------------------------------------------------------- */
@@ -173,7 +186,8 @@
         }
 
         if( count($astrLayers) == 0 || 
-            in_array(OGR_FD_GetName(OGR_L_GetLayerDefn($hLayer)), $astrLayers) != FALSE )
+            in_array(OGR_FD_GetName(OGR_L_GetLayerDefn($hLayer)), 
+                                        $astrLayers) != FALSE )
         {
             if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
             return OGRERR_FAILURE;
@@ -193,15 +207,15 @@
 /*                               Usage()                                */
 /************************************************************************/
 
-function Usage()
+    function Usage()
 
-{
-    printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
+    {
+        printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
              src_datasource_name [layer [layer ...]]\n");
     
-    return 1;
+        return 1;
+    }
 }
-
 /************************************************************************/
 /*                           TranslateLayer()                           */
 /************************************************************************/
@@ -223,12 +237,9 @@ function TranslateLayer( $hSrcDS, $hSrcLayer, $hDstDS )
     $hFDefn = OGR_L_GetLayerDefn($hSrcLayer);
 
 
-    $hSrcSpatialRef = OGR_L_GetSpatialRef($hSrcLayer);
-    printf("hSpatialRef= %d\n", $hSrcSpatialRef);
-    print_r($hSrcSpatialRef);
-
-
-    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName($hFDefn),$hSrcSpatialRef, OGR_FD_GetGeomType($hFDefn),NULL );
+    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName($hFDefn),
+                                     OGR_L_GetSpatialRef($hSrcLayer), 
+                                     OGR_FD_GetGeomType($hFDefn),NULL );
     if( $hDstLayer == NULL )
         return FALSE;
 
@@ -251,7 +262,8 @@ function TranslateLayer( $hSrcDS, $hSrcLayer, $hDstDS )
 
         $hDstFeature = OGR_F_Create( OGR_L_GetLayerDefn($hDstLayer) );
 
-        if( OGR_F_SetFrom( $hDstFeature, $hFeature, FALSE /*bForgiving*/ ) != OGRERR_NONE )
+        if( OGR_F_SetFrom( $hDstFeature, $hFeature, FALSE /*bForgiving*/ ) 
+            != OGRERR_NONE )
         {
             OGR_F_Destroy($hFeature);
             
