@@ -247,14 +247,12 @@ function OGRSetGetStringList($hFeatureIn, $iField, $value)
    $eErr = OGRSetGetStringList($hFeature, $fieldIndex, $stringListValue);
 
 
-   if ($eErr != OGRERR_NONE)
-      printf("Warning %s\n", $eErr);
-
    OGR_F_Destroy($hFeature);
 
-   return OGRERR_NONE;
-
-
+   if ($eErr != OGRERR_NONE)
+      printf("Warning %s\n", $eErr);
+   else
+      return OGRERR_NONE;
 ?>
 
 </PRE>

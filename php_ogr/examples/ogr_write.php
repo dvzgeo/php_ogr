@@ -231,9 +231,10 @@ else
 
    $eErr = OGRCCreate($strfilename);
 
-   printf("Warning %s\n", $eErr);
-
-   return OGRERR_NONE;
+   if ($eErr != OGRERR_NONE)
+      printf("Warning %s\n", $eErr);
+   else
+      return OGRERR_NONE;
 
 ?>
 
