@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.15  2003/04/02 20:27:27  nsavard
+ * Clean up
+ *
  * Revision 1.14  2003/04/02 20:03:42  nsavard
  * Added access to CPL functions
  *
@@ -1112,17 +1115,17 @@ PHP_FUNCTION(ogr_g_getenvelope)
     if (hGeometry)
         OGR_G_GetEnvelope(hGeometry, &oEnvelope);
 
+    zval_dtor(oenvel);
+
     if (object_init(oenvel)==FAILURE) {
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
 
-    zval_dtor(oenvel);
-
     add_property_double(oenvel, "minx", oEnvelope.MinX);
     add_property_double(oenvel, "maxx", oEnvelope.MaxX);
-    add_property_double(oenvel, "mint", oEnvelope.MinY);
-    add_property_double(oenvel, "maxz", oEnvelope.MaxY);
+    add_property_double(oenvel, "miny", oEnvelope.MinY);
+    add_property_double(oenvel, "maxy", oEnvelope.MaxY);
 }
 
 #ifdef CONSTRUCT_FLAG
@@ -3884,11 +3887,13 @@ PHP_FUNCTION(ogr_l_testcapability)
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hlayer, &strcapability, &strcapability_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hlayer, &strcapability,
+                              &strcapability_len) == FAILURE) 
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, "OGRLayer", le_Layer);
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
+                            "OGRLayer", le_Layer);
     }
     if (hLayerResource){
         RETURN_BOOL(OGR_L_TestCapability(hLayerResource, strcapability));
@@ -4095,7 +4100,7 @@ PHP_FUNCTION(ogr_ds_getlayer)
     }
     if (!hLayer) {
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
 
     ZEND_REGISTER_RESOURCE(return_value, hLayer, le_Layer);
@@ -4283,18 +4288,20 @@ PHP_FUNCTION(ogr_dr_open)
     OGRSFDriverH hDriver = NULL;
     OGRDataSourceH hDataSource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsb", &hsfdriver, &strname, &strname_len, &bupdate) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rsb", &hsfdriver, &strname,
+                              &strname_len, &bupdate) == FAILURE) 
         return;
 
     if (hsfdriver){
-        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id, "OGRSFDriverH", le_SFDriver);
+        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id,
+                            "OGRSFDriverH", le_SFDriver);
     }
     if (hDriver)
         hDataSource = OGR_Dr_Open(hDriver, strname, bupdate);
 
     if (!hDataSource){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
 
     ZEND_REGISTER_RESOURCE(return_value, hDataSource, le_Datasource);
@@ -4384,17 +4391,17 @@ PHP_FUNCTION(ogropen)
 
     if (OGRGetDriverCount() == 0)
     {
-        php_error(E_WARNING, "OGR drivers not registered, make sure you call OGRRegisterAll() before OGROpen()");
-        RETURN_FALSE;
+        php_error(E_WARNING, "OGR drivers not registered, make sure you call
+                              OGRRegisterAll() before OGROpen()");
+        RETURN_NULL();
     }
 
     hFile = OGROpen(strName, bUpdate, &hDriver);
-
     if (hFile == NULL)
     {
         php_error(E_WARNING, "Unable to open datasource file");
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
 
     /* Create return values */
@@ -4460,7 +4467,7 @@ PHP_FUNCTION(ogrgetdriver)
 
     if (!hDriver){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
     ZEND_REGISTER_RESOURCE(return_value, hDriver, le_SFDriver);
 }
