@@ -2,6 +2,8 @@
 //require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRLayerTest2";                             
+
 class OGRLayerTest2 extends PHPUnit_TestCase {
     var $strDirName;
     var $strPathToOutputData;
@@ -12,7 +14,7 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
     var $bForce;
     var $hOGRSFDriver;
     var $eGeometryType;
-    var $strSrcDataSource;
+    var $hSrcDataSource;
     var $strOutputLayer;
     var $strDestDataSource;
 
@@ -24,8 +26,8 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here
     function setUp() {
-        $this->strDirName = "testcase/";
-	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
+        $this->strDirName = "testcase2/";
+        $this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
@@ -74,7 +76,6 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
         unset($this->strOutputLayer);
         unset($this->strDestDataSource);
     }
-
 /***********************************************************************
 *                         testOGR_L_GetFeature0()                    
 *                         
@@ -114,7 +115,6 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
         $this->assertFalse($iRetval, "Problem with ".
                            "OGR_L_GetFeature() ".
                            "Files comparison did not matched.\n");
-
     }
 /***********************************************************************
 *                         testOGR_L_GetNextFeature0()                    
@@ -198,14 +198,16 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         OGR_DS_Destroy($hDestDS);
 
-        system("ogrinfo -al ".$this->strPathToOutputData.
+        system("/usr1/local/bin/ogrinfo -al ".$this->strPathToOutputData.
                $this->strDestDataSource." > ".
                $this->strPathToOutputData.
                $this->strTmpDumpFile);
 
-        system("diff --brief ".$this->strPathToOutputData.
+        system("diff --brief --ignore-matching-lines=\"INFO:\" ".
+               $this->strPathToOutputData.
                $this->strTmpDumpFile.
-               " ".$this->strPathToStandardData.$strStandardFile,
+               " ".$this->strPathToStandardData.
+               $strStandardFile,
                $iRetval);
 
         $this->assertFalse($iRetval, "Problem with ".
@@ -294,7 +296,6 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
                             "Problem with OGR_L_GetExten():  ".
                             "Extent is not corresponding.", 0 /*Delta*/);
     }
-
 /***********************************************************************
 *                         testOGR_L_GetFeatureCount0()                    
 *                         
@@ -314,7 +315,6 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
                             "OGR_L_GetFeatureCount():  Features count is ".
                             "not corresponding");
     }
-
 /***********************************************************************
 *                         testOGR_L_CreateField0()                    
 *                       
@@ -345,16 +345,18 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
         OGR_DS_Destroy($hDestDS);
 
 
-        system("ogrinfo -al ".$this->strPathToOutputData.
+        system("/usr1/local/bin/ogrinfo -al ".$this->strPathToOutputData.
                $this->strDestDataSource." >".
                $this->strPathToOutputData.
                $this->strTmpDumpFile);
 
 
 
-        system("diff --brief ".$this->strPathToOutputData.
+        system("diff --brief --ignore-matching-lines=\"INFO:\" ".
+               $this->strPathToOutputData.
                $this->strTmpDumpFile.
-               " ".$this->strPathToStandardData.$strStandardFile,
+               " ".$this->strPathToStandardData.
+               $strStandardFile,
                $iRetval);
 
         $this->assertFalse($iRetval, "Problem with ".
@@ -425,7 +427,6 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 *                         testOGR_L_CreateFeature0()                    
 *                        Randow write not supported for mif. 
 ************************************************************************/
-
     function testOGR_L_CreateFeature0() {
 
         $strStandardFile = "testOGR_L_CreateFeature0.std";
@@ -477,12 +478,13 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         OGR_DS_Destroy($hDestDS);
 
-        system("ogrinfo -al ".$this->strPathToOutputData.
+        system("/usr1/local/bin/ogrinfo -al ".$this->strPathToOutputData.
                $this->strDestDataSource." >".
                $this->strPathToOutputData.
                $this->strTmpDumpFile);
 
-        system("diff --brief ".$this->strPathToOutputData.
+        system("diff --brief --ignore-matching-lines=\"INFO:\" ".
+               $this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
@@ -491,6 +493,5 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
                            "OGR_L_CreateFeature() ".
                            "Files comparison did not matched.\n");
     }
-
 }
 ?> 
