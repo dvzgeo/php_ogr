@@ -214,7 +214,7 @@ function   DumpGeometryCollection( $fp, $hGeom)
 /**********************************************************************
  *                      OGR_G_DumpReadable()
  *
- * Dump all geometry on a layer.
+ * Dump a geometry of a specific feature on a layer.
  *
  **********************************************************************/
 
@@ -267,7 +267,7 @@ function OGR_G_DumpReadable($fp, $hGeom)
 /**********************************************************************
  *                      OGR_F_DumpReadable()
  *
- * Dump all features on a layer.
+ * Dump a feature on a layer.
  *
  **********************************************************************/
 
@@ -282,7 +282,6 @@ function OGR_F_DumpReadable( $fp, $hFeature)
             OGR_FD_GetName($hFeatureDefn), 
             OGR_F_GetFID($hFeature) );
 
-    printf("normfid=%d\n",OGR_F_GetFID($hFeature));
     fputs($fp, $strOutput,strlen($strOutput)); 
 
     $numFields = OGR_FD_GetFieldCount($hFeatureDefn);
