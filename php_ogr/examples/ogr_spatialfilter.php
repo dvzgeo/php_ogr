@@ -66,21 +66,60 @@ function OGR_SpatialFilter_main()
 
     $numArgs = count($_SERVER["argv"]);
 
-    for( $iArg = 1; $iArg < $numArgs; $iArg++ ){
-
-        if( !strcasecmp($_SERVER["argv"][$iArg], "-f") && $iArg < $numArgs-1 ){
+    for( $iArg = 1; $iArg < $numArgs; $iArg++ )
+    {
+        if( !strcasecmp($_SERVER["argv"][$iArg], "-f") && $iArg < $numArgs-1 )
+        {
             $strFormat = $_SERVER["argv"][++$iArg];
             printf("Format = %s\n", $strFormat);
         }
-        else if( $_SERVER["argv"][$iArg][0] == '-' ){
+        /* Construct a spatial filter.*/
 
+        else if( $_SERVER["argv"][$iArg] == "-spat" 
+                 && $_SERVER["argv"][$iArg+1] != NULL 
+                 && $_SERVER["argv"][$iArg+2] != NULL 
+                 && $_SERVER["argv"][$iArg+3] != NULL 
+                 && $_SERVER["argv"][$iArg+4] != NULL )
+        {
+            $hSpatialFilter = OGR_G_CreateGeometry(wkbLinearRing);
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+1]),
+                           floatval($_SERVER["argv"][$iArg+2]), 0.0 );
+
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+1]),
+                           floatval($_SERVER["argv"][$iArg+4]), 0.0 );
+            OGR_G_AddPoint($hSpatialFilter,  floatval($_SERVER["argv"][$iArg+3]), 
+                           floatval($_SERVER["argv"][$iArg+4]), 0.0 );
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+3]), 
+                           floatval($_SERVER["argv"][$iArg+2]), 0.0 );
+            OGR_G_AddPoint($hSpatialFilter, floatval($_SERVER["argv"][$iArg+1]), 
+                           floatval($_SERVER["argv"][$iArg+2]), 0.0 );
+            printf("Xmin = %s Ymin = %s Xmax = %s Ymax = %s\n", 
+                   $_SERVER["argv"][$iArg+1], $_SERVER["argv"][$iArg+2],
+                   $_SERVER["argv"][$iArg+3], $_SERVER["argv"][$iArg+4]);
+
+            $iArg += 4;
+        }
+
+        /* Construct an attribute filter with where.  
+           Example: $strWhere = "Pop_1981 <= 1000000" */
+
+        else if( $_SERVER["argv"][$iArg] == "-where" 
+                 && $_SERVER["argv"][$iArg+1] != NULL )
+        {
+            $strWhere = $_SERVER["argv"][++$iArg];
+            printf("where = %s\n", $strWhere);
+        }
+        else if( $_SERVER["argv"][$iArg][0] == '-' )
+        {
             Usage();
         }
-        else if( $strDestDataSource == NULL ){
+        else if( $strDestDataSource == NULL )
+        {
             $strDestDataSource = $_SERVER["argv"][$iArg];
             printf("DestDataSource = %s\n", $strDestDataSource);
         }
-        else if( $strDataSource == NULL ){
+        else if( $strDataSource == NULL )
+        {
             $strDataSource = $_SERVER["argv"][$iArg];
             printf("DataSource = %s\n", $strDataSource);
         }
@@ -89,20 +128,7 @@ function OGR_SpatialFilter_main()
     if( $strDataSource == NULL )
         Usage();
 
-/* -------------------------------------------------------------------- */
-/*      Construct a spatial filter.                                     */
-/* -------------------------------------------------------------------- */
-   $hSpatialFilter = OGR_G_CreateGeometry(wkbLinearRing);
-   OGR_G_AddPoint($hSpatialFilter, -64.0, 45.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -64.0, 47.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -62.0, 47.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -62.0, 45.0, 0.0);
-   OGR_G_AddPoint($hSpatialFilter, -64.0, 45.0, 0.0);
 
-/* -------------------------------------------------------------------- */
-/*      Construct an attribute filter with where.                       */
-/* -------------------------------------------------------------------- */
-   $strWhere = "Pop_1981 <= 1000000";
 
 /* -------------------------------------------------------------------- */
 /*      Open data source.                                               */
@@ -221,19 +247,21 @@ function OGR_SpatialFilter_main()
     return OGRERR_NONE;
 
 
+}
 /************************************************************************/
 /*                               Usage()                                */
 /************************************************************************/
 
     function Usage()
 
-        {
+    {
             printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
-             src_datasource_name\n");
+             src_datasource_name [-spat Xmin Ymin Xmax Ymax]
+             [-where where_string]\n");
     
             return OGRERR_NONE;
-        }
-}
+    }
+
 /************************************************************************/
 /*                           TranslateLayer()                           */
 /************************************************************************/
