@@ -28,6 +28,10 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.4  2003/03/17 20:03:00  nsavard
+ * Corrected some bugs.  Enabling NULL parameters in some zend_parse_parameters
+ * functions with "!" option.
+ *
  * Revision 1.3  2003/03/14 00:31:18  assefa
  * Windows compilation.
  *
@@ -88,24 +92,6 @@ static unsigned char three_args_first_arg_force_ref[] = { 3, BYREF_FORCE, BYREF_
 static unsigned char three_args_third_arg_force_ref[] = { 3, BYREF_NONE, BYREF_NONE, BYREF_FORCE };
 static unsigned char three_args_second_arg_force_ref[] = { 3, BYREF_NONE, BYREF_FORCE, BYREF_NONE };
 static unsigned char two_args_first_arg_force_ref[] = { 2, BYREF_FORCE, BYREF_NONE };
-
-
-
-/*Create a null resource*/
-#define REGISTER_RESOURCE_CONSTANT(name, zval, flags)  zend_register_resource_constant((name), sizeof(name), (zval), (flags), module_number TSRMLS_CC)
-
-void zend_register_resource_constant(char *name, uint name_len, zval *resval, int flags, int module_number TSRMLS_DC)
-{
-	zend_constant c;
-
-
-	c.value = *resval;
-	c.flags = flags;
-	c.name = zend_strndup(name, name_len);
-	c.name_len = name_len;
-	c.module_number = module_number;
-	zend_register_constant(&c TSRMLS_CC);
-}
 
 
 
@@ -484,13 +470,6 @@ ogr_free_Feature(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 PHP_MINIT_FUNCTION(ogr)
 {
 
-    OGRSpatialReferenceH hsrs = NULL, hsrsDest = NULL;
-    OGRGeometryH hGeom = NULL;
-    OGRFieldDefnH hFieldDefn = NULL;
-//    OGRField *hField = NULL;
-    zval *hField = NULL;
-    OGRFeatureH hFeat = NULL;
-
     /* If you have INI entries, uncomment these lines 
     ZEND_INIT_MODULE_GLOBALS(ogr, php_ogr_init_globals, NULL);
     REGISTER_INI_ENTRIES();
@@ -559,22 +538,6 @@ PHP_MINIT_FUNCTION(ogr)
  
     /*Register constants*/
 #define OGR_CONST_FLAG CONST_CS | CONST_PERSISTENT
-#define HSRSRESNULL NULL
-#define GEOMRESNULL NULL
-#define FIELDDEFNRESNULL NULL
-#define FIELDRESNULL NULL
-#define FEATDEFNRESNULL NULL
-
-/*
-    php_printf("dans register1");
-    zval_dtor(hsrs);
-    ZEND_REGISTER_RESOURCE(hsrs, NULL, le_SpatialReferenceRef);
-    php_printf("dans register2");
-    ZEND_REGISTER_RESOURCE(hGeom, GEOMRESNULL, le_GeometryRef);
-    ZEND_REGISTER_RESOURCE(hFieldDefn, FIELDDEFNRESNULL, le_FieldDefnRef);
-    ZEND_REGISTER_RESOURCE(hField, FIELDRESNULL, le_FieldRef);
-    ZEND_REGISTER_RESOURCE(hFeat, FEATDEFNRESNULL, le_FeatureDefnRef);
-*/
 
 
     REGISTER_LONG_CONSTANT("OGRERR_NONE",                       OGRERR_NONE,                        OGR_CONST_FLAG);
@@ -639,15 +602,6 @@ PHP_MINIT_FUNCTION(ogr)
     REGISTER_STRING_CONSTANT("ODsCCreateLayer",         ODsCCreateLayer,        OGR_CONST_FLAG);
     REGISTER_STRING_CONSTANT("ODrCCreateDataSource",    ODrCCreateDataSource,   OGR_CONST_FLAG);
 
-/*
-    REGISTER_RESOURCE_CONSTANT("HSRSRESNULL",         HSRSRESNULL,         OGR_CONST_FLAG);
-    REGISTER_RESOURCE_CONSTANT("GEOMRESNULL",         GEOMRESNULL,         OGR_CONST_FLAG);
-    REGISTER_RESOURCE_CONSTANT("FIELDDEFNRESNULL",    FIELDDEFNRESNULL,    OGR_CONST_FLAG);
-    REGISTER_RESOURCE_CONSTANT("FIELDRESNULL",        FIELDRESNULL,        OGR_CONST_FLAG);
-    REGISTER_RESOURCE_CONSTANT("FEATDEFNRESNULL",     FEATDEFNRESNULL,     OGR_CONST_FLAG);
-
-
-*/
 
     return SUCCESS;
 }
@@ -2296,7 +2250,6 @@ PHP_FUNCTION(ogr_fd_getgeomtype)
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, hdefin_id, "OGRFeature", le_FeatureDefn, le_FeatureDefnRef);
     }
-    php_printf("in ogr_fd_getgeometrytype");
 
     if (hFeatureDefn){
         RETURN_LONG(OGR_FD_GetGeomType(hFeatureDefn));
@@ -2522,7 +2475,7 @@ PHP_FUNCTION(ogr_f_setgeometry)
     zval *hgeomin = NULL;
     OGRGeometryH hGeometry = NULL;
     OGRFeatureH hFeat = NULL;
-    OGRErr eErr = OGRERR_NONE;
+    OGRErr eErr = OGRERR_FAILURE;
 
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, &hgeomin) == FAILURE) 
@@ -2851,7 +2804,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
     long *panList = NULL;
     int ncount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlm", &hfeature, &ifield, &refncount) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield, &refncount) == FAILURE) 
         return;
 
     if (hfeature) {
@@ -2895,7 +2848,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
     double *padfList = NULL;
     int ncount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlm", &hfeature, &ifield, &refncount) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield, &refncount) == FAILURE) 
         return;
 
     if (hfeature) {
@@ -3316,39 +3269,39 @@ PHP_FUNCTION(ogr_f_dumpreadable)
 
 /* }}} */
 
-/* {{{ proto int ogr_f_setfrom(resource hfeature)
-   resource hsrcfeature, boolean bforgiving ) */
+/* {{{ proto int ogr_f_setfrom(resource hdstfeature, resource hsrcfeature, boolean bforgiving ) */
 PHP_FUNCTION(ogr_f_setfrom)
 {
     int argc = ZEND_NUM_ARGS();
-    int hfeature_id = -1;
-    zval *hfeature = NULL;
-    int hotherfeature_id = -1;
-    zval *hotherfeature = NULL;
+    int hdstfeature_id = -1;
+    zval *hdstfeature = NULL;
+    int hsrcfeature_id = -1;
+    zval *hsrcfeature = NULL;
     zend_bool bforgiving;
-    OGRFeatureH hFeat = NULL, hOtherFeat;
+    OGRFeatureH hDstFeat = NULL, hSrcFeat = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rrl", &hfeature, &hotherfeature, &bforgiving) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rrb", &hdstfeature, &hsrcfeature, &bforgiving) == FAILURE) 
         return;
 
-    if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, "OGRFeature", le_Feature);
+    if (hdstfeature) {
+        ZEND_FETCH_RESOURCE(hDstFeat, OGRFeatureH, &hdstfeature, hdstfeature_id, "OGRFeature", le_Feature);
     }
 
-    if (hotherfeature) {
-        ZEND_FETCH_RESOURCE(hOtherFeat, OGRFeatureH, &hotherfeature, hotherfeature_id, "OGRFeature", le_Feature);
+    if (hsrcfeature) {
+        ZEND_FETCH_RESOURCE(hSrcFeat, OGRFeatureH, &hsrcfeature, hsrcfeature_id, "OGRFeature", le_Feature);
     }
 
-    if (hFeat && hOtherFeat)
-        eErr = OGR_F_SetFrom(hFeat, hOtherFeat, bforgiving);
+    if (hDstFeat && hSrcFeat){
+        eErr = OGR_F_SetFrom(hDstFeat, hSrcFeat, bforgiving);
+    }
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
     }
     RETURN_LONG(eErr);
-
 }
+
 /* }}} */
 
 /* {{{ proto string ogr_f_getstylestring(resource hfeature)
@@ -3608,9 +3561,7 @@ PHP_FUNCTION(ogr_l_createfeature)
     }
 
     if (hLayerResource && hNewFeature){
-        php_printf(" in create feature in\n");
         eErr = (OGR_L_CreateFeature(hLayerResource, hNewFeature));
-        php_printf("in create feature out \n");
     }
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
@@ -3957,7 +3908,6 @@ PHP_FUNCTION(ogr_ds_getlayer)
 
     if (hDataSource){
         hLayer = OGR_DS_GetLayer(hDataSource, ilayer);
-  php_printf("\nin process getting layer >>>>\n ");
     }
     if (!hLayer) {
         php_report_ogr_error(E_WARNING);
@@ -4025,11 +3975,8 @@ PHP_FUNCTION(ogr_ds_createlayer)
 
     if (hDataSource){
         hLayer = OGR_DS_CreateLayer(hDataSource, strname, hSpatialReference, igeometrytype, papszoptions);
-
-  php_printf("in process create layer >>>> ");
-
-
     }
+
     CSLDestroy(papszoptions);
 
 
@@ -4247,25 +4194,25 @@ PHP_FUNCTION(ogr_dr_createdatasource)
     }
 
     if (astroptions){
+
         numelems = zend_hash_num_elements(Z_ARRVAL_P(astroptions));
         if(numelems == 0) {
-		RETURN_EMPTY_STRING();
+            RETURN_EMPTY_STRING();
         }
 
         zend_hash_internal_pointer_reset(Z_ARRVAL_P(astroptions));
         while (zend_hash_get_current_data(Z_ARRVAL_P(astroptions), 
 										 (void **) &tmp) == SUCCESS) {
-		convert_to_string_ex(tmp);
+            convert_to_string_ex(tmp);
 
-        php_printf("tmp = %s\n",(char *)Z_ARRVAL_PP(tmp));
-        papszoptions = (char **)CSLAddString(papszoptions, (char *)tmp);
+            php_printf("tmp = %s\n",(char *)Z_ARRVAL_PP(tmp));
+            papszoptions = (char **)CSLAddString(papszoptions, (char *)tmp);
 
-		zend_hash_move_forward(Z_ARRVAL_P(astroptions));
+            zend_hash_move_forward(Z_ARRVAL_P(astroptions));
         }
     }
-    php_printf("options=%s\n", (papszoptions[0]));
+
     if (hDriver){
-    php_printf("in create datasource\n");
         hDataSource = OGR_Dr_CreateDataSource(hDriver, strname, papszoptions );
     }
     if (!hDataSource){
@@ -4309,6 +4256,7 @@ PHP_FUNCTION(ogropen)
 
     if (hFile == NULL)
     {
+        php_error(E_WARNING, "Unable to open datasource file");
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
