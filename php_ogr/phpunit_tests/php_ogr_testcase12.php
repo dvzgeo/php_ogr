@@ -20,7 +20,8 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
     function testOGR_G_CreateGeometry() {
         $eType = wkbPoint;
         $hGeometry = OGR_G_CreateGeometry($eType);
-        $this->AssertNotNull($hGeometry, "Problem with OGR_G_CreateGeometry(): ".
+        $this->AssertNotNull($hGeometry, "Problem with ".
+                                       "OGR_G_CreateGeometry(): ".
                                        "handle is not supposed to be NULL.");
 
         OGR_G_DestroyGeometry($hGeometry);
@@ -58,20 +59,7 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
        
     }
 
-/***********************************************************************
-*                            testOGR_G_GetCoordinateDimension()
-************************************************************************/
 
-    function testOGR_G_GetCoordinateDimension() {
-        $eType = wkbMultiPolygon;
-        $hGeometry = OGR_G_CreateGeometry($eType);
-        $expected = 2;
-        $nCoordinateDimension = OGR_G_GetCoordinateDimension($hGeometry);
-        $this->AssertEquals($expected, $nCoordinateDimension, "Problem with ".
-                       "OGR_G_GetCoordinateDimension(): supposed to be a ".
-                       "two dimensions space.");
-        OGR_G_DestroyGeometry($hGeometry);
-    }
 /***********************************************************************
 *                            testOGR_G_GetGeometryType()
 ************************************************************************/
@@ -119,15 +107,39 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
 
         OGR_G_GetPoint($hGeometry, $iPoint, &$dfXOut, &$dfYOut, &$dfZOut);
 
-        $this->AssertEquals($dfXIn, $dfXOut, "Problem with OGR_G_SetPoint() or ".
-                            "OGR_G_GetPoint():  x coordinate.");
-        $this->AssertEquals($dfYIn, $dfYOut, "Problem with OGR_G_SetPoint() or ".
-                            "OGR_G_GetPoint():  y coordinate.");
-        $this->AssertEquals($dfZIn, $dfZOut, "Problem with OGR_G_SetPoint() or ".
-                            "OGR_G_GetPoint():  z coordinate.");
+        $this->AssertEquals($dfXIn, $dfXOut, "Problem with OGR_G_SetPoint() ".
+                            "or OGR_G_GetPoint():  x coordinate.");
+        $this->AssertEquals($dfYIn, $dfYOut, "Problem with OGR_G_SetPoint() ".
+                            "or OGR_G_GetPoint():  y coordinate.");
+        $this->AssertEquals($dfZIn, $dfZOut, "Problem with OGR_G_SetPoint() ".
+                             "or OGR_G_GetPoint():  z coordinate.");
 
         OGR_G_DestroyGeometry($hGeometry);
     }
+/***********************************************************************
+*                            testOGR_G_GetCoordinateDimension()
+************************************************************************/
+
+    function testOGR_G_GetCoordinateDimension() {
+        $eType = wkbPoint;
+        $hGeometry = OGR_G_CreateGeometry($eType);
+
+        $iPoint =0;
+        $dfXIn = 123.45;
+        $dfYIn = 456.78;
+        $dfZIn = 5.0;
+
+        OGR_G_SetPoint($hGeometry, $iPoint, $dfXIn, $dfYIn, $dfZIn);
+
+        $expected = 3;
+        $nCoordinateDimension = OGR_G_GetCoordinateDimension($hGeometry);
+        printf("dim=%d\n",$nCoordinateDimension);
+        $this->AssertEquals($expected, $nCoordinateDimension, "Problem with ".
+                       "OGR_G_GetCoordinateDimension(): supposed to be a ".
+                       "two dimensions space.");
+        OGR_G_DestroyGeometry($hGeometry);
+    }
+
 /***********************************************************************
 *                            testOGR_G_AddGetxyz()
 ************************************************************************/
@@ -142,21 +154,21 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
         $iPoint =1;
         $expected = 12.34;
         $dfX = OGR_G_GetX($hGeometry, $iPoint);
-        $this->AssertEquals($expected, $dfX, "Problem with OGR_G_AddPoint() or ".
-                            "OGR_G_GetX().");
+        $this->AssertEquals($expected, $dfX, "Problem with OGR_G_AddPoint() ".
+                            "or OGR_G_GetX().");
 
         $iPoint =0;
         $expected = 456.78;
         $dfY = OGR_G_GetY($hGeometry, $iPoint);
-        $this->AssertEquals($expected, $dfY, "Problem with OGR_G_AddPoint() or ".
-                            "OGR_G_GetY().");
+        $this->AssertEquals($expected, $dfY, "Problem with OGR_G_AddPoint() ".
+                            "or OGR_G_GetY().");
 
 
         $iPoint =1;
         $expected = 6.8;
         $dfZ = OGR_G_GetZ($hGeometry, $iPoint);
-        $this->AssertEquals($expected, $dfZ, "Problem with OGR_G_AddPoint() or ".
-                            "OGR_G_GetZ().");
+        $this->AssertEquals($expected, $dfZ, "Problem with OGR_G_AddPoint() ".
+                            "or OGR_G_GetZ().");
 
         OGR_G_DestroyGeometry($hGeometry);
     }
@@ -198,25 +210,48 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
         $expected = 1;
         $nGeometryCount = OGR_G_GetGeometryCount($hContainer);
         $this->AssertEquals($expected, $nGeometryCount, "Problem with ".
-                            "OGR_G_AddGeometry() or OGR_G_GetGeometryCount().");
+                            "OGR_G_AddGeometry() or ".
+                            "OGR_G_GetGeometryCount().");
 
         $eErr = OGR_G_AddGeometry($hContainer, $hGeometry2);
         $expected = 2;
         $nGeometryCount = OGR_G_GetGeometryCount($hContainer);
         $this->AssertEquals($expected, $nGeometryCount, "Problem with ".
-                            "OGR_G_AddGeometry() or OGR_G_GetGeometryCount().");
+                            "OGR_G_AddGeometry() or ".
+                            "OGR_G_GetGeometryCount().");
 
         OGR_G_DestroyGeometry($hGeometry1);
         OGR_G_DestroyGeometry($hGeometry2);
         OGR_G_DestroyGeometry($hContainer);
     }
 
+/***********************************************************************
+*                            testOGR_G_FlattenTo2D()
+************************************************************************/
+
+    function testOGR_G_FlattenTo2D() {
+        $eType = wkbLineString;
+        $hGeometry = OGR_G_CreateGeometry($eType);
+
+        OGR_G_AddPoint($hGeometry, 123.45, 456.78, 0.0);
+        OGR_G_AddPoint($hGeometry, 12.34, 45.67, 6.8);
+
+        $expected = 3;
+        $nCoordinateDimension = OGR_G_GetCoordinateDimension($hGeometry);
+        $this->AssertEquals($expected, $nCoordinateDimension, "Problem with ".
+                       "OGR_G_GetCoordinateDimension(): supposed to be a ".
+                       "three dimensions space.");
+
+        OGR_G_FlattenTo2D($hGeometry);
+
+        $expected = 2;
+        $nCoordinateDimension = OGR_G_GetCoordinateDimension($hGeometry);
+        $this->AssertEquals($expected, $nCoordinateDimension, "Problem with ".
+                       "OGR_G_GetCoordinateDimension(): supposed to be a ".
+                       "two dimensions space.");
+
+        OGR_G_DestroyGeometry($hGeometry);
+
+    }
 }
 ?>
-
-
-
-
-
-
-
