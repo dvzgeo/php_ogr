@@ -4,7 +4,7 @@
 <?php
 
 /******************************************************************************
- * $Id:
+ * $Id$
  *
  * Project:  PHP Interface for OGR C API
  * Purpose:  Test program for PHP/OGR module.
@@ -143,7 +143,8 @@ function OGR_SpatialFilter_main()
     if( $hDS == NULL )
     {
        
-        printf( "FAILURE:\nUnable to open datasource `%s' with the following drivers:\n", $strDataSource );
+        printf( "FAILURE:\nUnable to open datasource `%s' with the following drivers:\n",
+                $strDataSource );
 
         for( $iDriver = 0; $iDriver < OGRGetDriverCount(); $iDriver++ )
         {
@@ -285,7 +286,10 @@ function TranslateLayer( $hSrcDS, $hSrcLayer, $hDstDS )
 
     $hSrcSpatialRef = OGR_L_GetSpatialRef($hSrcLayer);
 
-    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName($hFDefn),$hSrcSpatialRef, OGR_FD_GetGeomType($hFDefn),NULL );
+    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName($hFDefn),
+                                     $hSrcSpatialRef, 
+                                     OGR_FD_GetGeomType($hFDefn),
+                                     NULL );
     if( $hDstLayer == NULL )
         return FALSE;
 
