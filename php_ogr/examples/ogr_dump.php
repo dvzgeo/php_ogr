@@ -2,13 +2,40 @@
 <HTML>
 <PRE>
 <?php
-/* $Id$ */
+
+/******************************************************************************
+ * $Id$
+ *
+ * Project:  PHP Interface for OGR C API
+ * Purpose:  Test program for PHP/OGR module.
+ * Author:   Normand Savard, nsavard@dmsolutions.ca
+ *
+ ******************************************************************************
+ * Copyright (c) 2003, DM Solutions Group Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *****************************************************************************/
+
 
 /************************************************************************/
 /*                            DumpPoint                                 */
 /*                                                                      */
-/*      Translate this structure into it's well known text format       */
-/*      equivelent.                                                     */
 /************************************************************************/
 
 function DumpPoint( $hGeom, $iPoint )
@@ -25,8 +52,6 @@ function DumpPoint( $hGeom, $iPoint )
 /************************************************************************/
 /*                            DumpLineString                            */
 /*                                                                      */
-/*      Translate this structure into it's well known text format       */
-/*      equivelent.  This could be made alot more CPU efficient!        */
 /************************************************************************/
 
 function DumpLineString( $hGeom )
@@ -56,8 +81,6 @@ function DumpLineString( $hGeom )
 /************************************************************************/
 /*                            DumpPolygon                               */
 /*                                                                      */
-/*      Translate this structure into it's well known text format       */
-/*      equivelent.  This could be made alot more CPU efficient!        */
 /************************************************************************/
 function DumpPolygon( $hGeom )
 
@@ -83,8 +106,6 @@ function DumpPolygon( $hGeom )
 /************************************************************************/
 /*                            DumpMultiPoint                            */
 /*                                                                      */
-/*      Translate this structure into it's well known text format       */
-/*      equivelent.  This could be made alot more CPU efficient!        */
 /************************************************************************/
 
 function DumpMultipoint( $hGeom)
@@ -115,8 +136,6 @@ function DumpMultipoint( $hGeom)
 /************************************************************************/
 /*                            DumpMultiLineString                       */
 /*                                                                      */
-/*      Translate this structure into it's well known text format       */
-/*      equivelent.  This could be made alot more CPU efficient!        */
 /************************************************************************/
 
 
@@ -141,8 +160,6 @@ function DumpMultiLineString( $hGeom)
 /************************************************************************/
 /*                            DumpMultiPolygon                          */
 /*                                                                      */
-/*      Translate this structure into it's well known text format       */
-/*      equivelent.  This could be made alot more CPU efficient!        */
 /************************************************************************/
 
 function   DumpMultiPolygon($hGeom)
@@ -158,8 +175,8 @@ function   DumpMultiPolygon($hGeom)
     {
         $hPolygon = OGR_G_GetGeometryRef($hGeom, $iLine);
 
-            $eErr = DumpPolygon($hPolygon, &$strPolygon );
-
+        $eErr = DumpPolygon($hPolygon, &$strPolygon );
+        
         if( $eErr != OGRERR_NONE )
             return eErr;
     }
@@ -170,8 +187,6 @@ function   DumpMultiPolygon($hGeom)
 /************************************************************************/
 /*                            DumpGeometryCollection                    */
 /*                                                                      */
-/*      Translate this structure into it's well known text format       */
-/*      equivelent.  This could be made alot more CPU efficient!        */
 /************************************************************************/
 
 function   DumpGeometryCollection( $hGeom)
@@ -190,36 +205,7 @@ function   DumpGeometryCollection( $hGeom)
     {
         $hSubGeom = OGR_G_GetGeometryRef($hGEom, $i );
 
-
-        switch (OGR_G_GetGeometryType($hSubGeom)) {
-          case wkbUnkonwn:
-            print "0\n";
-            break;
-          case wkbPoint:
-          case wkbPoint25D:
-            $eERR = exportToWktwkbPoint( $hSubGeom, 0 );
-            break;
-          case wkbLineString:
-          case wkbLineString25D:
-            $eErr = exportToWktwkbLineString( $hSubGeom );
-            break;
-          case wkbPolygon:
-          case wkbPolygon25D:
-            $eErr = exportToWktwkbPolygon( $hSubGeom );
-            break;
-          case wkbMultiPoint:
-          case wkbMultiPoint25D:
-            $eErr = exportToWktwkbMultipoint( $hSubGeom );
-            break;
-          case wkbMultiLineString:
-          case wkbMultiLineString25D:
-            $eErr = exportToWktwkbMultiLineString( $hSubGeom );
-            break;
-          case wkbMultiPolygon:
-          case wkbMultiPolygon25D:
-            $eErr = exportToWktwkbMultiLinePolygon( $hSubGeom );
-            break;
-        }
+        $eErr = OGR_G_DumpReadable($hGeom);
 
         if( $eErr != OGRERR_NONE )
             return $eErr;
@@ -237,51 +223,47 @@ function   DumpGeometryCollection( $hGeom)
  **********************************************************************/
 
 
-function OGR_G_DumpReadable($hGeom, $strPrefix)
+function OGR_G_DumpReadable($hGeom)
 {
 
-    $pszWkt = NULL;
-    
-    if( $pszPrefix == NULL )
-        $pszPrefix = "";
-
     switch (OGR_G_GetGeometryType($hGeom)) {
-       case wkbUnkonwn:
-         break;
-       case wkbPoint:
-       case wkbPoint25D:
-         $eErr = DumpPoint( $hGeom, 0 );
-         break;
-       case wkbLineString:
-       case wkbLineString25D:
-         $eErr = DumpLineString( $hGeom );
-         break;
-       case wkbPolygon:
-       case wkbPolygon25D:
-         $eErr = DumpPolygon( $hGeom );
-         break;
-        case wkbMultiPoint:
-        case wkbMultiPoint25D:
-         $eErr = DumpMultipoint( $hGeom );
-          break;
-        case wkbMultiLineString:
-        case wkbMultiLineString25D:
-         $eErr = DumpMultiLineString( $hGeom );
-          break;
-        case wkbMultiPolygon:
-        case wkbMultiPolygon25D:
-         $eErr = DumpMultiPolygon( $hGeom );
-          break;
-       case wkbGeometryCollection:
-       case wkbGeometryCollection25D:
-         $eErr = DumpGeometryCollection( $hGeom );
-         break;
-       case wkbNone:
-         $eErr = OGRERR_UNSUPPORTED_GEOMETRY_TYPE;
-         break;
-       case wkbLinearRing:
-         $eErr = DumpMultiLineString( $hGeom );
-         break;
+      case wkbUnkonwn:
+        break;
+      case wkbPoint:
+      case wkbPoint25D:
+        $eErr = DumpPoint( $hGeom, 0 );
+        break;
+      case wkbLineString:
+      case wkbLineString25D:
+        $eErr = DumpLineString( $hGeom );
+        break;
+      case wkbPolygon:
+      case wkbPolygon25D:
+        $eErr = DumpPolygon( $hGeom );
+        break;
+      case wkbMultiPoint:
+      case wkbMultiPoint25D:
+        $eErr = DumpMultipoint( $hGeom );
+        break;
+      case wkbMultiLineString:
+      case wkbMultiLineString25D:
+        $eErr = DumpMultiLineString( $hGeom );
+        break;
+      case wkbMultiPolygon:
+      case wkbMultiPolygon25D:
+        $eErr = DumpMultiPolygon( $hGeom );
+        break;
+      case wkbGeometryCollection:
+      case wkbGeometryCollection25D:
+        $eErr = DumpGeometryCollection( $hGeom );
+        break;
+      case wkbLinearRing:
+        $eErr = DumpMultiLineString( $hGeom );
+        break;
+      case wkbNone:
+      default:
+        $eErr = OGRERR_UNSUPPORTED_GEOMETRY_TYPE;
+        break;
     } 
 
 }
@@ -301,26 +283,26 @@ function OGR_G_DumpReadable($hGeom, $strPrefix)
     $hFeatureDefn = OGR_F_GetDefnRef($hFeature);
 
 
-    printf( "OGRFeature(%s):%ld\n", OGR_FD_GetName($hFeatureDefn), OGR_F_GetFID($hFeature) );
+    printf( "OGRFeature(%s):%ld\n", 
+            OGR_FD_GetName($hFeatureDefn), 
+            OGR_F_GetFID($hFeature) );
 
-    for( $iField = 0; $iField < (OGR_FD_GetFieldCount($hFeatureDefn)); $iField++ )
+    $numFields = OGR_FD_GetFieldCount($hFeatureDefn);
+
+    for( $iField = 0; $iField < $numFields; $iField++ )
     {
-
-
 
         $hFieldDefn = OGR_FD_GetFieldDefn($hFeatureDefn, $iField);
 
-
-
         printf( "  %s (%s) = ", OGR_FLD_GetNameRef($hFieldDefn),
-               OGR_GetFieldTypeName(OGR_FLD_GetType($hFieldDefn)) );
+                OGR_GetFieldTypeName(OGR_FLD_GetType($hFieldDefn)) );
 
 
 
        if( OGR_F_IsFieldSet( $hFeature, $iField ) )
-          printf( "%s\n", OGR_F_GetFieldAsString( $hFeature, $iField ) );
-         else
-            printf( "(null)\n" );
+           printf( "%s\n", OGR_F_GetFieldAsString( $hFeature, $iField ) );
+       else
+           printf( "(null)\n" );
             
     }
 
@@ -329,7 +311,7 @@ function OGR_G_DumpReadable($hGeom, $strPrefix)
     
 
     if( OGR_F_GetGeometryRef($hFeature) != NULL ){
-        OGR_G_DumpReadable( OGR_F_GetGeometryRef($hFeature),  "  " );
+        OGR_G_DumpReadable( OGR_F_GetGeometryRef($hFeature) );
     }
     printf("\n");
 }
@@ -342,25 +324,35 @@ function OGR_G_DumpReadable($hGeom, $strPrefix)
  *
  **********************************************************************/
 
+// Check for command-line arguments
+if (count($_SERVER["argv"]) >= 2)
+{
+    // Filename passed as argument in command-line mode
+    $strfilename = $_SERVER["argv"][1];
+}
+else
+{
+    // Set your default test filename here (for use in web environment)
+    $strfilename ="test.tab";  
+}
+
 
 // Register all drivers
    OGRRegisterAll();
 
 // Open data source 
    $hSFDriver=NULL;
-//   $strfilename = "/home/nsavard/proj/php-4.3.1/ext/ogr/OGRTests/norsa1.tab";
-$strfilename ="/usr1/home/daniel/ttt/canada/outfme/CANADA.tab";
    $hDatasource = OGROpen($strfilename, 0, $hSFDriver);
 
-   printf("\hDatasource = ");
+   printf("\nDatasource = ");
    print_r($hDatasource);
 
-   printf("\hSFDriver = ");
+   printf("\nSFDriver = ");
    print_r($hSFDriver);
 
    if ( ! $hDatasource)
    {
-      printf("Unable to open \n\n%s\n", $strfilename);
+      printf("Unable to open %s\n", $strfilename);
       return -1;
    }
 
@@ -425,21 +417,8 @@ $strfilename ="/usr1/home/daniel/ttt/canada/outfme/CANADA.tab";
 
 
 
-
-
-
-
-
 ?>
 
 </PRE>
 </BODY>
 </HTML>
-
-
-
-
-
-
-
-
