@@ -34,24 +34,6 @@
 
 
 /**********************************************************************
- *                      
- *
- *                    Utility functions.
- *
- **********************************************************************/
-
-function PHPEQUAL($str1, $str2)
-{
-
-    $str1 = strtolower($str1);
-    $str2 = strtolower($str2);
-
-    return(!strcmp($str1, $str2));
-
-}
-
-
-/**********************************************************************
  *                      OGRCCreate()
  *
  * Create a new dataset using OGR C API with a few features in it.
@@ -66,13 +48,14 @@ function OGRCCreate($strFname)
 
     /* Fetch MITAB driver - we want to create a TAB file */
     $numDrivers = OGRGetDriverCount();
-    printf("nombre drivers = %d", $numDrivers);
+    printf("nombre drivers = %d\n", $numDrivers);
 
     for($i=0; $i<$numDrivers; $i++)
     {
         $hdriver = OGRGetDriver($i);
-        if (PHPEQUAL("MapInfo File", OGR_Dr_GetName($hdriver))){
-            printf("\nDriver name = %s driver number = %d\n", OGR_Dr_GetName($hdriver), $i);
+        if ( OGR_Dr_GetName($hdriver) == "MapInfo File" ){
+            printf("Driver name = %s driver number = %d\n", 
+                   OGR_Dr_GetName($hdriver), $i);
            break;  /* Found it! */
         }
         $hdriver = NULL;
@@ -105,12 +88,14 @@ function OGRCCreate($strFname)
        to specify the "dat" extension with filename, example:  "filename.dat"
        on the command line.  If we want to dump data from the newly created
        file we have to specify the "tab" extension with filename, 
-       example:  "filename.tab".
-       Fetch the layer handle */
+       example:  "filename.tab". */
+    /* Fetch the layer handle */
 //    $hlayer = OGR_DS_GetLayer($hdatasource, 0 /*layer number*/);
 
-    /*Or create a new layer.*/
-    $hlayer = OGR_DS_CreateLayer($hdatasource, "Test", NULL /*Spatial reference*/, wkbPoint, NULL/*Array of options*/);
+    /* Or create a new layer.*/
+    $hlayer = OGR_DS_CreateLayer($hdatasource, "Test", 
+                                 NULL /*Spatial reference*/, wkbPoint, 
+                                 NULL /*Array of options*/);
 
     if ($hlayer == NULL)
     {
@@ -221,7 +206,7 @@ if (count($_SERVER["argv"]) >= 2)
 {
     // Filename passed as argument in command-line mode
     $strfilename = $_SERVER["argv"][1];
-    printf("\nfilename =%s", $strfilename);
+    printf("filename =%s\n", $strfilename);
 }
 else
 {
@@ -232,31 +217,16 @@ else
    $eErr = OGRCCreate($strfilename);
 
    if ($eErr != OGRERR_NONE)
-      printf("Warning %s\n", $eErr);
+   {
+      printf("Some errors were reported (error %d)\n", $eErr);
+   }
    else
-      return OGRERR_NONE;
+   {
+      printf("ogr_write completed with no errors.\n");
+   }
 
 ?>
 
 </PRE>
 </BODY>
 </HTML>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
