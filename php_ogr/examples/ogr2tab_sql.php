@@ -32,7 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-   $eErr = OGRSQL_main();
+   $eErr = OGR2Tab_SQL_main();
 
    if ($eErr != OGRERR_NONE)
    {
@@ -45,9 +45,9 @@
 
 
 /************************************************************************/
-/*                                OGRSQL_main()                                */
+/*                                OGR2Tab_SQL_main()                                */
 /************************************************************************/
-function OGRSQL_main()
+function OGR2Tab_SQL_main()
 {
    /*Assigning initial value.*/
     $strFormat = "MapInfo File";
