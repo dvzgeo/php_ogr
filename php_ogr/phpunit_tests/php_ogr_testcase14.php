@@ -25,8 +25,15 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
                              "handle is not supposed to be NULL.");
 
         OGR_Fld_Destroy($hFieldDefn);
-        $this->AssertNull($hFieldDefn, "Problem with OGR_Fld_Destroy(): ".
-                                       "handle is supposed to be NULL.");
+
+        $expected = "Unknown";
+
+        $actual = get_resource_type($hFieldDefn);
+
+        $this->assertEquals($expected, $actual, "Problem with ".
+                          "OGR_Fld_Destroy():  ".
+                          "Field definition resource is supposed to be freed ".
+                          "after OGR_Fld_Destroy().\n");
     }
 /***********************************************************************
 *                            testOGR_Fld_SetGetName()
@@ -213,4 +220,3 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
 }
 ?>
-

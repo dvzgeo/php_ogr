@@ -1,4 +1,4 @@
-<?php
+php<?php
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
@@ -28,8 +28,15 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
                              "handle should not be NULL.");
 
         OGR_FD_Destroy($hFeatureDefn);
-        $this->AssertNull($hFeatureDefn, "Problem with OGR_FD_Destroy(): ".
-                          "handle should be NULL.");
+
+        $expected = "Unknown";
+
+        $actual = get_resource_type($hFeatureDefn);
+
+        $this->assertEquals($expected, $actual, "Problem with ".
+                          "OGR_FD_Destroy():  ".
+                          "Feature definition resource is supposed to be ".
+                          "freed after OGR_FD_Destroy().\n");
     }
 /***********************************************************************
 *                            testOGR_FD_GetName()
