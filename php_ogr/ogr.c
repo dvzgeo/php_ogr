@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.14  2003/04/02 20:03:42  nsavard
+ * Added access to CPL functions
+ *
  * Revision 1.13  2003/04/01 23:45:57  nsavard
  * Removed a useless test in OGR_DS_ExecuteSQL().
  *
@@ -4391,7 +4394,6 @@ PHP_FUNCTION(ogropen)
     {
         php_error(E_WARNING, "Unable to open datasource file");
         php_report_ogr_error(E_WARNING);
-        RETURN_LONG(OGRERR_FAILURE);
         RETURN_FALSE;
     }
 
