@@ -1,5 +1,6 @@
 <?php
-//require_once 'phpunit-0.5/phpunit.php';
+
+$testSuites_list[] = "OGRSFDriverRegistrarTest0";                             
                              
 class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
     var $strPathToData;
@@ -32,7 +33,6 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
 *                       testOGROpen0()
 *
 ************************************************************************/
-
     function testOGROpen0() {
 
         $hDS = @OGROpen($this->strPathToData, $this->bUpdate, 
@@ -46,7 +46,6 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
 *                       testOGROpen1()
 *
 ************************************************************************/
-
     function testOGROpen1() {
         OGRRegisterAll();
 
@@ -63,7 +62,7 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
         OGR_DS_Destroy($hDS);
     }
 }
-
+$testSuites_list[] = "OGRSFDriverRegistrarTest1";                             
 
 class OGRSFDriverRegistrarTest1 extends PHPUnit_TestCase {
     var $strPathToData;
@@ -95,7 +94,6 @@ class OGRSFDriverRegistrarTest1 extends PHPUnit_TestCase {
         unset($this->bUpdate);
         unset($this->hOGRSFDriver);
     }
-
 /***********************************************************************
 *                       testOGROpen0()
 *
@@ -136,6 +134,7 @@ class OGRSFDriverRegistrarTest1 extends PHPUnit_TestCase {
                              "all drivers are registered.");
     }
 }
+$testSuites_list[] = "OGRSFDriverRegistrarTest2";                             
 
 class OGRSFDriverRegistrarTest2 extends PHPUnit_TestCase {
     var $strPathToData;
@@ -181,7 +180,6 @@ class OGRSFDriverRegistrarTest2 extends PHPUnit_TestCase {
         $this->assertNull($this->hOGRSFDriver, "Problem with OGROpen():  ".
                              "hOGRSFDriver is supposed to be NULL when ".
                              "no driver is registered.");
-
     }
 /***********************************************************************
 *                       testOGROpen1()
@@ -204,7 +202,6 @@ class OGRSFDriverRegistrarTest2 extends PHPUnit_TestCase {
 
         OGR_DS_Destroy($hDS);
     }
-
 }
 
 ?> 
