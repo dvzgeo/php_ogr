@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.10  2003/03/31 15:08:20  assefa
+ * Change all return values to lowercase in getextent function.
+ *
  * Revision 1.9  2003/03/28 21:30:36  assefa
  * Correct bug in GetExtents function.
  *
@@ -889,7 +892,7 @@ PHP_FUNCTION(ogr_g_clone)
 
     if (!hNewGeom){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
     ZEND_REGISTER_RESOURCE(return_value, hNewGeom, le_Geometry);
 }
@@ -904,10 +907,10 @@ PHP_FUNCTION(ogr_g_getenvelope)
     int hgeom_id = -1;
     zval *hgeom = NULL;
     zval *oenvel = NULL;
-    OGREnvelope *oEnvelope = NULL;
+    OGREnvelope oEnvelope;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "ro", &hgeom, &oenvel) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rz", &hgeom, &oenvel) == FAILURE) 
         return;
 
     if (hgeom) {
@@ -915,7 +918,7 @@ PHP_FUNCTION(ogr_g_getenvelope)
     }
 
     if (hGeometry)
-        OGR_G_GetEnvelope(hGeometry, oEnvelope);
+        OGR_G_GetEnvelope(hGeometry, &oEnvelope);
 
     if (object_init(oenvel)==FAILURE) {
         php_report_ogr_error(E_WARNING);
@@ -924,10 +927,10 @@ PHP_FUNCTION(ogr_g_getenvelope)
 
     zval_dtor(oenvel);
 
-    add_property_double(oenvel, "minX", oEnvelope->MinX);
-    add_property_double(oenvel, "maxX", oEnvelope->MaxX);
-    add_property_double(oenvel, "minY", oEnvelope->MinY);
-    add_property_double(oenvel, "maxy", oEnvelope->MaxY);
+    add_property_double(oenvel, "minx", oEnvelope.MinX);
+    add_property_double(oenvel, "maxx", oEnvelope.MaxX);
+    add_property_double(oenvel, "mint", oEnvelope.MinY);
+    add_property_double(oenvel, "maxz", oEnvelope.MaxY);
 }
 
 #ifdef CONSTRUCT_FLAG
@@ -1617,7 +1620,7 @@ PHP_FUNCTION(ogr_g_getgeometryref)
 
     if (!hGeometryRef){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
     ZEND_REGISTER_RESOURCE(return_value, hGeometryRef, le_GeometryRef);
 }
@@ -1748,7 +1751,7 @@ PHP_FUNCTION(ogrbuildpolygonfromedges)
 
     if (!hNewGeometry){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
     ZEND_REGISTER_RESOURCE(return_value, hNewGeometry, le_Geometry);
     zval_dtor(referr);
