@@ -1,4 +1,4 @@
-<BODY>
+ <BODY>
 <HTML>
 <PRE>
 <?php
@@ -32,93 +32,6 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-
-
-/**********************************************************************
- *                      
- *
- *                    Utility functions.
- *
- **********************************************************************/
-
-function PHPEQUAL($str1, $str2)
-{
-
-    $str1 = strtolower($str1);
-    $str2 = strtolower($str2);
-
-    return(!strcmp($str1, $str2));
-
-}
-
-
-/**********************************************************************
- *                       PHPAddString()
- *
- * Append a string to a StringArray and return the modified
- * StringArray.
- * If the input StringArray is NULL, then a new StringArray is created.
- **********************************************************************/
-function PHPAddString($astrArray, $strNewString)
-{
-    $nItems=0;
-
-    if ($strNewString == NULL)
-        return $astrArray;    /* Nothing to do!*/
-
-    $nItems = PHPCount($astrArray);
-
-    /* Copy the string in the list */
-    $astrArray[$nItems] = $strNewString;
-    $astrArray[$nItems+1] = NULL;
-
-    return $astrArray;
-}
-
-/**********************************************************************
- *                       PHPCount()
- *
- * Return the number of elements in a StringArray.
- **********************************************************************/
-function PHPCount($astrArray)
-{
-    $nItems=0;
-
-    if ($astrArray)
-    {
-        while($astrArray[$nItems] != NULL)
-        {
-            $nItems++;
-        }
-    }
-
-    return $nItems;
-}
-
-/************************************************************************/
-/*                           PHPFindString()                            */
-/*                                                                      */
-/*      Find a string within an array list.  The string must match      */
-/*      the full length, but the comparison is case insensitive.        */
-/*      Return -1 on failure.                                           */
-/************************************************************************/
-
-function PHPFindString( $astrArray, $strTarget )
-
-{
-    if( $astrArray == NULL )
-        return -1;
-
-    for( $i = 0; $astrArray[$i] != NULL; $i++ )
-    {
-        if( PHPEQUAL($astrArray[$i],$strTarget) )
-            return $i;
-    }
-
-    return -1;
-}
-
-
 /************************************************************************/
 /*                                main()                                */
 /************************************************************************/
@@ -144,7 +57,7 @@ function PHPFindString( $astrArray, $strTarget )
 
     for( $iArg = 1; $iArg < $numArgs; $iArg++ ){
 
-        if( PHPEQUAL($_SERVER["argv"][$iArg], "-f") && $iArg < $numArgs-1 ){
+        if( !strcasecmp($_SERVER["argv"][$iArg], "-f") && $iArg < $numArgs-1 ){
             $strFormat = $_SERVER["argv"][++$iArg];
             printf("Format = %s\n", $strFormat);
         }
@@ -161,7 +74,7 @@ function PHPFindString( $astrArray, $strTarget )
             printf("DataSource = %s\n", $strDataSource);
         }
         else{
-            $astrLayers = PHPAddString( $astrLayers, $_SERVER["argv"][$iArg]);
+            $astrLayers[] = $_SERVER["argv"][$iArg];
         }
     }
     $i = 0;
@@ -203,7 +116,7 @@ function PHPFindString( $astrArray, $strTarget )
          $iDriver < OGRGetDriverCount() && $hSFDriver == NULL;
          $iDriver++ )
     {
-        if( PHPEQUAL(OGR_DR_GetName(OGRGetDriver($iDriver)) , $strFormat) )
+        if( !strcasecmp(OGR_DR_GetName(OGRGetDriver($iDriver)) , $strFormat) )
         {
             $hSFDriver = OGRGetDriver($iDriver);
         }
@@ -259,8 +172,8 @@ function PHPFindString( $astrArray, $strTarget )
 
         }
 
-        if( PHPCount($astrLayers) == 0 || 
-            PHPFindString( $astrLayers, OGR_FD_GetName(OGR_L_GetLayerDefn($hLayer))) != -1 )
+        if( count($astrLayers) == 0 || 
+            in_array(OGR_FD_GetName(OGR_L_GetLayerDefn($hLayer)), $astrLayers) != FALSE )
         {
             if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
             return OGRERR_FAILURE;
@@ -309,11 +222,13 @@ function TranslateLayer( $hSrcDS, $hSrcLayer, $hDstDS )
 
     $hFDefn = OGR_L_GetLayerDefn($hSrcLayer);
 
-    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName(OGR_L_GetLayerDefn($hSrcLayer)),
-                                       OGR_L_GetSpatialRef($hSrcLayer),
-                                       OGR_FD_GetGeomType($hFDefn),
-                                       NULL );
 
+    $hSrcSpatialRef = OGR_L_GetSpatialRef($hSrcLayer);
+    printf("hSpatialRef= %d\n", $hSrcSpatialRef);
+    print_r($hSrcSpatialRef);
+
+
+    $hDstLayer = OGR_DS_CreateLayer( $hDstDS, OGR_FD_GetName($hFDefn),$hSrcSpatialRef, OGR_FD_GetGeomType($hFDefn),NULL );
     if( $hDstLayer == NULL )
         return FALSE;
 
