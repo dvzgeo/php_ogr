@@ -60,13 +60,10 @@ PHP_INSTALL_DIR =  c:\Apache\php3
 
 GDAL_DIR= ../../gdal
 
-#xerces
-XERCES_DIR =	C:\projects\xerces-c1_6_0-win32
-XERCES_LIB = $(XERCES_DIR)/lib/xerces-c_1.lib
 
 PHPOGR_INC =  -I../../gd-1.8.4 -I$(GDAL_DIR)/ogr/ogrsf_frmts -I$(GDAL_DIR)/ogr -I$(GDAL_DIR)/ogr/../port -I$(GDAL_DIR)/core -I$(GDAL_DIR)/alg
 
-PHPOGR_LIBS = ../../gd-1.8.4/gd.lib $(GDAL_DIR)/gdal.lib $(GDAL_DIR)/ogr/ogrsf_frmts/ogrsf_frmts.lib $(GDAL_DIR)/ogr/ogrsf_frmts/ogrsf_frmts_sup.lib $(GDAL_DIR)/ogr/ogr.lib $(GDAL_DIR)/ogr/../port/cpl.lib $(XERCES_LIB)
+PHPOGR_LIBS = ../../gd-1.8.4/gd.lib $(GDAL_DIR)/gdal.lib $(GDAL_DIR)/ogr/ogrsf_frmts/ogrsf_frmts.lib $(GDAL_DIR)/ogr/ogrsf_frmts/ogrsf_frmts_sup.lib $(GDAL_DIR)/ogr/ogr.lib $(GDAL_DIR)/ogr/../port/cpl.lib
         
 
 #
