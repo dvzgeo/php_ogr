@@ -1,17 +1,15 @@
 <?php
-require_once 'phpunit-0.5/phpunit.php';
+//require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
-class OGRDataSourceTest1 extends PHPUnit_TestCase {
+class OGRDataSourceTest0 extends PHPUnit_TestCase {
     var $strPathToData;
     var $strPathToOutputData;
     var $strPathToStandardData;
-    var $strPathToDumpData;
     var $strTmpDumpFile;
     var $bUpdate;
     var $bForce;
     var $hOGRSFDriver;
-    var $strFilename;
     var $strCapability;
     var $strLayerName;
     var $hSRS;
@@ -19,9 +17,13 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
     var $strDialect;
     var $strFormat;
     var $strDestDataSource;
+    var $nLayerCount;
+    var $iDriver;
+    var $astrOptions;
+
 
     // constructor of the test suite
-    function OGRDataSourceTest1($name){
+    function OGRDataSourceTest0($name){
         $this->PHPUnit_TestCase($name);
     }
     // called before the test functions will be executed    
@@ -31,9 +33,7 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
         $this->strPathToData = "./data/mif";
         $this->strPathToOutputData = "../../ogrtests/testcase/";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToDumpData = "../../ogrtests/testcase/";
         $this->strTmpDumpFile = "DumpFile.tmp";
-        $this->strFilename = "NewDataSource";
         $this->bUpdate = FALSE;
         $this->bForce = TRUE;
         $this->strCapability = ODsCCreateLayer;
@@ -42,7 +42,20 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
         $this->eGeometryType = wkbPoint;
         $this->strDialect = ""; /*"Generic SQL"*/
         $this->strFormat = "MapInfo File";
-        $this->strDestDataSource = "Output";
+        $this->strDestDataSource = "OutputDS";
+        $this->nLayerCount = 10;
+        $this->hOGRSFDriver = null;
+        $this->iDriver = 5;
+        $this->astrOptions[0] = "FORMAT=MIF";
+
+        if (file_exists($this->strPathToOutputData)) {
+            system( "rm -R ".$this->strPathToOutputData);
+        }
+        mkdir($this->strPathToOutputData, 0777);
+
+
+        OGRRegisterAll();
+
     }
     // called after the test functions are executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
@@ -52,96 +65,126 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
         unset($this->strPathToData);
         unset($this->strPathToOutputData);
         unset($this->strPathToStandardData);
-        unset($this->strPathToDumpData);
         unset($this->strTmpDumpFile);
-        unset($this->strFilename);
         unset($this->bUpdate);
         unset($this->bForce);
+        unset($this->hOGRSFDriver);
         unset($this->strCapability);
         unset($this->strLayerName);
         unset($this->hSRS);
         unset($this->eGeometryType);
+        unset($this->strDialect);
         unset($this->strFormat);
         unset($this->strDestDataSource);
+        unset($this->nLayerCount);
+        unset($this->iDriver);
+        unset($this->astrOptions);
     }
+/***********************************************************************
+*                       testOGR_DS_TestCapability0()
+************************************************************************/
 
-    /*Testing data source capability*/
-    function testOGR_DS_TestCapability1() {
-        OGRRegisterAll();
-        $hDriver = OGRGetDriver(5);
+    function testOGR_DS_TestCapability0() {
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
+        $this->hOGRSFDriver = OGRGetDriver($this->iDriver);
+        $hSrcDataSource =  OGR_Dr_Open($this->hOGRSFDriver,
                                                $this->strPathToData,
                                                $this->bUpdate);
-        $iCapability = OGR_DS_TestCapability($hExistingDataSource,
+
+        $iCapability = OGR_DS_TestCapability($hSrcDataSource,
                                              $this->strCapability);
-        $this->assertTrue($iCapability,"Capability is supposed to be".
-                          " supported" );
+        $this->assertTrue($iCapability,"Problem with ".
+                          "OGR_DS_TestCapability():  ".$this->strCapability.
+                          " is supposed to be supported." );
 
-        OGR_DS_Destroy($hExistingDataSource);
+        OGR_DS_Destroy($hSrcDataSource);
     }
 
+/***********************************************************************
+*                       testOGR_DS_GetName0()
+************************************************************************/
 
-    /*Getting data source name*/
-    function testOGR_DS_GetName1(){
+    function testOGR_DS_GetName0(){
 
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
-                                       $hOGRSFDriver);
-        $strName = OGR_DS_GetName($hExistingDataSource);
-        $expected = "./data/mif";
-        $this->assertEquals($strName, $expected, "Data source name is not".
-                            " what is expected\n" );
-        OGR_DS_Destroy($hExistingDataSource);
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+                                       $this->hOGRSFDriver);
+        $strName = OGR_DS_GetName($hSrcDataSource);
+        $expected = $this->strPathToData;
+        $this->assertEquals($expected, $strName, "Problem with ".
+                            "OGR_DS_GetName():  Data source name is ".
+                            "supposed to be ".$this->strPathToData.".");
+        OGR_DS_Destroy($hSrcDataSource);
+
+    }
+/***********************************************************************
+*                       testOGR_DS_GetLayerCount0()
+************************************************************************/
+
+    function testOGR_DS_GetLayerCount0(){
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+                                       $this->hOGRSFDriver);
+
+        $nLayerCount = OGR_DS_GetLayerCount($hSrcDataSource);
+        $expected = $this->nLayerCount;
+        $this->assertEquals($expected, $nLayerCount, "Problem with ".
+                            "OGR_DS_GetLayerCount():  Data source layers ".
+                            "number is supposed to be ".$this->nLayerCount.
+                            ".");
+        OGR_DS_Destroy($hSrcDataSource);
 
     }
 
-    /*Getting data source layers number.*/
-    function testOGR_DS_GetLayerCount1(){
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
-                                       $hOGRSFDriver);
-        $nLayerCount = OGR_DS_GetLayerCount($hExistingDataSource);
-        $expected = 10;
-        $this->assertEquals($nLayerCount, $expected, "Data source layers 
-                            number is to be ten\n");
-        OGR_DS_Destroy($hExistingDataSource);
+/***********************************************************************
+*                       testOGR_DS_GetLayer0()
+*                      Getting a layer by index.
+************************************************************************/
+
+    function testOGR_DS_GetLayer0(){
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+                                       $this->hOGRSFDriver);
+
+        $iLayer = 2;
+        $hLayer = OGR_DS_GetLayer($hSrcDataSource, $iLayer);
+        $this->assertNotNull($hLayer, "Problem with OGR_DS_GetLayer():  ".
+                             "Data source layer handle ".
+                             "is not supposed to be NULL.\n");
+        OGR_DS_Destroy($hSrcDataSource);
 
     }
 
-    /*Getting a layer by index.*/
+/***********************************************************************
+*                       testOGR_DS_GetLayer1()
+*               Getting a layer with an index out of range.
+************************************************************************/
+
     function testOGR_DS_GetLayer1(){
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
-                                       $hOGRSFDriver);
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 2);
-        $this->assertNotNull($hLayer, "Data source layer 
-                            is not supposed to be NULL.\n");
-        OGR_DS_Destroy($hExistingDataSource);
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+                                       $this->hOGRSFDriver);
+
+        $iLayer = 500;
+        $hLayer = OGR_DS_GetLayer($hSrcDataSource, $iLayer);
+        $this->assertNull($hLayer, "Problem with OGR_DS_GetLayer():  ".
+                                   "Data source layer handle ". 
+                                   "is supposed to be NULL.\n");
+        OGR_DS_Destroy($hSrcDataSource);
 
     }
 
-    /*Getting a layer with an index out of range.*/
-    function testOGR_DS_GetLayer2(){
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
-                                       $hOGRSFDriver);
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 500);
-        $this->assertNull($hLayer, "Data source layer 
-                            is supposed to be NULL.\n");
-        OGR_DS_Destroy($hExistingDataSource);
+/***********************************************************************
+*                       testOGR_DS_ExecuteSQL0()
+*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
+*     VERIFY DATA.
+************************************************************************/
+    function testOGR_DS_ExecuteSQL0(){
 
-    }
-
-    /*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
-     VERIFY DATA.*/
-    function testOGR_DS_ExecuteSQL1(){
-
-        $strStandardFile = "testOGR_DS_ExecuteSQL1.std";
+        $strStandardFile = "testOGR_DS_ExecuteSQL0.std";
 
 
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
                                        $this->hOGRSFDriver);
         /*Temporary access to driver, bug with OGROpen() not 
           returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver(5); /*MapInfo File driver.*/
-        $drivername = OGR_dr_GetName($this->hOGRSFDriver);
+        $this->hOGRSFDriver = OGRGetDriver($this->idriver); 
 
         $hSpatialFilter = null;
 
@@ -149,25 +192,25 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         CPLErrorReset();
 
-        $hLayer = OGR_DS_ExecuteSQL($hExistingDataSource, $strSQLCommand,
+        $hLayer = OGR_DS_ExecuteSQL($hSrcDataSource, $strSQLCommand,
                                     $hSpatialFilter, $this->strDialect);
 
         $eErrType = CPLGetLastErrorType(); 
 
         $eErrMsg = CPLGetLastErrorMsg();
 
+        $expected = OGRERR_NONE;
+        $this->assertEquals($expected, $eErrType, "Problem with ".
+                            "OGR_DS_ExecuteSQL():  ".$eErrMsg);
 
-        $this->assertEquals($OGRERR_NONE, $eErrType, $eErrMsg);
-
-        $this->assertNotNull($hLayer, "Data source layer 
-                            is not supposed to be NULL.\n");
+        $this->assertNotNull($hLayer, "Problem with OGR_DS_ExecuteSQL():  ".
+                             "Data source layer is not supposed to be NULL.");
 
         if (!hLayer) {
             return FALSE;
         }
 
-
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
           $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -178,36 +221,51 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         fclose($fpOut);
 
-        OGR_DS_ReleaseResultSet($hExistingDataSource, $hLayer);
 
-        $this->assertNull($hLayer, "layer is supposed to be NULL ".
+        OGR_DS_ReleaseResultSet($hSrcDataSource, $hLayer);
+
+        $expected = "Unknown";
+
+        $actual = get_resource_type($hLayer);
+
+
+        $this->assertEquals($expected, $actual, "Problem with ".
+                          "OGR_DS_ReleaseResultSet():  ".
+                          "Layer resource is supposed to be freed ".
                           "after OGR_DS_ReleaseResultSet().\n");
 
-        OGR_DS_Destroy($hExistingDataSource);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        OGR_DS_Destroy($hSrcDataSource);
+
+
+        system("diff --brief ".$this->strPathToOutputData.
                           $this->strTmpDumpFile.
                           " ".$this->strPathToStandardData.$strStandardFile,
                              $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_DS_ExecuteSQL(): ".
+                           "Files comparison did not matched, ".
+                           "after execution of:  ".$strSQLCommand.".");
 
     }
 
-    /*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
-     VERIFY DATA.*/
-    function testOGR_DS_ExecuteSQL2(){
+/***********************************************************************
+*                       testOGR_DS_ExecuteSQL1()
+*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
+*     VERIFY DATA.
+************************************************************************/
 
-        $strStandardFile = "testOGR_DS_ExecuteSQL2.std";
+    function testOGR_DS_ExecuteSQL1(){
 
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+        $strStandardFile = "testOGR_DS_ExecuteSQL1.std";
+
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
                                        $this->hOGRSFDriver);
+
         /*Temporary access to driver, bug with OGROpen() not 
           returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver(5); /*MapInfo File driver.*/
-        $drivername = OGR_dr_GetName($this->hOGRSFDriver);
+        $this->hOGRSFDriver = OGRGetDriver($this->idriver); 
 
         $hSpatialFilter = null;
 
@@ -215,24 +273,25 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         CPLErrorReset();
 
-        $hLayer = OGR_DS_ExecuteSQL($hExistingDataSource, $strSQLCommand,
+        $hLayer = OGR_DS_ExecuteSQL($hSrcDataSource, $strSQLCommand,
                                     $hSpatialFilter, $this->strDialect);
 
         $eErrType = CPLGetLastErrorType(); 
 
         $eErrMsg = CPLGetLastErrorMsg();
 
+        $expected = OGRERR_NONE;
+        $this->assertEquals($expected, $eErrType, "Problem with ".
+                            "OGR_DS_ExecuteSQL():  ".$eErrMsg);
 
-        $this->assertEquals($OGRERR_NONE, $eErrType, $eErrMsg);
-
-        $this->assertNotNull($hLayer, "Data source layer 
-                            is not supposed to be NULL.\n");
+        $this->assertNotNull($hLayer, "Problem with OGR_DS_ExecuteSQL():  ".
+                             "Data source layer is not supposed to be NULL.");
 
         if (!hLayer) {
             return FALSE;
         }
 
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -243,33 +302,36 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         fclose($fpOut);
 
-        OGR_DS_ReleaseResultSet($hExistingDataSource, $hLayer);
+        OGR_DS_ReleaseResultSet($hSrcDataSource, $hLayer);
 
-        OGR_DS_Destroy($hExistingDataSource);
+        OGR_DS_Destroy($hSrcDataSource);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                           $this->strTmpDumpFile.
                           " ".$this->strPathToStandardData.$strStandardFile,
-                             $iRetval);
+                          $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_DS_ExecuteSQL(): ".
+                           "Files comparison did not matched, ".
+                           "after execution of:  ".$strSQLCommand.".");
 
     }
+/***********************************************************************
+*                       testOGR_DS_ExecuteSQL2()
+*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
+*     VERIFY DATA.
+************************************************************************/
 
-    /*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
-     VERIFY DATA.*/
-    function testOGR_DS_ExecuteSQL3(){
+    function testOGR_DS_ExecuteSQL2(){
 
-        $strStandardFile = "testOGR_DS_ExecuteSQL3.std";
+        $strStandardFile = "testOGR_DS_ExecuteSQL2.std";
 
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
                                        $this->hOGRSFDriver);
         /*Temporary access to driver, bug with OGROpen() not 
           returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver(5); /*MapInfo File driver.*/
-        $drivername = OGR_dr_GetName($this->hOGRSFDriver);
+        $this->hOGRSFDriver = OGRGetDriver($this->idriver); 
 
         $hSpatialFilter = null;
 
@@ -278,24 +340,25 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         CPLErrorReset();
 
-        $hLayer = OGR_DS_ExecuteSQL($hExistingDataSource, $strSQLCommand,
+        $hLayer = OGR_DS_ExecuteSQL($hSrcDataSource, $strSQLCommand,
                                     $hSpatialFilter, $this->strDialect);
 
         $eErrType = CPLGetLastErrorType(); 
 
         $eErrMsg = CPLGetLastErrorMsg();
 
-        $this->assertEquals($OGRERR_NONE, $eErrType, $eErrMsg);
+        $expected = OGRERR_NONE;
+        $this->assertEquals($expected, $eErrType, "Problem with ".
+                            "OGR_DS_ExecuteSQL():  ".$eErrMsg);
 
-        $this->assertNotNull($hLayer, "Data source layer 
-                            is not supposed to be NULL.\n");
-
+        $this->assertNotNull($hLayer, "Problem with OGR_DS_ExecuteSQL():  ".
+                             "Data source layer is not supposed to be NULL.");
 
         if (!hLayer) {
             return FALSE;
         }
 
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -306,33 +369,37 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         fclose($fpOut);
 
-        OGR_DS_ReleaseResultSet($hExistingDataSource, $hLayer);
+        OGR_DS_ReleaseResultSet($hSrcDataSource, $hLayer);
 
-        OGR_DS_Destroy($hExistingDataSource);
+        OGR_DS_Destroy($hSrcDataSource);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                           $this->strTmpDumpFile.
                           " ".$this->strPathToStandardData.$strStandardFile,
-                             $iRetval);
+                          $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_DS_ExecuteSQL(): ".
+                           "Files comparison did not matched, ".
+                           "after execution of:  ".$strSQLCommand.".");
 
     }
 
-    /*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
-     VERIFY DATA.*/
-    function testOGR_DS_ExecuteSQL4(){
+/***********************************************************************
+*                       testOGR_DS_ExecuteSQL3()
+*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
+*     VERIFY DATA.
+************************************************************************/
 
-        $strStandardFile = "testOGR_DS_ExecuteSQL4.std";
+    function testOGR_DS_ExecuteSQL3(){
 
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+        $strStandardFile = "testOGR_DS_ExecuteSQL3.std";
+
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
                                        $this->hOGRSFDriver);
         /*Temporary access to driver, bug with OGROpen() not 
           returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver(5); /*MapInfo File driver.*/
-        $drivername = OGR_dr_GetName($this->hOGRSFDriver);
+        $this->hOGRSFDriver = OGRGetDriver($this->idriver); 
 
         $hSpatialFilter = null;
 
@@ -340,24 +407,25 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         CPLErrorReset();
 
-        $hLayer = OGR_DS_ExecuteSQL($hExistingDataSource, $strSQLCommand,
+        $hLayer = OGR_DS_ExecuteSQL($hSrcDataSource, $strSQLCommand,
                                     $hSpatialFilter, $this->strDialect);
 
         $eErrType = CPLGetLastErrorType(); 
-        printf("errtype=%d\n",$eErrType);
+
         $eErrMsg = CPLGetLastErrorMsg();
-        printf("errmsg=%s\n",$eErrMsg);
 
-        $this->assertEquals($OGRERR_NONE, $eErrType, $eErrMsg);
+        $expected = OGRERR_NONE;
+        $this->assertEquals($expected, $eErrType, "Problem with ".
+                            "OGR_DS_ExecuteSQL():  ".$eErrMsg);
 
-        $this->assertNotNull($hLayer, "Data source layer 
-                            is not supposed to be NULL.\n");
+        $this->assertNotNull($hLayer, "Problem with OGR_DS_ExecuteSQL():  ".
+                             "Data source layer is not supposed to be NULL.");
 
         if (!hLayer) {
             return FALSE;
         }
 
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -368,30 +436,34 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         fclose($fpOut);
         
-        OGR_DS_ReleaseResultSet($hExistingDataSource, $hLayer);
+        OGR_DS_ReleaseResultSet($hSrcDataSource, $hLayer);
 
-        OGR_DS_Destroy($hExistingDataSource);
+        OGR_DS_Destroy($hSrcDataSource);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                           $this->strTmpDumpFile.
                           " ".$this->strPathToStandardData.$strStandardFile,
                              $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_DS_ExecuteSQL(): ".
+                           "Files comparison did not matched, ".
+                           "after execution of:  ".$strSQLCommand.".");
 
     }
 
-    /*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
-     VERIFY DATA.*/
-    function testOGR_DS_ExecuteSQL5(){
-        $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
+/***********************************************************************
+*                       testOGR_DS_ExecuteSQL4()
+*Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
+*     VERIFY DATA.
+************************************************************************/
+
+    function testOGR_DS_ExecuteSQL4(){
+        $hSrcDataSource = OGROpen($this->strPathToData, $this->bUpdate,
                                        $this->hOGRSFDriver);
         /*Temporary access to driver, bug with OGROpen() not 
           returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver(5); /*MapInfo File driver.*/
-        $drivername = OGR_dr_GetName($this->hOGRSFDriver);
+        $this->hOGRSFDriver = OGRGetDriver($this->idriver); 
 
         $hSpatialFilter = null;
 
@@ -399,46 +471,47 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
 
         CPLErrorReset();
 
-        $hLayer = @OGR_DS_ExecuteSQL($hExistingDataSource, $strSQLCommand,
+        $hLayer = @OGR_DS_ExecuteSQL($hSrcDataSource, $strSQLCommand,
                                     $hSpatialFilter, $this->strDialect);
 
         $eErrType = CPLGetLastErrorType(); 
 
         $eErrMsg = CPLGetLastErrorMsg();
- 
-        $expected = 3;
 
-        $this->assertEquals($expected, $eErrType, $eErrMsg);
-
-        $this->assertNull($hLayer, "Statement command 
-                            is not supported by this driver.\n");
+        $expected = OGRERR_FAILURE;
+        $this->assertEquals($expected, $eErrType, "Problem with ".
+                            "OGR_DS_ExecuteSQL():  Bad error code or "
+                            .$eErrMsg);
 
         if (hLayer) {
             return FALSE;
         }
 
-        OGR_DS_ReleaseResultSet($hExistingDataSource, $hLayer);
+        OGR_DS_ReleaseResultSet($hSrcDataSource, $hLayer);
 
-        OGR_DS_Destroy($hExistingDataSource);
+        OGR_DS_Destroy($hSrcDataSource);
     }
 
-    /*Creating data source layer.*/
-    function testOGR_DS_CreateLayer1() {
-        system( "rm -R ".$this->strPathToOutputData.$this->strFilename);
-        $hDriver = OGRGetDriver(5);
-        $astrOptions[0] = "FORMAT=MIF";
-        $hDataSource = OGR_Dr_CreateDataSource($hDriver, 
+/***********************************************************************
+*                       testOGR_DS_CreateLayer0()
+************************************************************************/
+
+    function testOGR_DS_CreateLayer0() {
+        $this->hOGRSFDriver = OGRGetDriver($this->iDriver);
+
+        $hDataSource = OGR_Dr_CreateDataSource($this->hOGRSFDriver, 
                                                $this->strPathToOutputData.
-                                               $this->strFilename,
-                                               $astrOptions );
+                                               $this->strDestDataSource,
+                                               $this->astrOptions );
 
         $hLayer = OGR_DS_CreateLayer($hDataSource, 
                                      $this->strLayerName,
                                      $this->hSRS,
                                      $this->eGeometryType,
-                                     $astrOptions);
+                                     $this->astrOptions);
 
-        $this->assertNotNull($hLayer,"Not able to create layer\n" );
+        $this->assertNotNull($hLayer,"Problem with OGR_DS_CreateLayer():  ".
+                             "Not able to create layer." );
 
         OGR_DS_Destroy($hDataSource);
     }
