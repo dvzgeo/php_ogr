@@ -1,0 +1,10 @@
+# $Id$
+
+LTLIBRARY_NAME        = libogr.la
+LTLIBRARY_SOURCES     = ogr.c
+LTLIBRARY_SOURCES_CPP = 
+LTLIBRARY_SHARED_NAME = ogr.la
+LTLIBRARY_SHARED_LIBADD  = $(XBSQL_SHARED_LIBADD)
+LTLIBRARY_OBJECTS_X = $(LTLIBRARY_SOURCES_CPP:.cpp=.lo)
+
+include $(top_srcdir)/build/dynlib.mk
