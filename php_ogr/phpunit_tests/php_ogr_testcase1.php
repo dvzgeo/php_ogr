@@ -1,16 +1,14 @@
 <?php
-require_once 'phpunit-0.5/phpunit.php';
+//require_once 'phpunit-0.5/phpunit.php';
                              
-class OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest extends PHPUnit_TestCase {
+class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
     var $strPathToData;
     var $bUpdate;
     var $hOGRSFDriver;
     var $strFilename;
 
     // constructor of the test suite
-    function OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest($name){
-        printf("in constructor OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest\n");
-
+    function OGRSFDriverRegistrarTest0($name){
         $this->PHPUnit_TestCase($name);
     }
     // called before the test functions will be executed    
@@ -19,7 +17,7 @@ class OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest extends PHPUnit_TestCase {
     function setUp() {
         $this->strPathToData = "./data/mif";
         $this->strFilename = "road.tab";
-        $this->bUpdate = 0;
+        $this->bUpdate = FALSE;
     }
     // called after the test functions are executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
@@ -30,46 +28,61 @@ class OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest extends PHPUnit_TestCase {
         unset($this->strFilename);
         unset($this->bUpdate);
     }
-    function testOGROpen1() {
-        printf("in OGRSFDriverPathSetGoodhOGRSFDriverNotSetTest\n");
-        $result = NULL;
-        $result = OGROpen($this->strPathToData, $this->bUpdate, 
+/***********************************************************************
+*                       testOGROpen0()
+*
+************************************************************************/
+
+    function testOGROpen0() {
+
+        $hDS = @OGROpen($this->strPathToData, $this->bUpdate, 
                           $this->hOGRSFDriver);
-        printf("result = %d\n", $result);
-        $this->assertNull($result, "hOGRDataSource is not NULL");
+
+        $this->assertNull($hDS, "Problem with OGROpen():  ".
+                          "handle is supposed to be NULL when ".
+                          "no driver is registered.");
     }
-    function testOGROpen2() {
+/***********************************************************************
+*                       testOGROpen1()
+*
+************************************************************************/
+
+    function testOGROpen1() {
         OGRRegisterAll();
-        $result = NULL;
-        $result = OGROpen($this->strPathToData, $this->bUpdate, 
+
+        $hDS = OGROpen($this->strPathToData, $this->bUpdate, 
                           $this->hOGRSFDriver);
-        printf("result = %d\n", $result);
-        $this->assertNotNull($result, "hOGRDataSource is NULL");
-        if(is_null($this->hOGRSFDriver))
-            printf("Driver null\n");
-        printf("driver = %d\n", $this->hOGRSFDriver);
-        $this->assertNotNull($this->hOGRSFDriver, "hOGRSFDriver is NULL");
-        OGR_DS_Destroy($result);
+
+        $this->assertNotNull($hDS, "Problem with OGROpen():  handle ".
+                             "is not supposed to be NULL when all drivers ".
+                             "are registered.");
+
+        $this->assertNotNull($this->hOGRSFDriver, "Problem with OGROpen():  ".
+                             "hOGRSFDriver is not supposed to be NULL ".
+                             "when all drivers are registered.");
+        OGR_DS_Destroy($hDS);
     }
 }
-class OGRSFDriverPathSetBadhOGRSFDriverSetToNULLTest extends PHPUnit_TestCase {
+
+
+class OGRSFDriverRegistrarTest1 extends PHPUnit_TestCase {
     var $strPathToData;
     var $bUpdate;
     var $hOGRSFDriver;
     var $strFilename;
 
     // constructor of the test suite
-    function OGRSFDriverPathSetBadhOGRSFDriverSetToNULLTest($name) {
-        printf("in constructor of OGRSFDriverPathSetBadhOGRSFDriverSetToNULLTest\n");
+    function OGRSFDriverRegistrarTest1($name) {
         $this->PHPUnit_TestCase($name);
     }
+
     // called before the test functions will be executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here
     function setUp() {
         $this->strPathToData = "./dataBad/mif";
         $this->strFilename = "road.tab";
-        $this->bUpdate = 0;
+        $this->bUpdate = FALSE;
         $this->hOGRSFDriver = null;
     }
     // called after the test functions are executed    
@@ -82,35 +95,56 @@ class OGRSFDriverPathSetBadhOGRSFDriverSetToNULLTest extends PHPUnit_TestCase {
         unset($this->bUpdate);
         unset($this->hOGRSFDriver);
     }
-    function testOGROpen1() {
-        printf("in OGRSFDriverPathSetBadhOGRSFDriverSetToNULLTest\n");
-        $result = NULL;
-        $result = OGROpen($this->strPathToData, $this->bUpdate, 
+
+/***********************************************************************
+*                       testOGROpen0()
+*
+************************************************************************/
+
+    function testOGROpen0() {
+        $hDS = @OGROpen($this->strPathToData, $this->bUpdate, 
                           $this->hOGRSFDriver);
-        printf("result = %d\n", $result);
-        $this->assertNull($result, "OGRDataSourceH is not NULL");
-        $this->assertNull($this->hOGRSFDriver, "hOGRSFDriver is not NULL");
+
+        $this->assertNull($hDS, "Problem with OGROpen():  handle ".
+                             "is supposed to be NULL when a bad path ".
+                             "is entered.");
+
+        $this->assertNull($this->hOGRSFDriver, "Problem with OGROpen():  ".
+                             "hOGRSFDriver is supposed to be NULL ".
+                             "when a bad path is specified.");
+
     }
-    function testOGROpen2() {
+/***********************************************************************
+*                       testOGROpen1()
+*
+************************************************************************/
+
+    function testOGROpen1() {
         OGRRegisterAll();
-        $result = NULL;
-        $result = OGROpen($this->strPathToData, $this->bUpdate, 
+
+        $hDS = @OGROpen($this->strPathToData, $this->bUpdate, 
                           $this->hOGRSFDriver);
-        printf("result = %d\n", $result);
-        $this->assertNull($result, "OGRDataSourceH is not NULL");
-        $this->assertNull($this->hOGRSFDriver, "hOGRSFDriver is not NULL");
+
+        $this->assertNull($hDS, "Problem with OGROpen():  handle ".
+                             "is supposed to be NULL when a bad path ".
+                             "is entered eventhough, all drivers are ".
+                             "registered.");
+
+        $this->assertNull($this->hOGRSFDriver, "Problem with OGROpen():  ".
+                             "hOGRSFDriver is supposed to be NULL ".
+                             "when a bad path is specified, eventhough ".
+                             "all drivers are registered.");
     }
 }
-class OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest extends PHPUnit_TestCase {
+
+class OGRSFDriverRegistrarTest2 extends PHPUnit_TestCase {
     var $strPathToData;
-    var $strBadPathToData;
     var $bUpdate;
     var $hOGRSFDriver;
     var $strFilename;
 
     // constructor of the test suite
-    function OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest($name) {
-        printf("in constructor of OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest\n");
+    function OGRSFDriverRegistrarTest2($name) {
         $this->PHPUnit_TestCase($name);
     }
     // called before the test functions will be executed    
@@ -119,7 +153,7 @@ class OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest extends PHPUnit_TestCase {
     function setUp() {
         $this->strPathToData = "./data/mif";
         $this->strFilename = "road.tab";
-        $this->bUpdate = 0;
+        $this->bUpdate = FALSE;
         $this->hOGRSFDriver = null;
     }
     // called after the test functions are executed    
@@ -132,27 +166,43 @@ class OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest extends PHPUnit_TestCase {
         unset($this->bUpdate);
         unset($this->hOGRSFDriver);
     }
-    function testOGROpen1() {
-        printf("in OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest\n");
-        $result = NULL;
-        $result = OGROpen($this->strPathToData, $this->bUpdate, 
+/***********************************************************************
+*                       testOGROpen0()
+*
+************************************************************************/
+    function testOGROpen0() {
+        $hDS = @OGROpen($this->strPathToData, $this->bUpdate, 
                           $this->hOGRSFDriver);
-        printf("result = %d\n", $result);
-        /*Drivers are already registered in a preceeding test.*/
-        printf("Drivers already registered = %d\n", OGRGetDrivercount());
-        $this->assertNotNull($result, "OGRDataSourceH is not NULL");
-        /*hOGRSFDriver is NULL.*/
-        $this->assertNull($this->hOGRSFDriver, "hOGRSFDriver is not NULL");
+
+        $this->assertNull($hDS, "Problem with OGROpen():  handle ".
+                             "is supposed to be NULL when no driver ".
+                             "is registered.");
+
+        $this->assertNull($this->hOGRSFDriver, "Problem with OGROpen():  ".
+                             "hOGRSFDriver is supposed to be NULL when ".
+                             "no driver is registered.");
+
     }
-    function testOGROpen2() {
+/***********************************************************************
+*                       testOGROpen1()
+*
+************************************************************************/
+    function testOGROpen1() {
         OGRRegisterAll();
-        $result = NULL;
-        $result = OGROpen($this->strPathToData, $this->bUpdate, 
+
+        $hDS = @OGROpen($this->strPathToData, $this->bUpdate, 
                           $this->hOGRSFDriver);
-        printf("result = %d\n", $result);
-        $this->assertNotNull($result, "OGRDataSourceH is NULL");
-        $this->assertNull($this->hOGRSFDriver, "hOGRSFDriver is not NULL");
-        OGR_DS_Destroy($result);
+
+
+        $this->assertNotNull($hDS, "Problem with OGROpen():  handle ".
+                             "is not supposed to be NULL when all drivers ".
+                             "are registered.");
+
+        $this->assertNotNull($this->hOGRSFDriver, "Problem with OGROpen():  ".
+                             "hOGRSFDriver is not supposed to be NULL when ".
+                             "all drivers are registered.");
+
+        OGR_DS_Destroy($hDS);
     }
 
 }
