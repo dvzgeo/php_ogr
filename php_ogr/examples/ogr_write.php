@@ -40,7 +40,7 @@
  *
  **********************************************************************/
 
-function equal($str1, $str2)
+function PHPEQUAL($str1, $str2)
 {
 
     $str1 = strtolower($str1);
@@ -63,16 +63,15 @@ function OGRCCreate($strFname)
 
     /* Register all OGR drivers */
     OGRRegisterAll();
-    printf("allophp1");
-
 
     /* Fetch MITAB driver - we want to create a TAB file */
     $numDrivers = OGRGetDriverCount();
     printf("nombre drivers = %d", $numDrivers);
+
     for($i=0; $i<$numDrivers; $i++)
     {
         $hdriver = OGRGetDriver($i);
-        if (equal("MapInfo File", OGR_Dr_GetName($hdriver))){
+        if (PHPEQUAL("MapInfo File", OGR_Dr_GetName($hdriver))){
             printf("\nDriver name = %s driver number = %d\n", OGR_Dr_GetName($hdriver), $i);
            break;  /* Found it! */
         }
@@ -86,9 +85,15 @@ function OGRCCreate($strFname)
     }
 
     /* Create new file using this driver */
-    $aoptions[0] = 'NULL';
 
-    $hdatasource = OGR_Dr_CreateDataSource($hdriver,$strFname, $aoptions);
+   /*Uncomment and add options here. */
+ /* $aoptions[0] = 'option1';
+    $aoptions[1] = 'option2';
+    $hdatasource = OGR_Dr_CreateDataSource($hdriver, $strFname, $aoptions);
+*/
+
+    /* Or use no option.*/
+    $hdatasource = OGR_Dr_CreateDataSource($hdriver, $strFname, NULL);
 
     if ($hdatasource == NULL)
     {
@@ -102,9 +107,10 @@ function OGRCCreate($strFname)
        file we have to specify the "tab" extension with filename, 
        example:  "filename.tab".
        Fetch the layer handle */
-    $hlayer = OGR_DS_GetLayer($hdatasource, 0);
+//    $hlayer = OGR_DS_GetLayer($hdatasource, 0 /*layer number*/);
 
-    $hlayer = OGR_DS_CreateLayer($hdatasource, "Test", NULL, wkbPoint, NULL);
+    /*Or create a new layer.*/
+    $hlayer = OGR_DS_CreateLayer($hdatasource, "Test", NULL /*Spatial reference*/, wkbPoint, NULL/*Array of options*/);
 
     if ($hlayer == NULL)
     {
