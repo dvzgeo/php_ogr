@@ -357,14 +357,12 @@ else
    }
 
 
-//_____________
   /* Loop through layers and dump their contents */
-
 
 
   $numLayers = OGR_DS_GetLayerCount($hDatasource);
 
-  printf("\nLayers count = %s",$numLayers);
+  printf("\nLayers count = %s\n",$numLayers);
 
   for($i=0; $i<$numLayers; $i++)
   {
@@ -403,7 +401,7 @@ else
             OGR_F_Destroy( $hFeature );
         }
 
-         printf("\n\n\nFINFINFINFIN");
+         printf("\n\n----- EOF -----\n");
 
         /* No need to free layer handle, it belongs to the datasource */
 
@@ -412,9 +410,6 @@ else
 
     /* Close data source */
     OGR_DS_Destroy($hDatasource);
-
-    return 0;
-
 
 
 ?>
