@@ -51,7 +51,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $this->AssertEquals($expected, $strFieldNameOut, "Problem with ".
                             "OGR_Fld_SetName() or OGR_Fld_GetNameRef().");
 
-        printf("name =%s\n", $strFieldNameOut);
         OGR_Fld_Destroy($hFieldDefn);
     }
 
@@ -67,7 +66,7 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $expected = OFTString;
         $this->AssertEquals($expected, $eFieldTypeOut, "Problem with ".
                             "OGR_Fld_GetType()");
-        printf("type =%d\n", $eFieldTypeOut);
+
         $eFieldTypeIn = OFTReal;
         OGR_Fld_SetType($hFieldDefn, $eFieldTypeIn);
 
@@ -75,7 +74,7 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $expected = $eFieldTypeIn;
         $this->AssertEquals($expected, $eFieldTypeOut, "Problem with ".
                             "OGR_Fld_SetType() or OGR_Fld_GetType().");
-        printf("just =%d\n", $eFieldTypeOut);
+
         OGR_Fld_Destroy($hFieldDefn);
     }
 
@@ -92,7 +91,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $this->AssertEquals($expected, $eJustifyOut, "Problem with ".
                          "OGR_Fld_GetJustify().");
 
-        printf("just =%d\n", $eJustifyOut);
         $eJustifyIn = OJRight;
         OGR_Fld_SetJustify($hFieldDefn, $eJustifyIn);
 
@@ -100,7 +98,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $expected = $eJustifyIn;
         $this->AssertEquals($expected, $eJustifyOut, "Problem with ".
                             "OGR_Fld_SetJustify() or OGR_Fld_GetJustify().");
-        printf("just =%d\n", $eJustifyOut);
 
         OGR_Fld_Destroy($hFieldDefn);
     }
@@ -117,7 +114,7 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $expected = 0;
         $this->AssertEquals($expected, $nWidthOut, "Problem with ".
                             "OGR_Fld_GetWidth().");
-        printf("width =%d\n", $nWidthOut);
+
         $nWidthIn = 10;
         OGR_Fld_SetWidth($hFieldDefn, $nWidthIn);
 
@@ -126,7 +123,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $this->AssertEquals($expected, $nWidthOut, "Problem with ".
                             "OGR_Fld_SetWidth() or OGR_Fld_GetWidth().");
 
-        printf("width =%d\n", $nWidthOut);
         OGR_Fld_Destroy($hFieldDefn);
     }
 
@@ -142,7 +138,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $expected = 0;
         $this->AssertEquals($expected, $nPrecisionOut, "Problem with ".
                             "OGR_Fld_GetPrecision().");
-        printf("prec =%d\n", $nPrecisionOut);
 
         $nPrecisionIn = 1;
         OGR_Fld_SetPrecision($hFieldDefn, $nPrecisionIn);
@@ -152,7 +147,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $this->AssertEquals($expected, $nPrecisionOut, "Problem with ".
                             "OGR_Fld_SetPrecision() or OGR_Fld_GetPrecision().");
 
-        printf("prec =%d\n", $nPrecisionOut);
         OGR_Fld_Destroy($hFieldDefn);
     }
 
@@ -178,31 +172,28 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $expected = $strFieldNameIn;
         $this->AssertEquals($expected, $strFieldNameOut, "Problem with ".
                             "OGR_Fld_Set() on Name.");
-        printf("name =%s\n", $strFieldNameOut);
 
         $eFieldTypeOut = OGR_Fld_GetType($hFieldDefn);
         $expected = $eFieldTypeIn;
         $this->AssertEquals($expected, $eFieldTypeOut, "Problem with ".
                             "OGR_Fld_Set() on Type.");
-        printf("type =%d\n", $eFieldTypeOut);
 
         $nWidthOut = OGR_Fld_GetWidth($hFieldDefn);
         $expected = $nWidthIn;
         $this->AssertEquals($expected, $nWidthOut, "Problem with ".
                             "OGR_Fld_Set() on Width.");
-        printf("width =%d\n", $nWidthOut);
 
         $nPrecisionOut = OGR_Fld_GetPrecision($hFieldDefn);
         $expected = 2;
         $this->AssertEquals($expected, $nPrecisionOut, "Problem with ".
                             "OGR_Fld_Set() on Precision.");
-        printf("prec =%d\n", $nPrecisionOut);
+
 
         $eJustifyOut = OGR_Fld_GetJustify($hFieldDefn);
         $expected = $eJustifyIn;
         $this->AssertEquals($expected, $eJustifyOut, "Problem with ".
                             "OGR_Fld_Set() on Justification.");
-        printf("just =%d\n", $eJustifyOut);
+
 
         OGR_Fld_Destroy($hFieldDefn);
     }
@@ -217,7 +208,7 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
         $expected = "Real";
         $this->AssertEquals($expected, $strFieldTypeName, "Problem with ".
                             "OGR_GetFieldTypeName().");
-        printf("name=%s\n",$strFieldTypeName);
+
     }
 
 }
