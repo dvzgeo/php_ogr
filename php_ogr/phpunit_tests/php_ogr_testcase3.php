@@ -103,8 +103,8 @@ class OGRDataSourceTest1 extends PHPUnit_TestCase {
     function testOGR_DS_GetLayer1(){
         $hExistingDataSource = OGROpen($this->strPathToData, $this->bUpdate,
                                        $hOGRSFDriver);
-        $strLayer = OGR_DS_GetLayer($hExistingDataSource, 2);
-        $this->assertNotNull($strLayer, "Data source layer 
+        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 2);
+        $this->assertNotNull($hLayer, "Data source layer 
                             is not supposed to be NULL.\n");
         OGR_DS_Destroy($hExistingDataSource);
 
