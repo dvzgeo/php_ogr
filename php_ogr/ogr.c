@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.2  2003/03/13 23:51:53  daniel
+ * Added header with license and CVS ids
+ *
  */
 
 
@@ -41,13 +44,21 @@
 #include "php_ogr.h"
 
 /* Include OGR C Wrappers declarations */
+#include "ogr_srs_api.h"
 #include "ogr_api.h"
 #include "cpl_error.h"
 #include "cpl_conv.h"
+#include "cpl_string.h"
 
 /* If you declare any globals in php_ogr.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(ogr)
 */
+
+
+#ifdef PHP4
+#define ZEND_DEBUG 0
+#endif
+
 
 /* True global resources - no need for thread safety here */
 
@@ -219,7 +230,7 @@ function_entry ogr_functions[] = {
     PHP_FE(ogr_dr_open, NULL)
     PHP_FE(ogr_dr_testcapability,  NULL)
     PHP_FE(ogr_dr_createdatasource, NULL)
-    PHP_FE(ogropen, third_arg_force_ref)
+    PHP_FE(ogropen, three_args_third_arg_force_ref)
     PHP_FE(ogrregisterdriver,  NULL)
     PHP_FE(ogrgetdrivercount,   NULL)
     PHP_FE(ogrgetdriver,    NULL)
