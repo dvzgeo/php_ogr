@@ -32,7 +32,7 @@
  * DEALINGS IN THE SOFTWARE.
  *****************************************************************************/
 
-   $eErr = OGR_Update_main();
+   $eErr = OGR2Tab_Update_main();
 
    if ($eErr != OGRERR_NONE)
    {
@@ -46,10 +46,10 @@
 
 
 /************************************************************************/
-/*                                OGR_Update_main()                     */
+/*                                OGR2Tab_Update_main()                 */
 /************************************************************************/
 
- function OGR_Update_main()
+ function OGR2Tab_Update_main()
 
 {
     $strFormat = "MapInfo File";
