@@ -1,6 +1,8 @@
-php<?php
+<?php
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
+
+$testSuites_list[] = "OGRFeatureDefnTest0";                             
 
 class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
     var $hContainer;
@@ -8,12 +10,10 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
     function OGRFeatureDefnTest0($name){
         $this->PHPUnit_TestCase($name);	
     }
-
     function setUp() {
 
 
     }
-
     function tearDown() {
         unset($this->hContainer);
     }
@@ -54,7 +54,6 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
 
         OGR_FD_Destroy($hFeatureDefn);
     }
-
 /***********************************************************************
 *                            testOGR_FD_AddGetFieldDefn()
 ************************************************************************/
@@ -87,7 +86,5 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
 
         OGR_FD_Destroy($hFeatureDefn);
     }
-
 }
 ?>
-

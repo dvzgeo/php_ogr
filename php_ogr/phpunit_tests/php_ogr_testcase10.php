@@ -2,6 +2,8 @@
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRFeatureTest3";                             
+
 class OGRFeatureTest3 extends PHPUnit_TestCase {
     var $strPathToOutputData;
     var $strTmpDumpFile;
@@ -16,7 +18,7 @@ class OGRFeatureTest3 extends PHPUnit_TestCase {
     var $astrOptions;
  
     function OGRFeatureTest3($name){
-        $this->PHPUnit_TestCase($name);	
+        $this->PHPUnit_TestCase($name);
     }
 
     function setUp() {

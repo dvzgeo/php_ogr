@@ -2,10 +2,12 @@
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRGeometryTest0";                             
+
 class OGRGeometryTest0 extends PHPUnit_TestCase {
  
     function OGRGeometryTest0($name){
-        $this->PHPUnit_TestCase($name);	
+        $this->PHPUnit_TestCase($name);
     }
 
     function setUp() {

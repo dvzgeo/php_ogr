@@ -2,16 +2,16 @@
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRFieldDefnTest0";                             
+
 class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
     function OGRFieldDefnTest0($name){
         $this->PHPUnit_TestCase($name);	
     }
-
     function setUp() {
 
     }
-
     function tearDown() {
     }
 /***********************************************************************
@@ -60,7 +60,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
         OGR_Fld_Destroy($hFieldDefn);
     }
-
 /***********************************************************************
 *                            testOGR_Fld_SetGetType()
 ************************************************************************/
@@ -108,7 +107,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
         OGR_Fld_Destroy($hFieldDefn);
     }
-
 /***********************************************************************
 *                            testOGR_Fld_SetGetWidth()
 ************************************************************************/
@@ -132,7 +130,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
         OGR_Fld_Destroy($hFieldDefn);
     }
-
 /***********************************************************************
 *                            testOGR_Fld_SetGetPrecision()
 ************************************************************************/
@@ -156,7 +153,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
         OGR_Fld_Destroy($hFieldDefn);
     }
-
 /***********************************************************************
 *                            testOGR_Fld_Set()
 ************************************************************************/
@@ -204,7 +200,6 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
         OGR_Fld_Destroy($hFieldDefn);
     }
-
 /***********************************************************************
 *                            testOGR_GetFieldTypeName()
 ************************************************************************/
@@ -217,6 +212,5 @@ class OGRFieldDefnTest0 extends PHPUnit_TestCase {
                             "OGR_GetFieldTypeName().");
 
     }
-
 }
 ?>
