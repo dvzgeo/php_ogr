@@ -84,18 +84,10 @@ function OGRCCreate($strFname)
         return -1;
     }
 
-    /* MapInfo data sources are created with one empty layer.  But we have
-       to specify the "dat" extension with filename, example:  "filename.dat"
-       on the command line.  If we want to dump data from the newly created
-       file we have to specify the "tab" extension with filename, 
-       example:  "filename.tab". */
-    /* Fetch the layer handle */
-//    $hlayer = OGR_DS_GetLayer($hdatasource, 0 /*layer number*/);
-
-    /* Or create a new layer.*/
-    $hlayer = OGR_DS_CreateLayer($hdatasource, "Test", 
-                                 NULL /*Spatial reference*/, wkbPoint, 
-                                 NULL /*Array of options*/);
+    /* MapInfo data sources are created with one empty layer corresponding 
+       to the $strFname that was passed to the OGR_Dr_CreateDataSource() call.
+       Fetch this layer handle now. */
+    $hlayer = OGR_DS_GetLayer($hdatasource, 0 /*layer number*/);
 
     if ($hlayer == NULL)
     {
@@ -211,7 +203,11 @@ if (count($_SERVER["argv"]) >= 2)
 else
 {
 // Set your default test filename here (for use in web environment)
-    $strfilename ="test.dat";  
+// Setting a path with no extension will create a new directory as data
+// source with most drivers.
+// Creating OGR datasources can be tricky, please see the docs or ask the
+// GDAL-DEV mailing list if you need help with a specific driver.
+    $strfilename ="test.mif";  
 }
 
    $eErr = OGRCCreate($strfilename);
