@@ -158,9 +158,3 @@ class OGRSFDriverPathSetOkhOGRSFDriverSetToNULLTest extends PHPUnit_TestCase {
 }
 
 ?> 
-
-
-
-
-
-
