@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.8  2003/03/25 14:54:34  daniel
+ * Prevent crashes when returning NULL strings or resources
+ *
  * Revision 1.7  2003/03/24 20:08:14  nsavard
  * Take into account the case when a C function return a NULL resource in
  * OGR_G_GetSpatialReference, OGR_L_GetSpatialFilter, OGR_L_GetSpatialRef.
@@ -3638,11 +3641,11 @@ PHP_FUNCTION(ogr_l_getextent)
     zend_bool bforce;
     zval *hlayer = NULL;
     zval *oextent = NULL;
-    OGREnvelope *oEnvelope = NULL;
+    OGREnvelope oEnvelope;
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rob", &hlayer, &oextent, &bforce) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rzb", &hlayer, &oextent, &bforce) == FAILURE) 
         return;
 
     if (hlayer) {
@@ -3650,7 +3653,7 @@ PHP_FUNCTION(ogr_l_getextent)
     }
 
     if (hLayerResource)
-        eErr = OGR_L_GetExtent(hLayerResource, oEnvelope , bforce);
+        eErr = OGR_L_GetExtent(hLayerResource, &oEnvelope , bforce);
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
@@ -3664,10 +3667,10 @@ PHP_FUNCTION(ogr_l_getextent)
         RETURN_FALSE;
     }
 
-    add_property_double(oextent, "minX", oEnvelope->MinX);
-    add_property_double(oextent, "maxX", oEnvelope->MaxX);
-    add_property_double(oextent, "minY", oEnvelope->MinY);
-    add_property_double(oextent, "maxy", oEnvelope->MaxY);
+    add_property_double(oextent, "minX", oEnvelope.MinX);
+    add_property_double(oextent, "maxX", oEnvelope.MaxX);
+    add_property_double(oextent, "minY", oEnvelope.MinY);
+    add_property_double(oextent, "maxy", oEnvelope.MaxY);
 }
 
 /* }}} */
