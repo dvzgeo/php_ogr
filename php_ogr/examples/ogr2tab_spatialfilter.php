@@ -198,40 +198,33 @@ function OGR_SpatialFilter_main()
     if( $hODS == NULL )
         return OGRERR_FAILURE;
 /* -------------------------------------------------------------------- */
-/*      Process each data source layer.                                 */
+/*      Process only first layer in source dataset                      */
 /* -------------------------------------------------------------------- */
-    for( $iLayer = 0; $iLayer < OGR_DS_GetLayerCount($hDS); $iLayer++ )
+    if( OGR_DS_GetLayerCount($hDS) > 0)
     {
-        $hLayer = OGR_DS_GetLayer($hDS, $iLayer);
+        $hLayer = OGR_DS_GetLayer($hDS, 0);
 
         if( $hLayer == NULL )
         {
-            printf( "FAILURE: Couldn't fetch advertised layer %d!\n",
-                    $iLayer );
+            printf( "FAILURE: Couldn't fetch advertised layer 0!\n" );
             return OGRERR_FAILURE;
-
         }
-
-        if( count($astrLayers) == 0 || 
-            in_array(OGR_FD_GetName(OGR_L_GetLayerDefn($hLayer)), $astrLayers) != FALSE )
-        {
 
         /*Assign spatial filter*/
-            if($hSpatialFilter != NULL)
-                OGR_L_SetSpatialFilter($hLayer, $hSpatialFilter);
+        if($hSpatialFilter != NULL)
+            OGR_L_SetSpatialFilter($hLayer, $hSpatialFilter);
 
         /*Assign attribute filter*/
-            if($strWhere != NULL)
-                $eErr = OGR_L_SetAttributeFilter($hLayer, $strWhere);
-            if($eErr != OGRERR_NONE){
-                printf("Erreur when setting attribute filter", $eErr);
-                return $eErr;
-            }
+        if($strWhere != NULL)
+            $eErr = OGR_L_SetAttributeFilter($hLayer, $strWhere);
+        if($eErr != OGRERR_NONE){
+            printf("Erreur when setting attribute filter", $eErr);
+            return $eErr;
+        }
 
         /*Copy datasource file to a new data source file*/
-            if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
+        if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
             return OGRERR_FAILURE;
-        }
     }
 
 /* -------------------------------------------------------------------- */

@@ -168,27 +168,20 @@ function OGR2OGR_main()
     if( $hODS == NULL )
         return OGRERR_FAILURE;
 /* -------------------------------------------------------------------- */
-/*      Process each data source layer.                                 */
+/*      Process only first layer in source dataset                      */
 /* -------------------------------------------------------------------- */
-    for( $iLayer = 0; $iLayer < OGR_DS_GetLayerCount($hDS); $iLayer++ )
+    if( OGR_DS_GetLayerCount($hDS) > 0)
     {
-        $hLayer = OGR_DS_GetLayer($hDS, $iLayer);
+        $hLayer = OGR_DS_GetLayer($hDS, 0);
 
         if( $hLayer == NULL )
         {
-            printf( "FAILURE: Couldn't fetch advertised layer %d!\n",
-                    $iLayer );
-            return OGRERR_FAILURE;
-
-        }
-
-        if( count($astrLayers) == 0 || 
-            in_array(OGR_FD_GetName(OGR_L_GetLayerDefn($hLayer)), 
-                                        $astrLayers) != FALSE )
-        {
-            if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
+            printf( "FAILURE: Couldn't fetch advertised layer 0!\n" );
             return OGRERR_FAILURE;
         }
+
+        if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
+            return OGRERR_FAILURE;
     }
 
 /* -------------------------------------------------------------------- */
@@ -208,7 +201,7 @@ function OGR2OGR_main()
 function Usage()
 {
     printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
-             src_datasource_name [layer [layer ...]]\n");
+             src_datasource_name\n");
     
     return 1;
 }

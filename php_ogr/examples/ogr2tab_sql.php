@@ -203,19 +203,20 @@ function OGRSQL_main()
         return OGRERR_FAILURE;
 
 /* -------------------------------------------------------------------- */
-/*      Process each data source layer.                                 */
+/*      Fetch source layer using SQL statement.                         */
 /* -------------------------------------------------------------------- */
 
-       $hLayer = OGR_DS_ExecuteSQL($hDS, $strSQLStatement, $hSpatialFilter, 
-                                   NULL /*strDialect set to default*/);
+    $hLayer = OGR_DS_ExecuteSQL($hDS, $strSQLStatement, $hSpatialFilter, 
+                                NULL /*strDialect set to default*/);
 
-        /*Copy datasource file to a new data source file*/
-            if($hLayer != NULL)
-            {
-                if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
-                    return OGRERR_FAILURE;
-                OGR_DS_ReleaseResultSet($hDS, $hLayer);
-            }
+    /*Copy datasource file to a new data source file*/
+    if($hLayer != NULL)
+    {
+        if( !TranslateLayer( $hDS, $hLayer, $hODS ) )
+            return OGRERR_FAILURE;
+        OGR_DS_ReleaseResultSet($hDS, $hLayer);
+    }
+
 /* -------------------------------------------------------------------- */
 /*      Close down.                                                     */
 /* -------------------------------------------------------------------- */

@@ -56,7 +56,6 @@
     $strDataSource = NULL;
     $strDestDataSource = NULL;
     $amAttribute = NULL;
-    $astrLayers = NULL;
 
     
 /* -------------------------------------------------------------------- */
@@ -99,17 +98,6 @@
             $strDataSource = $_SERVER["argv"][$iArg];
             printf("DataSource = %s\n", $strDataSource);
         }
-        /* Select layer into which attribute value is updated.*/
-        else{
-            $astrLayers[] = $_SERVER["argv"][$iArg];
-        }
-    }
-
-    /* Print layer selected*/
-    $i = 0;
-    while ($astrLayers[$i]){
-        printf("Layers [%d] = %s\n", $i, $astrLayers[$i] );
-        $i++;
     }
 
 
@@ -189,27 +177,20 @@
     if( $hODS == NULL )
         return OGRERR_FAILURE;
 /* -------------------------------------------------------------------- */
-/*      Process each data source layer.                                 */
+/*      Process only first layer in source dataset                      */
 /* -------------------------------------------------------------------- */
-    for( $iLayer = 0; $iLayer < OGR_DS_GetLayerCount($hDS); $iLayer++ )
+    if( OGR_DS_GetLayerCount($hDS) > 0)
     {
-        $hLayer = OGR_DS_GetLayer($hDS, $iLayer);
+        $hLayer = OGR_DS_GetLayer($hDS, 0);
 
         if( $hLayer == NULL )
         {
-            printf( "FAILURE: Couldn't fetch advertised layer %d!\n",
-                    $iLayer );
-            return OGRERR_FAILURE;
-
-        }
-
-        if( count($astrLayers) == 0 || 
-            in_array(OGR_FD_GetName(OGR_L_GetLayerDefn($hLayer)), 
-                     $astrLayers) != FALSE )
-        {
-            if( !TranslateLayer( $hDS, $hLayer, $hODS, $amAttribute ) )
+            printf( "FAILURE: Couldn't fetch advertised layer 0!\n" );
             return OGRERR_FAILURE;
         }
+
+        if( !TranslateLayer( $hDS, $hLayer, $hODS, $amAttribute ) )
+            return OGRERR_FAILURE;
     }
 
 /* -------------------------------------------------------------------- */
@@ -230,7 +211,7 @@ function Usage()
 {
     printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
              src_datasource_name [-fid feature_id attribute_name 
-                                 attribute_value  [layer [layer ...]]");
+                                 attribute_value ]");
     
     return 1;
 }
