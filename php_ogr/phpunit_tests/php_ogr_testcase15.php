@@ -1,4 +1,5 @@
-require_once `phpunit-0.5/phpunit.php';
+<?php
+//require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
 class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
@@ -23,10 +24,12 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
     function testOGR_FD_CreateDestroy() {
         $strNameIn = "Lake";
         $hFeatureDefn = OGR_FD_Create($strNameIn);
-        $this->AssertNotNull($hFeatureDefn, "");
+        $this->AssertNotNull($hFeatureDefn, "Problem with OGR_FD_Create(): ".
+                             "handle should not be NULL.");
 
         OGR_FD_Destroy($hFeatureDefn);
-        $this->AssertNull($hFeatureDefn, "");
+        $this->AssertNull($hFeatureDefn, "Problem with OGR_FD_Destroy(): ".
+                          "handle should be NULL.");
     }
 /***********************************************************************
 *                            testOGR_FD_GetName()
@@ -35,18 +38,21 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
     function testOGR_FD_GetName() {
         $strNameIn = "Lake";
         $hFeatureDefn = OGR_FD_Create($strNameIn);
+
         $strNameOut = OGR_FD_GetName($hFeatureDefn);
-        $expected = strcpy($strNameIn);
-        $this->AssertEquals($expected, $strNameOut, "");
+        $expected = $strNameIn;
+
+        $this->AssertEquals($expected, $strNameOut, "Problem with ".
+                            "OGR_FD_GetName().");
 
         OGR_FD_Destroy($hFeatureDefn);
     }
 
 /***********************************************************************
-*                            testOGR_FD_GetName()
+*                            testOGR_FD_AddGetFieldDefn()
 ************************************************************************/
 
-    function testOGR_FD_GetName() {
+    function testOGR_FD_AddGetFieldDefn() {
         $strName = "Lake";
         $hFeatureDefn = OGR_FD_Create($strName);
 
@@ -54,29 +60,27 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
         $hFieldDefn = OGR_Fld_Create($strFieldName, OFTString);
 
         OGR_FD_AddFieldDefn($hFeatureDefn, $hFieldDefn);
+        OGR_Fld_Destroy($hFieldDefn);
 
         $strName = "area";
         $hFieldDefn = OGR_Fld_Create($strFieldName, OFTReal);
 
         OGR_FD_AddFieldDefn($hFeatureDefn, $hFieldDefn);
+        OGR_Fld_Destroy($hFieldDefn);
 
         $iField = 0;
-        hFieldDefn = OGR_FD_GetFieldDefn($hFeaatureDefn, $iField);
-        $strFieldName = OGR_Fld_GetNameRef(hFieldDefn);
+        $hFieldDefn = OGR_FD_GetFieldDefn($hFeatureDefn, $iField);
+        $strFieldName = OGR_Fld_GetNameRef($hFieldDefn);
 
-        $expected = strcpy($strFieldName);
-        $this->AssertEquals($expected, $strFieldName, "");
+        $expected = $strFieldName;
+        $this->AssertEquals($expected, $strFieldName, "Problem with ".
+                            "OGR_FD_AddFieldDefn() or OGR_FD_GetFieldDefn().");
 
-        OGR_FD_Destroy($hFieldDefn);
+//        OGR_Fld_Destroy($hFieldDefn);
+
         OGR_FD_Destroy($hFeatureDefn);
     }
+
 }
-
-
-
-
-
-
-
-
+?>
 

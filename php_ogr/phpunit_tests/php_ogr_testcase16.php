@@ -1,35 +1,36 @@
-require_once `phpunit-0.5/phpunit.php';
+<?php
+//require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
-class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
+class OGRFeatureDefnTest1 extends PHPUnit_TestCase {
     var $hFieldDefn;
     var $hFeatureDefn;
  
-    function OGRFeatureDefnTest0($name){
+    function OGRFeatureDefnTest1($name){
         $this->PHPUnit_TestCase($name);	
     }
 
     function setUp() {
         $strName = "Lake";
-        $hFeatureDefn = OGR_FD_Create($strName);
+        $this->hFeatureDefn = OGR_FD_Create($strName);
 
         $strFieldName = "name";
-        $hFieldDefn = OGR_Fld_Create($strFieldName, OFTString);
+        $this->hFieldDefn = OGR_Fld_Create($strFieldName, OFTString);
 
-        OGR_FD_AddFieldDefn($hFeatureDefn, $hFieldDefn);
+        OGR_FD_AddFieldDefn($this->hFeatureDefn, $this->hFieldDefn);
 
-        $strName = "area";
-        $hFieldDefn = OGR_Fld_Create($strFieldName, OFTReal);
+        $strFieldName = "area";
+        $this->hFieldDefn = OGR_Fld_Create($strFieldName, OFTReal);
 
-        OGR_FD_AddFieldDefn($hFeatureDefn, $hFieldDefn);
+        OGR_FD_AddFieldDefn($this->hFeatureDefn, $this->hFieldDefn);
 
     }
 
     function tearDown() {
+        OGR_Fld_Destroy($this->hFieldDefn);
+        OGR_FD_Destroy($this->hFeatureDefn);
         unset($this->hFieldDefn);
         unset($this->hFeatureDefn);
-        OGR_FD_Destroy($hFieldDefn);
-        OGR_FD_Destroy($hFeatureDefn);
 
     }
 
@@ -39,9 +40,10 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
 
     function testOGR_FD_GetFieldCount() {
         $nFieldCount = OGR_FD_GetFieldCount($this->hFeatureDefn);
-        $expected = 2;
-        $this->AssertEquals($expected, $nFieldCount, "");
 
+        $expected = 2;
+        $this->AssertEquals($expected, $nFieldCount, "Problem with ".
+                            "OGR_FD_GetFieldCount().");
     }
 /***********************************************************************
 *                            testOGR_FD_GetFieldIndex()
@@ -49,11 +51,13 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
 
     function testOGR_FD_GetFieldIndex() {
         $strFieldName = "area";
-        $iField = OGR_FD_GetFieldIndex($this->hFeatureDefn, $strFieldName);
-        $expected = 2;
-        $this->AssertEquals($expected, $iField, "");
 
+        $iField = OGR_FD_GetFieldIndex($this->hFeatureDefn, $strFieldName);
+        $expected = 1;
+        $this->AssertEquals($expected, $iField, "Problem with ".
+                            "OGR_FD_GetFieldIndex().");
     }
+
 /***********************************************************************
 *                            testOGR_FD_SetGetGeomType()
 ************************************************************************/
@@ -64,9 +68,10 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
 
         $eType = OGR_FD_GetGeomType($this->hFeatureDefn);
         $expected = wkbLineString;
-        $this->AssertEquals($expected, $eType, "");
-
+        $this->AssertEquals($expected, $eType, "Problem with ".
+                            "OGR_FD_SetGeomType() or OGR_FD_GetGeomType().");
     }
+
 /***********************************************************************
 *                            testOGR_FD_GetReferenceCount()
 ************************************************************************/
@@ -74,18 +79,36 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
     function testOGR_FD_GetReferenceCount() {
         $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
         $expected = 0;
-        $this->AssertEquals($expected, $nFeatureCount, "");
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_GetReferenceCount(), expected no element.");
         
-        $hFeature = OGR_F_Create($this->hFeatureDefn);
+        $hFeature1 = OGR_F_Create($this->hFeatureDefn);
+        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
         $expected = 1;
-        $this->AssertEquals($expected, $nFeatureCount, "");
-        OGR_F_Destroy($hFeature);
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                             "OGR_FD_GetReferenceCount(), expected one element.");
 
-        $hFeature = OGR_F_Create($this->hFeatureDefn);
+
+        $hFeature2 = OGR_F_Create($this->hFeatureDefn);
+        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
         $expected = 2;
-        $this->AssertEquals($expected, $nFeatureCount, "");
-        OGR_F_Destroy($hFeature);
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_GetReferenceCount(), expected two elements.");
+
+        OGR_F_Destroy($hFeature1);
+        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
+        $expected = 1;
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                             "OGR_FD_GetReferenceCount(), expected one element.");
+
+        OGR_F_Destroy($hFeature2);
+        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
+        $expected = 0;
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_GetReferenceCount(), expected no element.");
+
     }
+
 /***********************************************************************
 *                            testOGR_FD_GetReference()
 ************************************************************************/
@@ -93,28 +116,33 @@ class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
     function testOGR_FD_GetReference() {
         $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
         $expected = 0;
-        $this->AssertEquals($expected, $nFeatureCount, "");
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_GetReference(): expected no element.");
         
-        $nFeatureCount = OGR_FD_Reference($hFeatureDefn);
+        $nFeatureCount = OGR_FD_Reference($this->hFeatureDefn);
         $expected = 1;
-        $this->AssertEquals($expected, $nFeatureCount, "");
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_Reference(): expected one element.");
 
         $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
         $expected = 1;
-        $this->AssertEquals($expected, $nFeatureCount, "");
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_GetReferenceCount():  expected one element.");
 
-        $nFeatureCount = OGR_FD_Reference($hFeatureDefn);
+        $nFeatureCount = OGR_FD_Reference($this->hFeatureDefn);
         $expected = 2;
-        $this->AssertEquals($expected, $nFeatureCount, "");
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_Reference():  expected two elements.");
 
-        $nFeatureCount = OGR_FD_Dereference($hFeatureDefn);
+        $nFeatureCount = OGR_FD_Dereference($this->hFeatureDefn);
         $expected = 1;
-        $this->AssertEquals($expected, $nFeatureCount, "");
+        $this->AssertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_FD_Dereference():  expected one element.");
 
     }
 
 }
-
+?>
 
 
 
