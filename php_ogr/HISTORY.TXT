@@ -15,6 +15,11 @@ Current Version
 --------------------------
 
 
+Version 1.0.1 (2004-10-06)
+--------------------------
+
+- Modified config.m4 to detect correct gdal lib version
+
 Version 1.0.0 (2003-10-17)
 --------------------------
 
