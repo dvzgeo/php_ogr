@@ -2,11 +2,11 @@
 /*                                ogr2tab.php                           */
 /************************************************************************/
 
--ogr2tab.php:  Read an OGR MapInfo dataset and copy to a new OGR MapInfo dataset.
+-ogr2tab.php:  Read an OGR dataset and copy to a new OGR MapInfo dataset.
 
 Example:  ./php -q ogr2tab.php 
-          /home/msapps/user/outputfilename.tab 
-          /home/msapps/user/sourcefilename.tab
+          /path/to/outputfilename.tab 
+          /path/to/sourcefilename.tab
 
 
 /************************************************************************/
@@ -16,9 +16,11 @@ Example:  ./php -q ogr2tab.php
 -ogr2tab_spatialfilter.php:  A copy of ogr2tab.php to which the ability
  to set a spatial filter (bounding box search) has been added.
 
+Note: the -spat and -where parameters are optional.
+
 Example:  ./php -q ogr2tab_spatialfilter.php 
-          /home/msapps/outputfilename.tab
-          /home/msapps/user/sourcefilename.tab 
+          /path/to/outputfilename.tab
+          /path/to/sourcefilename.tab 
           -spat Xmin Ymin Xmax Ymax 
           -where "any_attribute <= a_certain_value"
 
@@ -30,13 +32,15 @@ Example:  ./php -q ogr2tab_spatialfilter.php
 -ogr2tab_sql.php:  A copy of ogr2tab_spatialfilter.php to which the ability
  of setting a SQL attribute filter has been added.
 
+Note: The -spat parameter is optional.  The -sql parameter is required.
+
 Example:  ./php -q ogr2tab_sql.php 
-          /home/msapps/user/outputfilename.tab
-          /home/msapps/user/sourcefilename.tab 
+          /path/to/outputfilename.tab
+          /path/to/sourcefilename.tab 
           -spat Xmin Ymin Xmax Ymax
           -sql "SELECT any_attribute from layername 
-          WHERE any_attribute < a_certain_value
-          ORDER BY any_attribute ASC"
+                WHERE any_attribute < a_certain_value
+                ORDER BY any_attribute ASC"
 
 
 /************************************************************************/
@@ -49,8 +53,8 @@ Example:  ./php -q ogr2tab_sql.php
  destination.
 
 Example:  ./php -q ogr2tab_update.php 
-          /home/msapps/user/outputfilename.tab
-          /home/msapps/user/sourcefilename.tab 
+          /path/to/outputfilename.tab
+          /path/to/sourcefilename.tab 
           -fid a_fid attribute_to_update new_attribute_value
 
 /************************************************************************/
@@ -61,7 +65,7 @@ Example:  ./php -q ogr2tab_update.php
  Shows how to read feature and geometry members, attribute fields, etc.
 
 Example:  ./php -q ogr_dump.php 
-          /home/msapps/usr/sourcefilename
+          /path/to/usr/sourcefilename
 
 /************************************************************************/
 /*                                ogr_write.php                         */
@@ -71,7 +75,7 @@ Example:  ./php -q ogr_dump.php
  Shows how to create new features and geometries.
 
 Example:  ./php -q ogr_write.php 
-          /home/msapps/user/outputfilename
+          /path/to/outputfilename
 
 /************************************************************************/
 /*                                ogr2ogr.php                           */
@@ -81,8 +85,8 @@ Example:  ./php -q ogr_write.php
  in specified format.
 
 Example:  ./php -q ogr2ogr.php 
-          /home/msapps/user/outputdirectory 
-          /home/msapps/user/sourcedirectory 
+          /path/to/outputdirectory 
+          /path/to/sourcedirectory 
           -f "MapInfo File" layername
 
 
@@ -105,8 +109,8 @@ Example:  ./php -q ogr_setgetfield.php
  to set a spatial filter (bounding box search) has been added.
 
 Example:  ./php -q ogr_spatialfilter.php 
-          /home/msapps/outputdirectory
-          /home/msapps/user/sourcedirectory -f "MapInfo File" 
+          /path/to/outputdirectory
+          /path/to/sourcedirectory -f "MapInfo File" 
           -spat Xmin Ymin Xmax Ymax -where "any_attribute <= a_certain_value"
 
 
@@ -118,8 +122,8 @@ Example:  ./php -q ogr_spatialfilter.php
  of setting a SQL attribute filter has been added.
 
 Example:  ./php -q ogr_sql.php 
-          /home/msapps/user/outputdirectory
-          /home/msapps/user/sourcedirectory 
+          /path/to/outputdirectory
+          /path/to/sourcedirectory 
           -f "MapInfo File" -spat Xmin Ymin Xmax Ymax
           -sql "SELECT any_attribute from layername 
           WHERE any_attribute < a_certain_value
@@ -137,7 +141,7 @@ Example:  ./php -q ogr_sql.php
  destination.
 
 Example:  ./php -q ogr_update.php 
-          /home/msapps/user/outputdirectory
-          /home/msapps/user/sourcedirectory 
+          /path/to/outputdirectory
+          /path/to/sourcedirectory 
          -f "MapInfo File" layername 
          -fid a_fid attribute_to_update new_attribute_value
