@@ -40,7 +40,6 @@ PHP_RINIT_FUNCTION(ogr);
 PHP_RSHUTDOWN_FUNCTION(ogr);
 PHP_MINFO_FUNCTION(ogr);
 
-PHP_FUNCTION(confirm_ogr_compiled);	/* For testing, remove later. */
 PHP_FUNCTION(cplerrorreset);
 PHP_FUNCTION(cplgetlasterrorno);
 PHP_FUNCTION(cplgetlasterrortype);
@@ -164,6 +163,7 @@ PHP_FUNCTION(ogr_ds_destroy);
 PHP_FUNCTION(ogr_ds_getname);
 PHP_FUNCTION(ogr_ds_getlayercount);
 PHP_FUNCTION(ogr_ds_getlayer);
+PHP_FUNCTION(ogr_ds_getlayerbyname);
 PHP_FUNCTION(ogr_ds_createlayer);
 PHP_FUNCTION(ogr_ds_testcapability);
 PHP_FUNCTION(ogr_ds_executesql);
