@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.9  2003/03/28 21:30:36  assefa
+ * Correct bug in GetExtents function.
+ *
  * Revision 1.8  2003/03/25 14:54:34  daniel
  * Prevent crashes when returning NULL strings or resources
  *
@@ -3667,9 +3670,9 @@ PHP_FUNCTION(ogr_l_getextent)
         RETURN_FALSE;
     }
 
-    add_property_double(oextent, "minX", oEnvelope.MinX);
-    add_property_double(oextent, "maxX", oEnvelope.MaxX);
-    add_property_double(oextent, "minY", oEnvelope.MinY);
+    add_property_double(oextent, "minx", oEnvelope.MinX);
+    add_property_double(oextent, "maxx", oEnvelope.MaxX);
+    add_property_double(oextent, "miny", oEnvelope.MinY);
     add_property_double(oextent, "maxy", oEnvelope.MaxY);
 }
 
