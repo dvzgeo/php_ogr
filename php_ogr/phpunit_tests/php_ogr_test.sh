@@ -1,0 +1,1 @@
+/home/httpd/cgi-bin/php4 php_ogr_test.php
