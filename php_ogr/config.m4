@@ -49,18 +49,12 @@ if test "$PHP_OGR" != "no"; then
   PHP_EVAL_INCLINE($OGR_CFLAGS)
   PHP_ADD_INCLUDE($OGR_DIR/include)
   PHP_EVAL_LIBLINE($OGR_LIBS, OGR_SHARED_LIBADD)
-  PHP_ADD_LIBRARY_WITH_PATH(gdal.1.1, $OGR_DIR/lib, OGR_SHARED_LIBADD)
 
-
-  PHP_CHECK_LIBRARY(gdal.1.1, OGRRegisterAll, 
-  [ 
-    AC_DEFINE(HAVE_OGR,1,[ ])
-  ],[
-    AC_MSG_ERROR(OGRRegisterAll() not found.  Please make sure your GDAL includes OGR support.)
-  ],[
-    $OGR_LIBS -L$OGR_DIR/lib
-  ])
-
+  if test x`$OGR_CONFIG --ogr-enabled` = "xyes" ; then
+      AC_DEFINE(HAVE_OGR,1,[ ])
+  else
+      AC_MSG_ERROR(OGR support not found.  Please make sure your GDAL includes OGR support.)
+  fi
 
   PHP_SUBST(OGR_SHARED_LIBADD)
 
