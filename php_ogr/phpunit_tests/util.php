@@ -11,9 +11,6 @@
  * @param  file handle
  * @access public
  */
- 
-
-
 
 /************************************************************************/
 /*                            DumpPoint                                 */
@@ -21,7 +18,6 @@
 /************************************************************************/
 
 function DumpPoint($fp, $hGeom, $iPoint )
-
 {
 
     $strOutput =  sprintf( "%.3f %.3f %.3f\n", OGR_G_GetX($hGeom, $iPoint),
@@ -39,7 +35,6 @@ function DumpPoint($fp, $hGeom, $iPoint )
 /************************************************************************/
 
 function DumpLineString( $fp, $hGeom )
-
 {
     $strOutput =  sprintf( "%s:\n", OGR_G_GetGeometryName($hGeom) );
 
@@ -64,14 +59,11 @@ function DumpLineString( $fp, $hGeom )
 
     return OGRERR_NONE;
 }
-
-
 /************************************************************************/
 /*                            DumpPolygon                               */
 /*                                                                      */
 /************************************************************************/
 function DumpPolygon( $fp, $hGeom )
-
 {
 /* -------------------------------------------------------------------- */
 /*      Build a list of strings containing the stuff for each ring.     */
@@ -92,14 +84,12 @@ function DumpPolygon( $fp, $hGeom )
     
     return OGRERR_NONE;
 }
-
 /************************************************************************/
 /*                            DumpMultiPoint                            */
 /*                                                                      */
 /************************************************************************/
 
 function DumpMultipoint( $fp, $hGeom)
-
 {
     $strOutput =  sprintf("%s:\n", OGR_G_GetGeometryName($hGeom) );
     fputs($fp, $strOutput,strlen($strOutput)); 
@@ -125,15 +115,12 @@ function DumpMultipoint( $fp, $hGeom)
     }
     return OGRERR_NONE;
 }
-
 /************************************************************************/
 /*                            DumpMultiLineString                       */
 /*                                                                      */
 /************************************************************************/
 
-
 function DumpMultiLineString( $fp, $hGeom)
-
 {
 /* -------------------------------------------------------------------- */
 /*      Build a list of strings containing the stuff for each ring.     */
@@ -150,16 +137,13 @@ function DumpMultiLineString( $fp, $hGeom)
     }
    return OGRERR_NONE;
 }
-
 /************************************************************************/
 /*                            DumpMultiPolygon                          */
 /*                                                                      */
 /************************************************************************/
 
 function   DumpMultiPolygon($fp, $hGeom)
-
 {
-
 /* -------------------------------------------------------------------- */
 /*      Build a list of strings containing the stuff for each ring.     */
 /* -------------------------------------------------------------------- */
@@ -178,16 +162,13 @@ function   DumpMultiPolygon($fp, $hGeom)
     
     return OGRERR_NONE;
 }
-
 /************************************************************************/
 /*                            DumpGeometryCollection                    */
 /*                                                                      */
 /************************************************************************/
 
 function   DumpGeometryCollection( $fp, $hGeom)
-
 {
-
 /* -------------------------------------------------------------------- */
 /*      Build a list of strings containing the stuff for each Geom.     */
 /* -------------------------------------------------------------------- */
@@ -209,16 +190,12 @@ function   DumpGeometryCollection( $fp, $hGeom)
 
     return OGRERR_NONE;
 }
-
-
 /**********************************************************************
  *                      OGR_G_DumpReadable()
  *
  * Dump a geometry of a specific feature on a layer.
  *
  **********************************************************************/
-
-
 function OGR_G_DumpReadable($fp, $hGeom)
 {
     switch (OGR_G_GetGeometryType($hGeom)) {
@@ -262,8 +239,6 @@ function OGR_G_DumpReadable($fp, $hGeom)
     } 
 
 }
-
-
 /**********************************************************************
  *                      OGR_F_DumpReadable()
  *
@@ -272,7 +247,6 @@ function OGR_G_DumpReadable($fp, $hGeom)
  **********************************************************************/
 
 function OGR_F_DumpReadable( $fp, $hFeature)
-
 {
 
     $hFeatureDefn = OGR_F_GetDefnRef($hFeature);
@@ -321,7 +295,6 @@ function OGR_F_DumpReadable( $fp, $hFeature)
 
     fputs($fp, "\n",strlen("\n")); 
 }
-
 /**********************************************************************
  *                      OGRFieldDefnDump()
  *
@@ -330,7 +303,6 @@ function OGR_F_DumpReadable( $fp, $hFeature)
  **********************************************************************/
 
 function OGRFieldDefnDump( $fp, $hFieldDefn)
-
 {
 
         $strFieldDefn = OGR_FLD_GetNameRef($hFieldDefn);
@@ -348,7 +320,8 @@ function OGRFieldDefnDump( $fp, $hFieldDefn)
  * Dump all layers.
  *
  **********************************************************************/
-function OGRDumpAllLayers ($fp, $hDatasource, $bForce){
+function OGRDumpAllLayers ($fp, $hDatasource, $bForce)
+{
 
     $bForce = TRUE;
   /* Loop through layers and dump their contents */
@@ -411,16 +384,15 @@ function OGRDumpAllLayers ($fp, $hDatasource, $bForce){
       /* No need to free layer handle, it belongs to the datasource */
 
   }
- 
 }
-
 /**********************************************************************
  *                      OGRDumpSingleLayer()
  *
  * Dump a single layer.
  *
  **********************************************************************/
-function OGRDumpSingleLayer ($fp, $hLayer, $bForce){
+function OGRDumpSingleLayer ($fp, $hLayer, $bForce)
+{
 
     $bForce = TRUE;
 
@@ -442,7 +414,8 @@ function OGRDumpSingleLayer ($fp, $hLayer, $bForce){
         $hFieldDefn = OGR_FD_GetFieldDefn( $hLayerDefn, $j );
         $strOutput =  sprintf(" Field %d: %s (%s)\n", $j, 
                               OGR_Fld_GetNameRef($hFieldDefn), 
-                              OGR_GetFieldTypeName(OGR_Fld_GetType($hFieldDefn)) );
+                              OGR_GetFieldTypeName(
+                                  OGR_Fld_GetType($hFieldDefn)) );
 
         fputs($fp, $strOutput,strlen($strOutput)); 
     }
@@ -472,14 +445,14 @@ function OGRDumpSingleLayer ($fp, $hLayer, $bForce){
     /* No need to free layer handle, it belongs to the datasource */
 
 }
-
 /**********************************************************************
  *                      OGRDumpLayerDefn()
  *
  * Dump a layer definition.
  *
  **********************************************************************/
-function OGRDumpLayerDefn ($fp, $hLayerDefn){
+function OGRDumpLayerDefn ($fp, $hLayerDefn)
+{
 
     /* Dump info about this layer */
     $numFields = OGR_FD_GetFieldCount( $hLayerDefn );
@@ -508,9 +481,7 @@ function OGRDumpLayerDefn ($fp, $hLayerDefn){
     fputs($fp, "\n\n----- EOF -----\n", strlen("\n\n----- EOF -----\n")); 
 
     /* No need to free layer handle, it belongs to the datasource */
-
 }
-
 /************************************************************************/
 /*                                OGR_WriteResult_main()                */
 /************************************************************************/
@@ -523,7 +494,6 @@ function OGRDumpLayerDefn ($fp, $hLayerDefn){
  */
 
 function utilWriteResult( $hSrcDS, $hSrcLayer, $hDstDS )
-
 {
     printf("in utilWriteResult()\n");
 /* -------------------------------------------------------------------- */
