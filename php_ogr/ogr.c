@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.11  2003/03/31 22:03:35  nsavard
+ * Corrected bugs in OGR_G_GetEnvelope.
+ *
  * Revision 1.10  2003/03/31 15:08:20  assefa
  * Change all return values to lowercase in getextent function.
  *
@@ -683,7 +686,7 @@ PHP_MINFO_FUNCTION(ogr)
 
 static void php_report_ogr_error(int nErrLevel)
 {
-    if (CPLGetLastErrorMsg())
+    if (CPLGetLastErrorMsg() && (CPLGetLastErrorNo() != OGRERR_NONE))
         php_error(nErrLevel, CPLGetLastErrorMsg());
 
     CPLErrorReset();
@@ -4014,11 +4017,17 @@ PHP_FUNCTION(ogr_ds_executesql)
     }
 
     if (hDataSource){
+        CPLErrorReset();
         hLayer = OGR_DS_ExecuteSQL(hDataSource, strsqlcommand, hGeometry, strdialect);
+    }
+
+    if (!hLayer && (CPLGetLastErrorNo() != OGRERR_NONE)) {
+        php_report_ogr_error(E_WARNING);
+        RETURN_NULL();
     }
     if (!hLayer) {
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL();
     }
 
     ZEND_REGISTER_RESOURCE(return_value, hLayer, le_Layer);
