@@ -308,14 +308,7 @@ class OGRFeatureTest3 extends PHPUnit_TestCase {
         $this->assertFalse($iRetval, "Problem with OGR_F_SetFrom() ".
                              "Files comparison did not matched.\n");
 
-
-
     }
 
 }
 ?>
-	
-
-
-
-
