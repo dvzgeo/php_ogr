@@ -203,19 +203,19 @@ function OGR2OGR_main()
     return OGRERR_NONE;
 
 
+}
 /************************************************************************/
 /*                               Usage()                                */
 /************************************************************************/
 
-    function Usage()
-
-    {
-        printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
+function Usage()
+{
+    printf( "Usage: ogr2ogr [-f format_name] dst_datasource_name\n
              src_datasource_name [layer [layer ...]]\n");
     
-        return 1;
-    }
+    return 1;
 }
+
 /************************************************************************/
 /*                           TranslateLayer()                           */
 /************************************************************************/
