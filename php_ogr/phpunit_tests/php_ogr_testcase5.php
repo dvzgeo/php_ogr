@@ -125,12 +125,6 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
 
         OGR_DS_Destroy($hExistingDataSource);
 
-        printf("diff --brief %s%s %s%s\n",
-               $this->strPathToDumpData,
-               $this->strTmpDumpFile,
-               $this->strPathToStandardData,
-               $strStandardFile);
-
         system("diff --brief ".$this->strPathToDumpData.
                           $this->strTmpDumpFile.
                           " ".$this->strPathToStandardData.$strStandardFile,
@@ -141,7 +135,53 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
         $this->assertFalse($iRetval, "Files have changed.\n");
     }
 
+/***********************************************************************
+*                         testOGR_L_SetAttributeFilter0()                    
+*                         
+************************************************************************/
 
+    function testOGR_L_SetAttributeFilter0() {
 
+        $strStandardFile = "testOGR_L_SetAttributeFilter0.std";
+
+        $hSpatialFilter = null;
+
+        $hDriver = OGRGetDriver(5);
+
+        $hExistingDataSource =  OGR_Dr_Open($hDriver,
+                                               $this->strPathToData,
+                                               $this->bUpdate);
+
+        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 4);
+
+        $strAttributeFilter = "(PERIMETER <= 100000) AND (LAND_FN_ID > 640)";
+
+        $eErr = OGR_L_SetAttributeFilter($hLayer, $strAttributeFilter);
+
+        $this->assertEquals(OGRERR_NONE, $eErr, "Attribute filter 
+                            is not supposed to returned an error.\n");
+
+        $fpOut = fopen($this->strPathToDumpData.
+                       $this->strTmpDumpFile, "w");
+
+        if ($fpOut == FALSE) {
+            printf("Dump file creation error\n");
+            return FALSE;
+        }
+        OGRDumpSingleLayer($fpOut, $hLayer, TRUE /*bForce*/);
+
+        fclose($fpOut);
+
+        OGR_DS_Destroy($hExistingDataSource);
+
+        system("diff --brief ".$this->strPathToDumpData.
+                          $this->strTmpDumpFile.
+                          " ".$this->strPathToStandardData.$strStandardFile,
+                             $iRetval);
+
+        printf("retval = %d\n", $iRetval);
+
+        $this->assertFalse($iRetval, "Files have changed.\n");
+    }
 }
 ?> 
