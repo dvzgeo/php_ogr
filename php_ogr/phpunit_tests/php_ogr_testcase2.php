@@ -2,6 +2,8 @@
 //require_once 'phpunit-0.5/phpunit.php';
 require_once("util.php");
 
+$testSuites_list[] = "OGRSFDriverRegistrarTest3";   
+                 
 class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
     var $strDirName;
     var $strPathToData;
@@ -54,6 +56,7 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
 
     function testOGRGetDriverCount0() {
         $nDriverCount = OGRGetDriverCount();
+        printf("driver count = %d\n", $nDriverCount);
 
         $expected = 0;
         $this->assertEquals($expected, $nDriverCount, 
@@ -61,7 +64,6 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
                             "Driver count is supposed".
                             " to be ".$expected, 0 /*$delta*/);
     }
-
 /***********************************************************************
 *                       testOGRGetDriverCount1()
 *    Adding one driver.  PROBLEM WITH OGRGetDriver when no registered
@@ -76,12 +78,15 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
                           "Return driver is supposed to be NULL".
                           "since no driver is registered.");
         $nDriverCount = OGRGetDriverCount();
+        printf("driver count = %d\n", $nDriverCount);
 
         $expected = 0;
-        $this->assertEquals($expected, $result, "Problem with ".
+
+        $this->assertEquals($expected, $nDriverCount, "Problem with ".
                             "OGRGetDriverCount():  Driver count is supposed".
                             " to be ".$expected." when no driver is ".
                             "registered.", 0 );
+
     }
 /***********************************************************************
 *                       testOGRGetDriverCount2()
@@ -89,17 +94,22 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
 *
 ************************************************************************/
     function testOGRGetDriverCount2() {
+
+
         OGRRegisterAll();
 
         $nDriverCount = OGRGetDriverCount();
-
+        printf("driver count = %d\n", $nDriverCount);
         $expected = 10;
+        printf("in testogrgetdrivercount2a\n");
+
         $this->assertEquals($expected, $nDriverCount, "Problem with ".
                             "OGRGetDriverCount():  Driver count is supposed".
-                            " to be".$expected." after drivers are ".
+                            " to be ".$expected." after drivers are ".
                             "registered.", 0 /*$delta*/);
-    }
+        printf("in testogrgetdrivercount2b\n");
 
+    }
 /***********************************************************************
 *                       testOGRGetDriverCount3()
 *    Verify driver count after registering a new driver.
@@ -110,7 +120,7 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
 ************************************************************************/
 
     function testOGRGetDriverCount3() {
-
+        printf("in testogrgetdrivercount3\n");
         $hDS = OGROpen($this->strPathToData, $this->bUpdate, 
                           $this->hOGRSFDriver);
 
@@ -126,7 +136,11 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
                             "Driver count is supposed".
                             " to be ".$expected." before registering ".
                             "a new driver.", 0 /*$delta*/);
-        @OGRRegisterDriver($this->hOGRSFDriver);
+
+        if($this->hOGRSFDriver != null) {
+            OGRRegisterDriver($this->hOGRSFDriver);
+        }
+
         $nDriverCount = OGRGetDriverCount();
 
         $expected = 1;
@@ -134,8 +148,9 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
                             "OGRRegisterDriver():  Driver count is supposed".
                             " to be ".$expected." after a new driver is ".
                             "registered.", 0 /*$delta*/);
-    }
 
+        OGR_DS_Destroy($hDS);
+    }
 /***********************************************************************
 *                       testOGRGetDriver0()
 *       Get a driver handle after execution OGRRegisterAll().
@@ -187,6 +202,7 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
                             "driver is already registered.", 0 /*$delta*/);
     }
 }
+$testSuites_list[] = "OGRSFDriverTest0";                             
 
 class OGRSFDriverTest0 extends PHPUnit_TestCase {
     var $strDirName;
@@ -233,7 +249,6 @@ class OGRSFDriverTest0 extends PHPUnit_TestCase {
         unset($this->strCapability);
         unset($this->hOGRSFDriver);
     }
-
 /***********************************************************************
 *                       testOGR_Dr_GetName0()
 *                       Getting driver name.
@@ -285,12 +300,10 @@ class OGRSFDriverTest0 extends PHPUnit_TestCase {
                           "Data source resource is supposed to be freed ".
                           "after OGR_DS_Destroy().");
     }
-
 /***********************************************************************
 *                        testOGR_Dr_Open0()
 *       Opening an existing data source with MapInfo File driver.
 ************************************************************************/
-
 
     function testOGR_Dr_Open0(){
         OGRRegisterAll();
@@ -308,7 +321,6 @@ class OGRSFDriverTest0 extends PHPUnit_TestCase {
                              "supposed to be NULL.");
         OGR_DS_Destroy($hSrcDataSource);
     }
-
 /***********************************************************************
 *                        testOGR_Dr_TestCapability0()
 ************************************************************************/
