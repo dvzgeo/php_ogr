@@ -1,0 +1,26 @@
+PHP OGR Extension - Revision History
+====================================
+
+This is a human-readable revision history which attempts to document
+the changes to the PHP OGR extension by version and the required changes
+for users to migrate from one version of the PHP OGR extension to the next.
+Developers are strongly encouraged to document their changes and their 
+impacts on the users here. (Please add the most recent changes to the 
+top of the list.)
+
+For a complete change history, please see the CVS log comments.
+
+
+Current Version
+--------------------------
+
+
+Version 1.0.0 (2003-10-17)
+--------------------------
+
+- No Revision history before version 1.0.0
+
+
+---------
+$Id$
+---------
