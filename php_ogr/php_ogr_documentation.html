@@ -11,16 +11,16 @@
 &nbsp;
 <h2>
 <font face="Arial,Helvetica">Introduction</font></h2>
-<font face="Arial,Helvetica">The <a href="http://gdal.velocet.ca/projects/opengis/">OGR
+<font face="Arial,Helvetica">The <a href="http://gdal.maptools.org/ogr/">OGR
 library </a>is a C++ open source library (and commandline tools) providing
-read (and sometimes write) access to a variety of vector <a href="http://gdal.velocet.ca/projects/opengis/ogrhtml/ogr_formats.html">file
+read (and sometimes write) access to a variety of vector <a href="http://gdal.maptools.org/ogr/ogr_formats.html">file
 formats</a>&nbsp; including ESRI Shapefiles, S-57, SDTS, PostGIS, Oracle
 Spatial, and Mapinfo mid/mif and TAB formats.</font>
-<p><font face="Arial,Helvetica">he C API is generally easy to call from
+<p><font face="Arial,Helvetica">The C API is generally easy to call from
 other languages which allow call out to DLLs functions, such as Visual
 Basic, or Delphi.</font>
 <p><font face="Arial,Helvetica">The OGR/PHP extension enables PHP users
-to access the functionnalities included in the OGR library.&nbsp; This
+to access the functionalities included in the OGR library.&nbsp; This
 extension can be use as built-in PHP or as dynamic library (".dll" on Windows
 or ".so" on Unix).</font>
 <br>&nbsp;
@@ -37,7 +37,7 @@ is needed:</font>
 <font face="Arial,Helvetica">GDAL library 1.1.8</font></li>
 
 <li>
-<font face="Arial,Helvetica">OGR/PHP extension module(???)</font></li>
+<font face="Arial,Helvetica">OGR/PHP extension module</font></li>
 </ul>
 
 <h4>
@@ -46,46 +46,21 @@ is needed:</font>
 Linux distributions have it built in).</font>
 <br><font face="Arial,Helvetica">If not, download the 4.2.3 or higher PHP
 version source code or binaries.</font>
-<p><font face="Arial,Helvetica">Only binaries of PHP Win32 librairy are
-available on the <a href="http://www.php.net/downloads.php">PHP web site</a>.</font>
-<p><font face="Arial,Helvetica">The PHP source code is available by anonymous
-CVS:</font>
-<p><font face="Arial,Helvetica">cvs -d :pserver:cvsread@cvs.php.net:/repository
-login</font>
-<br><font face="Arial,Helvetica">Password:&nbsp; phpfi</font>
-<br><font face="Arial,Helvetica">cvs -d :pserver:cvsread@cvs.php.net:/repository
-co -r PHP_4_2_3 php4</font>
-<p><font face="Arial,Helvetica">More information can be found on the <a href="http://www.php.net/anoncvs.php">PHP
-cvs page</a> and the CVS tree can be <a href="http://cvs.php.net/cvs.php?login=1&php=e7525c1c915fd33ae1fa9469da1b23c9">browsed
-on the web</a>.</font>
-<p><font face="Arial,Helvetica">The full source release is also available
-as a tar ball on <a href="http://www.php.net/downloads.php">PHP download
+<p><font face="Arial,Helvetica">Source code and win32 binaries are
+available on the <a href="http://www.php.net/downloads.php">PHP download
 </a>page.</font>
+<p><font face="Arial,Helvetica">The PHP source code is also available via anonymous
+CVS,
+see the <a href="http://www.php.net/anoncvs.php">PHP
+cvs page</a>.</font>
 <h4>
-<font face="Arial,Helvetica">GDAL</font></h4>
-Binaries of the GDAL utility programs and the shared libraries are available
-as part of <a href="ftp://ftp.remotesensing.org/pub/gdal/openev/">OpenEV_FW</a>
-releases on Windows and Linux. GDAL is also a component of the FreeGIS
-CDs available from <a href="www.freegis.org">www.freegis.org</a> in RPM
-format.
-<p>The GDAL source is available by anonymous CVS:
-<p>% export CVSROOT=:pserver:<a href="mailto:anonymous@cvs.remotesensing.org">anonymous@cvs.remotesensing.org</a>:/cvsroot
-<br>% cvs login
-<br>Password: anonymous
-<br>% cvs checkout gdal
-<p>The CVS tree can be <a href="http://www.remotesensing.org/cgi-bin/cvsweb.cgi/osrs/gdal/">browsed
-on the web</a>, and <a href="ftp://ftp.remotesensing.org/gdal/daily/">daily
-CVS snapshots</a> are available.
-<p>The last full source release is also available as <a href="gdal118.zip">gdal118.zip</a>
-or <a href="gdal-1.1.8.tar.gz">gdal-1.1.8.tar.gz</a>.
-<p><font face="Arial,Helvetica">GDAL library download information can be
-found on <a href="www.remotesensing.ogr/gdal/.">www.remotesensing.ogr/gdal/.</a></font>
+<font face="Arial,Helvetica">GDAL/OGR</font></h4>
+Visit the <a href="http://gdal.maptools.org/">GDAL website</a> to download the
+latest version of the library.</font>
 <br>&nbsp;
 <h4>
 <font face="Arial,Helvetica">OGR/PHP</font></h4>
-<a href="www.tobedetermined.com">Source&nbsp; code</a> or <a href="www.tobedetermined2.com">Win32
-dll</a> for the OGR/PHP extension can be obtained from DM Solutions web
-site.
+Source code or Win32 dll for the OGR/PHP extension can be obtained from DM Solutions.  The official download location is still to be determined.
 <h2>
 <font face="Arial,Helvetica">Build/Installation/Test</font></h2>
 
@@ -106,10 +81,7 @@ instructions</a>, and then install.</font>
 <br><font face="Arial,Helvetica">% ./configure</font>
 <br><font face="Arial,Helvetica">...</font>
 <br><font face="Arial,Helvetica">% make</font>
-<br><font face="Arial,Helvetica">% su</font>
-<br><font face="Arial,Helvetica">Password: ********</font>
-<br><font face="Arial,Helvetica">$ make install</font>
-<br><font face="Arial,Helvetica">$ exit</font>
+<br><font face="Arial,Helvetica">% sudo make install</font>
 <h4>
 <font face="Arial,Helvetica">PHP - PHP/OGR</font></h4>
 
@@ -188,12 +160,11 @@ in the 'Extensions' table.</font>
 <br>&nbsp;
 <h2>
 <font face="Arial,Helvetica">Functions documentation</font></h2>
-The C API documentation&nbsp; was created using Doxygen and can be found
-on the <a href="www2.dmsolutions.ca/tmp/org-docs">DM Solutions web site</a>.&nbsp;
+The C API documentation&nbsp; was created using Doxygen and is part of the <a href="http://gdal.maptools.org/ogr/ogr__api_8h.html">GDAL/OGR documentation</a>.&nbsp;
 In addition to OGR functions, four CPL functions for handling error are
 made available to the user:&nbsp; CPLErrorReset, CPLGetLastErrorNo, CPLGetLastErrorMsg
 and CPLGetLastErrorType.&nbsp; Information on these functions can be found
-<a href="/home/src/gdal/ogr/html/cpl_error.h.html">on this page</a>.
+<a href="http://gdal.maptools.org/ogr/cpl__error_8h.html">on this page</a>.
 <h2>
 <font face="Arial,Helvetica">Information and bug reporting</font></h2>
 The OGR mailing list can be used for discussion of developement and user
