@@ -1,26 +1,16 @@
 <?php
-require_once 'phpunit-0.5/phpunit.php';
+//require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
 class OGRFeatureTest0 extends PHPUnit_TestCase {
     var $strPathToData;
     var $strPathToStandardData;
     var $strPathToOutputData;
-    var $strPathToDumpData;
     var $strTmpDumpFile;
     var $bUpdate;
-    var $bForce;
-    var $hOGRSFDriver;
-    var $strFilename;
-    var $strOutputFilename;
-    var $strCapability;
-    var $strLayerName;
-    var $hSRS;
     var $eGeometryType;
-    var $strDialect;
-    var $strFormat;
     var $strDestDataSource;
-    var $strLayerOutput;
+    var $strOutputLayer;
 
     // constructor of the test suite
     function OGRFeatureTest0($name){
@@ -33,24 +23,11 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
         $this->strPathToOutputData = "../../ogrtests/testcase/";
-        $this->strPathToDumpData = "../../ogrtests/testcase/";
-        $this->strFilename = "NewDataSource";
-        $this->strOutputFilename = "";
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = FALSE;
-        $this->bForce = TRUE;
-        $this->iSpatialFilter[0] = 3350000;  /*xmin*/
-        $this->iSpatialFilter[1] = 4210400;  /*ymin*/
-        $this->iSpatialFilter[2] = 3580000;  /*xmax*/
-        $this->iSpatialFilter[3] = 4280000;  /*ymax*/
-        $this->strCapability = "OLCFastGetExtent";
-        $this->strLayerName = "LayerPoint";
-        $this->hSRS = null;
         $this->eGeometryType = wkbUnknown;
-        $this->strDialect = ""; /*"Generic SQL"*/
-        $this->strFormat = "MapInfo File";
         $this->strDestDataSource = "DSOutput";
-        $this->strLayerOutput = "LayerOutput";
+        $this->strOutputLayer = "LayerOutput";
     }
     // called after the test functions are executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
@@ -59,20 +36,12 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
         // delete your instance
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
-        unset($this->strPathToDumpData);
         unset($this->strPathToOutputData);
-        unset($this->strFilename);
         unset($this->strTmpDumpFile);
-        unset($this->strOutputFilename);
         unset($this->bUpdate);
-        unset($this->bForce);
-        unset($this->strCapability);
-        unset($this->strLayerName);
-        unset($this->hSRS);
         unset($this->eGeometryType);
-        unset($this->strFormat);
         unset($this->strDestDataSource);
-        unset($this->strLayerOutput);
+        unset($this->strOutputLayer);
     }
 
 
@@ -94,25 +63,25 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
                                     $this->strDestDataSource, 
                                         null /*Options*/);
 
-        $hLayer = OGR_DS_CreateLayer($hODS, $this->strLayerOutput, 
+        $hLayer = OGR_DS_CreateLayer($hODS, $this->strOutputLayer, 
                                      $hSpatialRef,
                                      $this->eGeometryType,
                                      null /*Options*/);
 
         $hFeature = OGR_F_Create( OGR_L_GetLayerDefn($hLayer));
         
-        $this->assertNotNull($hFeature, "Feature handle is not supposed ".
-                             "to be NULL.");
+        $this->assertNotNull($hFeature, "OGR_F_Create(),
+                     Feature handle is not supposed to be NULL.");
         
         OGR_F_Destroy($hFeature);
 
-        $this->assertNull($hFeature, "Feature handle is supposed ".
-                             "to be NULL.");
+        $this->assertNull($hFeature, "OGR_F_Destroy(), Feature handle is ".
+                               "supposed to be NULL.");
 
         OGR_DS_Destroy($hODS);
 
         system( "rm -R ".$this->strPathToOutputData.$this->strDestDataSource);
-        
+
     }
 
 /***********************************************************************
@@ -133,7 +102,7 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
                                             $this->strPathToData,
                                             $this->bUpdate);
 
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -151,12 +120,11 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
 
         $hSameFeatureDefn = OGR_F_GetDefnRef($hFeature);
 
-        $this->assertNotNull($hSameFeatureDefn, "Feature handle is not ".
-                             "supposed to be NULL.");
+        $this->assertNotNull($hSameFeatureDefn, "OGR_F_GetDefnRef ".
+                                           "Feature handle is not ".
+                                           "supposed to be NULL.");
 
         OGRDumpLayerDefn ($fpOut, $hSameFeatureDefn);
-
-        printf("hfeature=%s,hsamefeature=%s\n", $hFeature, $hSameFeature);
 
         OGR_F_Destroy($hFeature);
 
@@ -164,25 +132,17 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
 
         fclose($fpOut);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
 
-        printf("retval = %d\n", $iRetval);
+        $this->assertFalse($iRetval, "Problem with OGR_L_GetLayerDefn(), ".
+                                     "or OGR_F_GetDefnRef(): ".
+                                     "files comparison did not match.\n");
 
-        $this->assertFalse($iRetval, "Files have changed.\n");
-
-
-//        system( "rm -R ".$this->strPathToOutputData.$this->strDestDataSource);
+        system( "rm ".$this->strPathToOutputData.$this->strTmpDumpFile);
         
     }
-
-
 }
 ?> 
-
-
-
-
-
