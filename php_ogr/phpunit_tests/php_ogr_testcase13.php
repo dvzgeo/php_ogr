@@ -2,6 +2,8 @@
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRGeometryTest1";                             
+
 class OGRGeometryTest1 extends PHPUnit_TestCase {
     var $strPathToOutputData;
     var $strTmpDumpFile;
@@ -19,7 +21,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
     function OGRGeometryTest1($name){
         $this->PHPUnit_TestCase($name);	
     }
-
     function setUp() {
 
         /*Prepare to write temporary data for comparison.*/
@@ -76,7 +77,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
 
 
     }
-
     function tearDown() {
         OGR_G_DestroyGeometry($this->hRing1);
         OGR_G_DestroyGeometry($this->hRing2);
@@ -147,8 +147,8 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
         $expected = 2;
         $nGeometryCount = OGR_G_GetGeometryCount($this->hContainer);
         $this->AssertEquals($expected, $nGeometryCount, "Problem with ".
-                            "OGR_G_GetGeometryRef():  supposed to be a polygon ".
-                            "with two rings.");
+                            "OGR_G_GetGeometryRef():  supposed to be a ".
+                            "polygon with two rings.");
 
         OGR_G_DestroyGeometry($hGeometry);
     }
@@ -167,7 +167,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
                             "OGR_G_RemoveGeometry():  not supposed to be ".
                             "supported on polygon yet.");
     }
-
 /***********************************************************************
 *                            testOGR_G_RemoveGeometry1()
 ************************************************************************/
@@ -219,7 +218,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
                              "Files comparison did not matched.\n");
 
     }
-
 /***********************************************************************
 *                            testOGR_G_Equals()
 ************************************************************************/
@@ -229,7 +227,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
         $this->AssertFalse($bEqual, "Problem with OGR_G_Equals: ".
                             "these two rings should not be equal.");
     }
-
 /***********************************************************************
 *                            testOGR_G_Intersect()
 ************************************************************************/
@@ -239,7 +236,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
         $this->AssertTrue($bIntersect, "Problem with OGR_G_Intersect(): ".
                           "these two rings should intersect.");
     }
-
 /***********************************************************************
 *                            testOGR_G_Empty()
 ************************************************************************/
@@ -270,7 +266,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
                              "Files comparison did not matched.\n");
 
     }
-
 /***********************************************************************
 *                            testOGR_G_Clone()
 ************************************************************************/
@@ -283,7 +278,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
 
         OGR_G_DestroyGeometry($hGeometry);
     }
-
 /***********************************************************************
 *                            testOGR_G_GetEnvelope()
 ************************************************************************/
@@ -303,12 +297,12 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
 
         $actual = serialize(&$hEnvelope);
 
-        $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:12.34;s:4:\"maxx\";d:123.45;".
-                                   "s:4:\"miny\";d:45.67;s:4:\"maxy\";d:456.78;}";
-        $this->AssertEquals($expected, $actual, "Problem with OGR_G_GetEnvelope().");
+        $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:12.34;s:4:\"maxx\";".
+            "d:123.45;s:4:\"miny\";d:45.67;s:4:\"maxy\";d:456.78;}";
+        $this->AssertEquals($expected, $actual, "Problem with ".
+                            "OGR_G_GetEnvelope().");
 
     }
-
 /***********************************************************************
 *                            testOGR_G_WkbSize()
 ************************************************************************/
@@ -318,10 +312,10 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
 
         $expected = 177; /*nSize += (4 + 16 * 5) * 2 rings et nSize =9. */
 
-        $this->AssertEquals($expected, $nSize, "Problem with OGR_G_WkbSize().");
+        $this->AssertEquals($expected, $nSize, 
+                            "Problem with OGR_G_WkbSize().");
 
     }
 
 }
 ?>
-
