@@ -14,8 +14,6 @@ class OGRFeatureTest3 extends PHPUnit_TestCase {
     var $strDirName;
     var $hOGRSFDriver;
     var $astrOptions;
-    var $hDestLayer;
-    
  
     function OGRFeatureTest3($name){
         $this->PHPUnit_TestCase($name);	
@@ -58,6 +56,7 @@ class OGRFeatureTest3 extends PHPUnit_TestCase {
 /*        if (file_exists($this->strPathToOutputData)) {
             system( "rm -R ".$this->strPathToOutputData);
             }*/
+        OGR_DS_Destroy($this->hDestDS);
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
