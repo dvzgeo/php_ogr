@@ -41,6 +41,10 @@ PHP_RSHUTDOWN_FUNCTION(ogr);
 PHP_MINFO_FUNCTION(ogr);
 
 PHP_FUNCTION(confirm_ogr_compiled);	/* For testing, remove later. */
+PHP_FUNCTION(cplerrorreset);
+PHP_FUNCTION(cplgetlasterrorno);
+PHP_FUNCTION(cplgetlasterrortype);
+PHP_FUNCTION(cplgetlasterrormsg);
 PHP_FUNCTION(ogr_ds_destroy);
 PHP_FUNCTION(ogropen);
 PHP_FUNCTION(ogr_g_createfromwkb);
