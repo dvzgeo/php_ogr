@@ -1,6 +1,7 @@
 <?php
-//require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
+
+$testSuites_list[] = "OGRGeometryTest2";                             
 
 class OGRGeometryTest2 extends PHPUnit_TestCase {
     var $hContainer;
@@ -20,7 +21,6 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
     function OGRGeometryTest2($name){
         $this->PHPUnit_TestCase($name);	
     }
-
     function setUp() {
         /*Create a polygon.*/
         $eType = wkbPolygon;
@@ -46,7 +46,7 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
         $eErr = OGR_G_AddGeometry($this->hContainer, $this->hRing2);
 
         /*Prepare to write temporary data for comparison.*/
-        $this->strDirName = "testcase/";
+        $this->strDirName = "testcase2/";
         $this->strPathToData = "./data/mifwgs1984";
         $this->strPathToStandardData = "./data/testcase/";
 	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
@@ -61,7 +61,6 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
         }
         mkdir($this->strPathToOutputData, 0777);
     }
-
     function tearDown() {
         OGR_G_DestroyGeometry($this->hRing1);
         OGR_G_DestroyGeometry($this->hRing2);
@@ -139,18 +138,20 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
 
         $eErr = OGR_L_CreateFeature($hDestLayer, $hDestFeature);
 
+        OGR_DS_Destroy($hSrcDS);
+
         OGR_DS_Destroy($hDestDS);
 
-
-        system("ogrinfo -al ".$this->strPathToOutputData.
-               $this->strDestDataSource." >".
+        system("/usr1/local/bin/ogrinfo -al ".$this->strPathToOutputData.
+               $this->strDestDataSource." &>".
                $this->strPathToOutputData.
                $this->strTmpDumpFile);
 
-
-        system("diff --brief ".$this->strPathToOutputData.
+        system("diff --brief --ignore-matching-lines=\"INFO:\" ".
+               $this->strPathToOutputData.
                $this->strTmpDumpFile.
-               " ".$this->strPathToStandardData.$strStandardFile,
+               " ".$this->strPathToStandardData.
+               $strStandardFile,
                $iRetval);
 
 
@@ -158,7 +159,6 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
                   "OGR_G_AssignSpatialReference() or OGR_G_GetSpatialRef(): ".
                   "Files comparison did not matched.\n");
 
-        OGR_DS_Destroy($hSrcDS);
 
     }
 /***********************************************************************
@@ -250,13 +250,3 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
 */
 }
 ?>
-
-
-
-
-
-
-
-
-
-
