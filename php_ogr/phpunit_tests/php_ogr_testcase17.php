@@ -7,6 +7,7 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
     var $hRing1;
     var $hRing2;
 
+    var $strDirName;
     var $strPathToOutputData;
     var $strTmpDumpFile;
     var $strPathToStandardData;
@@ -70,6 +71,7 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
         unset($this->hring2);
         unset($this->hContainer);
 
+        unset($this->strDirName);
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
@@ -144,6 +146,7 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
                $this->strDestDataSource." >".
                $this->strPathToOutputData.
                $this->strTmpDumpFile);
+
 
         system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
