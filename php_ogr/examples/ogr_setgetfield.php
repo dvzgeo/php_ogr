@@ -4,7 +4,7 @@
 <?php
 
 /******************************************************************************
- * $Id:
+ * $Id$
  *
  * Project:  PHP Interface for OGR C API
  * Purpose:  Test program for PHP/OGR module.
