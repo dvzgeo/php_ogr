@@ -227,7 +227,7 @@ function OGR_G_DumpReadable($hGeom)
 {
 
     switch (OGR_G_GetGeometryType($hGeom)) {
-      case wkbUnkonwn:
+      case wkbUnknown:
         break;
       case wkbPoint:
       case wkbPoint25D:
