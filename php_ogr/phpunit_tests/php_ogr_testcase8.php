@@ -3,6 +3,8 @@
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRFeatureTest1";                             
+
 class OGRFeatureTest1 extends PHPUnit_TestCase {
     var $strPathToDumpData;
     var $strTmpOutputFile;
@@ -31,7 +33,9 @@ class OGRFeatureTest1 extends PHPUnit_TestCase {
         $this->eGeometryType = wkbLineString;
         $this->strDestDataSource = "OutputDS";
 
-        $this->hDS = OGROpen($this->strPathToData, $this->bUpdate, $this->hOGRSFDriver);
+        $this->hDS = OGROpen($this->strPathToData, 
+                             $this->bUpdate, 
+                             $this->hOGRSFDriver);
         $iLayer = 3;
 	$this->hLayer = OGR_DS_GetLayer($this->hDS, $iLayer);
     }
@@ -40,11 +44,12 @@ class OGRFeatureTest1 extends PHPUnit_TestCase {
         OGR_DS_Destroy($this->hDS);
 
         if (file_exists($this->strPathToOutputData.$this->strDestDataSource)) {
-            system( "rm -R ".$this->strPathToOutputData.$this->strDestDataSource);
+            system( "rm -R ".$this->strPathToOutputData.
+                    $this->strDestDataSource);
         }
 
-        if (file_exists($this->strPathToOutputData.$this->strTmpDumpFile)) {     
-            system( "rm ".$this->strPathToOutputData.$this->strTmpDumpFile);
+        if (file_exists($this->strPathToOutputData.$this->strTmpDumpFile)) {
+           system( "rm ".$this->strPathToOutputData.$this->strTmpDumpFile);
         }
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
@@ -72,14 +77,16 @@ class OGRFeatureTest1 extends PHPUnit_TestCase {
 
         $hSpatialRef = null;
 
-        $hDestDS = OGR_Dr_CreateDataSource($hDriver, $this->strPathToOutputData.
-                                    $this->strDestDataSource, 
-                                        null /*Options*/);
+        $hDestDS = OGR_Dr_CreateDataSource($hDriver, 
+                                           $this->strPathToOutputData.
+                                           $this->strDestDataSource, 
+                                           null /*Options*/);
 
-        $hDestLayer = OGR_DS_CreateLayer($hDestDS, $this->strOutputLayer, 
-                                     $hSpatialRef,
-                                     $this->eGeometryType,
-                                     null /*Options*/);
+        $hDestLayer = OGR_DS_CreateLayer($hDestDS, 
+                                         $this->strOutputLayer, 
+                                         $hSpatialRef,
+                                         $this->eGeometryType,
+                                         null /*Options*/);
 
         $hDestFeature = OGR_F_Create( OGR_L_GetLayerDefn($hDestLayer));
 
@@ -114,8 +121,6 @@ class OGRFeatureTest1 extends PHPUnit_TestCase {
                              "Files comparison did not matched.\n");
 
         OGR_DS_Destroy($hDestDS);
-
-
     }
 /***********************************************************************
 *                            testOGR_F_Clone()                                
@@ -262,11 +267,3 @@ class OGRFeatureTest1 extends PHPUnit_TestCase {
 }
 
 ?>
-
-
-
-
-
-
-
-
