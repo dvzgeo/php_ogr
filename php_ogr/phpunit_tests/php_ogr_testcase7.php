@@ -2,6 +2,8 @@
 //require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRFeatureTest0";                             
+
 class OGRFeatureTest0 extends PHPUnit_TestCase {
     var $strPathToData;
     var $strPathToStandardData;
@@ -51,8 +53,6 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
         unset($this->strDestDataSource);
         unset($this->strOutputLayer);
     }
-
-
 /***********************************************************************
 *                         testOGR_F_CreateDestroy0()                    
 *                       
@@ -101,9 +101,7 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
 
 
         OGR_DS_Destroy($hODS);
-
     }
-
 /***********************************************************************
 *                         testOGR_F_GetDefnRef0()                    
 *                       

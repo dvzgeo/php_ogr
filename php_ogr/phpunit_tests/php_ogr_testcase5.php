@@ -1,6 +1,9 @@
 <?php
+
 //require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
+
+$testSuites_list[] = "OGRLayerTest1";                             
 
 class OGRLayerTest1 extends PHPUnit_TestCase {
     var $strDirName;
@@ -38,9 +41,7 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
         }
         mkdir($this->strPathToOutputData, 0777);
 
-
         OGRRegisterAll();
-
 
         $this->hOGRSFDriver = OGRGetDriver(5);
 
@@ -57,7 +58,6 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
     function tearDown() {
         // delete your instance
         OGR_DS_Destroy($this->hSrcDataSource);
-
         unset($this->strDirname);
         unset($this->strPathToOutputData);
         unset($this->strTmpDumpFile);
@@ -69,15 +69,12 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
         unset($this->iSpatialFilter);
         unset($this->hSrcDataSource);
     }
-
 /***********************************************************************
 *                         testOGR_L_SetGetSpatialFilter0()                    
 *                         
 ************************************************************************/
 
     function testOGR_L_SetGetSpatialFilter0() {
-
-
             $strStandardFile = "testOGR_L_SetGetSpatialFilter0.std";
 
             $hSpatialFilter = OGR_G_CreateGeometry(wkbLinearRing);
@@ -124,14 +121,12 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
                   "OGR_L_SetSpatialFilter() or OGR_L_GetSpatialFilter(): ".
                   "Files comparison did not matched.\n");
     }
-
 /***********************************************************************
 *                         testOGR_L_SetAttributeFilter0()                    
 *                         
 ************************************************************************/
 
     function testOGR_L_SetAttributeFilter0() {
-
         $strStandardFile = "testOGR_L_SetAttributeFilter0.std";
 
         $hSpatialFilter = null;

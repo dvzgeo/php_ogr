@@ -2,6 +2,8 @@
 //require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRLayerTest0";                             
+
 class OGRLayerTest0 extends PHPUnit_TestCase {
     var $strPathToData;
     var $strDirName;
@@ -11,7 +13,6 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
     var $strCapability;
     var $hLayer;
     var $hSrcDataSource;
-
 
     // constructor of the test suite
     function OGRLayerTest0($name){
@@ -63,12 +64,10 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
         unset($this->hLayer);
         unset($this->hSrcDataSource);
     }
-
 /***********************************************************************
 *                         testOGR_L_GetLayerDefn0()                    
 *                      
 ************************************************************************/
-
     function testOGR_L_GetLayerDefn0() {
 
         $hFeatureDefn = OGR_L_GetLayerDefn($this->hLayer);
@@ -78,12 +77,10 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
                              "is not supposed to be NULL.\n");
 
     }
-
 /***********************************************************************
 *                         testOGR_L_TestCapability0()                    
 *                         OLCRandomRead
 ************************************************************************/
-
     function testOGR_L_TestCapability0() {
 
         $bCapability = OGR_L_TestCapability($this->hLayer, 
@@ -94,12 +91,10 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
                           " capability is supposed to be supported." );
 
     }
-
 /***********************************************************************
 *                         testOGR_L_TestCapability1()                    
 *                         OLCSequentialWrite
 ************************************************************************/
-
     function testOGR_L_TestCapability1() {
 
         $bCapability = OGR_L_TestCapability($this->hLayer, 
@@ -114,7 +109,6 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 *                         testOGR_L_TestCapability2()                    
 *                         OLCRandowWrite
 ************************************************************************/
-
     function testOGR_L_TestCapability2() {
 
         $bCapability = OGR_L_TestCapability($this->hLayer, 
@@ -128,7 +122,6 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 *                         testOGR_L_TestCapability3()                    
 *                         OLCFastSpatialFilter
 ************************************************************************/
-
     function testOGR_L_TestCapability3() {
 
         OGR_L_SetSpatialFilter($this->hLayer, null);
@@ -146,7 +139,6 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 *                         testOGR_L_TestCapability4()                    
 *                          OLCFastFeatureCount
 ************************************************************************/
-
     function testOGR_L_TestCapability4() {
 
         $bCapability = OGR_L_TestCapability($this->hLayer, 
@@ -156,12 +148,10 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
                           "OGR_L_TestCapability(): ".$this->strCapability[4].
                           " capability is supposed to be supported." );
     }
-
 /***********************************************************************
 *                         testOGR_L_TestCapability5()                    
 *                         OLCFastGetExtent
 ************************************************************************/
-
     function testOGR_L_TestCapability5() {
 
         $bCapability = OGR_L_TestCapability($this->hLayer, 
@@ -172,6 +162,5 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
                           " capability is supposed to be supported." );
 
     }
-
 }
 ?> 

@@ -2,6 +2,8 @@
 //require_once `phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
+$testSuites_list[] = "OGRFeatureTest2";                             
+
 class OGRFeatureTest2 extends PHPUnit_TestCase {
     var $strPathToOutputData;
     var $strTmpDumpFile;
@@ -226,10 +228,3 @@ class OGRFeatureTest2 extends PHPUnit_TestCase {
 }
 
 ?>
-
-
-
-
-
-
-
