@@ -28,6 +28,11 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.12  2003/04/01 22:44:47  nsavard
+ * Corrected bug in OGR_DS_ExecuteSQL() when call to C API return NULL and
+ * there is no error, corrected bug in php_report_ogr_error() to avoid 
+ * printing empty string
+ *
  * Revision 1.11  2003/03/31 22:03:35  nsavard
  * Corrected bugs in OGR_G_GetEnvelope.
  *
@@ -4021,10 +4026,6 @@ PHP_FUNCTION(ogr_ds_executesql)
         hLayer = OGR_DS_ExecuteSQL(hDataSource, strsqlcommand, hGeometry, strdialect);
     }
 
-    if (!hLayer && (CPLGetLastErrorNo() != OGRERR_NONE)) {
-        php_report_ogr_error(E_WARNING);
-        RETURN_NULL();
-    }
     if (!hLayer) {
         php_report_ogr_error(E_WARNING);
         RETURN_NULL();
