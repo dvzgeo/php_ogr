@@ -1,4 +1,4 @@
- <BODY>
+<BODY>
 <HTML>
 <PRE>
 <?php
@@ -289,14 +289,3 @@ function TranslateLayer( $hSrcDS, $hSrcLayer, $hDstDS )
 </PRE>
 </BODY>
 </HTML>
-
-
-
-
-
-
-
-
-
-
-
