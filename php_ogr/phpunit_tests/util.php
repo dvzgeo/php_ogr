@@ -454,6 +454,43 @@ function OGRDumpSingleLayer ($fp, $hLayer, $bForce){
 
 }
 
+/**********************************************************************
+ *                      OGRDumpLayerDefn()
+ *
+ * Dump a layer definition.
+ *
+ **********************************************************************/
+function OGRDumpLayerDefn ($fp, $hLayerDefn){
+
+    /* Dump info about this layer */
+    $numFields = OGR_FD_GetFieldCount( $hLayerDefn );
+
+    fputs($fp, "\n===================\n", 
+          strlen("\n===================\n")); 
+
+    $strOutput =  sprintf("Layer %d: '%s'\n\n", i, 
+                          OGR_FD_GetName($hLayerDefn));
+    fputs($fp, $strOutput,strlen($strOutput)); 
+
+ 
+    for($j=0; $j<$numFields; $j++)
+    {
+
+        $hFieldDefn = OGR_FD_GetFieldDefn( $hLayerDefn, $j );
+        $strOutput =  sprintf(" Field %d: %s (%s)\n", $j, 
+                              OGR_Fld_GetNameRef($hFieldDefn), 
+                              OGR_GetFieldTypeName(OGR_Fld_GetType($hFieldDefn)) );
+
+        fputs($fp, $strOutput,strlen($strOutput)); 
+    }
+
+    fputs($fp, "\n", strlen("\n")); 
+
+    fputs($fp, "\n\n----- EOF -----\n", strlen("\n\n----- EOF -----\n")); 
+
+    /* No need to free layer handle, it belongs to the datasource */
+
+}
 
 /************************************************************************/
 /*                                OGR_WriteResult_main()                */
@@ -535,12 +572,3 @@ function utilWriteResult( $hSrcDS, $hSrcLayer, $hDstDS )
 
 }
 ?>
-
-
-
-
-
-
-
-
-
