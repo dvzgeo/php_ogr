@@ -1,20 +1,16 @@
 <?php
-require_once 'phpunit-0.5/phpunit.php';
+//require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
 class OGRLayerTest0 extends PHPUnit_TestCase {
     var $strPathToData;
+    var $strDirName;
     var $strPathToOutputData;
     var $bUpdate;
     var $hOGRSFDriver;
-    var $strFilename;
     var $strCapability;
-    var $strLayerName;
-    var $hSRS;
-    var $eGeometryType;
-    var $strDialect;
-    var $strFormat;
-    var $strDestDataSource;
+    var $hLayer;
+    var $hSrcDataSource;
 
 
     // constructor of the test suite
@@ -25,38 +21,47 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here
     function setUp() {
+        $this->strDirName = "testcase/";
+	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
         $this->strPathToData = "./data/mif";
-        $this->strPathToOutputData = "../../ogrtests/testcase/";
-        $this->strFilename = "NewDataSource";
         $this->bUpdate = FALSE;
-        $this->strCapability[0] = "OLCRandomRead";
-        $this->strCapability[1] = "OLCSequentialWrite";
-        $this->strCapability[2] = "OLCRandomWrite";
-        $this->strCapability[3] = "OLCFastSpatialFilter";
-        $this->strCapability[4] = "OLCFastFeatureCount";
-        $this->strCapability[5] = "OLCFastGetExtent";
-        $this->strLayerName = "LayerPoint";
-        $this->hSRS = null;
-        $this->eGeometryType = wkbPoint;
-        $this->strDialect = ""; /*"Generic SQL"*/
-        $this->strFormat = "MapInfo File";
-        $this->strDestDataSource = "Output";
+        $this->strCapability[0] = OLCRandomRead;
+        $this->strCapability[1] = OLCSequentialWrite;
+        $this->strCapability[2] = OLCRandomWrite;
+        $this->strCapability[3] = OLCFastSpatialFilter;
+        $this->strCapability[4] = OLCFastFeatureCount;
+        $this->strCapability[5] = OLCFastGetExtent;
+
+        if (file_exists($this->strPathToOutputData)) {
+            system( "rm -R ".$this->strPathToOutputData);
+        }
+        mkdir($this->strPathToOutputData, 0777);
+
+
+        OGRRegisterAll();
+        $this->hOGRSFDriver = OGRGetDriver(5);
+
+        $this->hSrcDataSource =  OGR_Dr_Open($this->hOGRSFDriver,
+                                               $this->strPathToData,
+                                               $this->bUpdate);
+
+        $this->hLayer = OGR_DS_GetLayer($this->hSrcDataSource, 1);
+
     }
     // called after the test functions are executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance
-        unset($this->strPathToData);
+        OGR_DS_Destroy($this->hSrcDataSource);
+        $this->strDirName = "testcase/";
         unset($this->strPathToOutputData);
-        unset($this->strFilename);
+        unset($this->strPathToData);
         unset($this->bUpdate);
+        unset($this->hOGRSFDriver);
         unset($this->strCapability);
-        unset($this->strLayerName);
-        unset($this->hSRS);
-        unset($this->eGeometryType);
-        unset($this->strFormat);
-        unset($this->strDestDataSource);
+        unset($this->hLayer);
+        unset($this->hSrcDataSource);
     }
 
 /***********************************************************************
@@ -64,22 +69,14 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 *                      
 ************************************************************************/
 
-    function testOGR_L_GetLayerDefn1() {
-        OGRRegisterAll();
-        $hDriver = OGRGetDriver(5);
+    function testOGR_L_GetLayerDefn0() {
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
+        $hFeatureDefn = OGR_L_GetLayerDefn($this->hLayer);
 
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 1);
+        $this->assertNotNull($hFeatureDefn, "Problem with ".
+                             "OGR_L_GetLayerDefn():  Layer definition ".
+                             "is not supposed to be NULL.\n");
 
-        $hFeatureDefn = OGR_L_GetLayerDefn($hLayer);
-
-        $this->assertNotNull($hFeatureDefn, "Layer definition
-                            is not supposed to be NULL.\n");
-
-        OGR_DS_Destroy($hExistingDataSource);
     }
 
 /***********************************************************************
@@ -89,20 +86,13 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 
     function testOGR_L_TestCapability0() {
 
-        $hDriver = OGRGetDriver(5);
+        $bCapability = OGR_L_TestCapability($this->hLayer, 
+                                            $this->strCapability[0]);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
+        $this->assertTrue($bCapability, "Problem with ".
+                          "OGR_L_TestCapability(): ".$this->strCapability[0].
+                          " capability is supposed to be supported." );
 
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 1);
-
-        $iCapability = OGR_L_TestCapability($hLayer, $this->strCapability[0]);
-
-        $this->assertTrue($iCapability,$this->strCapability[0]." capability".
-                          " is supposed to be supported" );
-
-        OGR_DS_Destroy($hExistingDataSource);
     }
 
 /***********************************************************************
@@ -112,21 +102,13 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 
     function testOGR_L_TestCapability1() {
 
-        $hDriver = OGRGetDriver(5);
+        $bCapability = OGR_L_TestCapability($this->hLayer, 
+                                            $this->strCapability[1]);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 1);
-
-        $iCapability = OGR_L_TestCapability($hLayer, $this->strCapability[1]);
-
-        $this->assertFalse($iCapability,$this->strCapability[1]." capability".
-                          " is not supposed to be supported since".
-                          "bUpdate is FALSE" );
-
-        OGR_DS_Destroy($hExistingDataSource);
+        $this->assertFalse($bCapability, "Problem with ".
+                          "OGR_L_TestCapability(): ".$this->strCapability[1].
+                          " capability is not supposed to be supported ".
+                           "since bUpdate is FALSE." );
     }
 /***********************************************************************
 *                         testOGR_L_TestCapability2()                    
@@ -135,20 +117,12 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 
     function testOGR_L_TestCapability2() {
 
-        $hDriver = OGRGetDriver(5);
+        $bCapability = OGR_L_TestCapability($this->hLayer, 
+                                            $this->strCapability[2]);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 1);
-
-        $iCapability = OGR_L_TestCapability($hLayer, $this->strCapability[2]);
-
-        $this->assertFalse($iCapability,$this->strCapability[2]." capability".
-                          " is supposed to be supported" );
-
-        OGR_DS_Destroy($hExistingDataSource);
+        $this->assertFalse($bCapability, "Problem with ".
+                          "OGR_L_TestCapability(): ".$this->strCapability[2].
+                          " capability is not supposed to be supported." );
     }
 /***********************************************************************
 *                         testOGR_L_TestCapability3()                    
@@ -157,22 +131,16 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 
     function testOGR_L_TestCapability3() {
 
-        $hDriver = OGRGetDriver(5);
+        OGR_L_SetSpatialFilter($this->hLayer, null);
+        OGR_L_SetAttributeFilter($this->hLayer, null);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
+        $bCapability = OGR_L_TestCapability($this->hLayer, 
+                                            $this->strCapability[3]);
 
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 1);
-        OGR_L_SetSpatialFilter($hLayer, null);
-        OGR_L_SetAttributeFilter($hLayer, null);
+        $this->assertTrue($bCapability, "Problem with ".
+                          "OGR_L_TestCapability(): ".$this->strCapability[3].
+                          " capability is supposed to be supported." );
 
-        $iCapability = OGR_L_TestCapability($hLayer, $this->strCapability[3]);
-
-        $this->assertTrue($iCapability,$this->strCapability[3]." capability".
-                          " is supposed to be supported" );
-
-        OGR_DS_Destroy($hExistingDataSource);
     }
 /***********************************************************************
 *                         testOGR_L_TestCapability4()                    
@@ -181,20 +149,12 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 
     function testOGR_L_TestCapability4() {
 
-        $hDriver = OGRGetDriver(5);
+        $bCapability = OGR_L_TestCapability($this->hLayer, 
+                                            $this->strCapability[4]);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 1);
-
-        $iCapability = OGR_L_TestCapability($hLayer, $this->strCapability[4]);
-
-        $this->assertTrue($iCapability,$this->strCapability[4]." capability".
-                          " is supposed to be supported" );
-
-        OGR_DS_Destroy($hExistingDataSource);
+        $this->assertTrue($bCapability, "Problem with ".
+                          "OGR_L_TestCapability(): ".$this->strCapability[4].
+                          " capability is supposed to be supported." );
     }
 
 /***********************************************************************
@@ -204,22 +164,14 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
 
     function testOGR_L_TestCapability5() {
 
-        $hDriver = OGRGetDriver(5);
+        $bCapability = OGR_L_TestCapability($this->hLayer, 
+                                            $this->strCapability[5]);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
+        $this->assertTrue($bCapability, "Problem with ".
+                          "OGR_L_TestCapability(): ".$this->strCapability[5].
+                          " capability is supposed to be supported." );
 
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 1);
-
-        $iCapability = OGR_L_TestCapability($hLayer, $this->strCapability[5]);
-
-        $this->assertTrue($iCapability,$this->strCapability[5]." capability".
-                          " is supposed to be supported" );
-
-        OGR_DS_Destroy($hExistingDataSource);
     }
-
 
 }
 ?> 
