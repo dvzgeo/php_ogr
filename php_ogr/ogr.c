@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.13  2003/04/01 23:45:57  nsavard
+ * Removed a useless test in OGR_DS_ExecuteSQL().
+ *
  * Revision 1.12  2003/04/01 22:44:47  nsavard
  * Corrected bug in OGR_DS_ExecuteSQL() when call to C API return NULL and
  * there is no error, corrected bug in php_report_ogr_error() to avoid 
@@ -115,12 +118,16 @@ static int le_Feature;
 
 
 /*Force some resource arguments to be passed as reference.*/
-static unsigned char five_args_third_fourth_fifth_args_force_ref[] = { 5,  BYREF_NONE, BYREF_NONE, BYREF_FORCE, BYREF_FORCE, BYREF_FORCE };
-
-static unsigned char three_args_first_arg_force_ref[] = { 3, BYREF_FORCE, BYREF_NONE, BYREF_NONE };
-static unsigned char three_args_third_arg_force_ref[] = { 3, BYREF_NONE, BYREF_NONE, BYREF_FORCE };
-static unsigned char three_args_second_arg_force_ref[] = { 3, BYREF_NONE, BYREF_FORCE, BYREF_NONE };
-static unsigned char two_args_first_arg_force_ref[] = { 2, BYREF_FORCE, BYREF_NONE };
+static unsigned char five_args_third_fourth_fifth_args_force_ref[] = 
+    { 5,  BYREF_NONE, BYREF_NONE, BYREF_FORCE, BYREF_FORCE, BYREF_FORCE };
+static unsigned char three_args_first_arg_force_ref[] = 
+    { 3, BYREF_FORCE, BYREF_NONE, BYREF_NONE };
+static unsigned char three_args_third_arg_force_ref[] = 
+    { 3, BYREF_NONE, BYREF_NONE, BYREF_FORCE };
+static unsigned char three_args_second_arg_force_ref[] = 
+    { 3, BYREF_NONE, BYREF_FORCE, BYREF_NONE };
+static unsigned char two_args_first_arg_force_ref[] = 
+    { 2, BYREF_FORCE, BYREF_NONE };
 
 
 /* {{{ ogr_functions[]
@@ -128,6 +135,10 @@ static unsigned char two_args_first_arg_force_ref[] = { 2, BYREF_FORCE, BYREF_NO
  * Every user visible function must have an entry in ogr_functions[].
  */
 function_entry ogr_functions[] = {
+    PHP_FE(cplerrorreset, NULL)
+    PHP_FE(cplgetlasterrorno, NULL)
+    PHP_FE(cplgetlasterrortype, NULL)
+    PHP_FE(cplgetlasterrormsg, NULL)
     PHP_FE(ogr_g_createfromwkb, NULL)
     PHP_FE(ogr_g_createfromwkt, NULL)
     PHP_FE(ogr_g_destroygeometry, NULL)
@@ -284,8 +295,10 @@ zend_module_entry ogr_module_entry = {
     ogr_functions,
     PHP_MINIT(ogr),
     PHP_MSHUTDOWN(ogr),
-    PHP_RINIT(ogr),     /* Replace with NULL if there's nothing to do at request start */
-    PHP_RSHUTDOWN(ogr), /* Replace with NULL if there's nothing to do at request end */
+    PHP_RINIT(ogr),     /* Replace with NULL if there's nothing to do at 
+                           request start */
+    PHP_RSHUTDOWN(ogr), /* Replace with NULL if there's nothing to do at
+                           request end */
     PHP_MINFO(ogr),
 #if ZEND_MODULE_API_NO >= 20010901
     "0.1", /* Replace with version number for your extension */
@@ -302,8 +315,10 @@ ZEND_GET_MODULE(ogr)
  */
 /* Remove comments and fill if you need to have entries in php.ini
 PHP_INI_BEGIN()
-    STD_PHP_INI_ENTRY("ogr.global_value",      "42", PHP_INI_ALL, OnUpdateInt, global_value, zend_ogr_globals, ogr_globals)
-    STD_PHP_INI_ENTRY("ogr.global_string", "foobar", PHP_INI_ALL, OnUpdateString, global_string, zend_ogr_globals, ogr_globals)
+    STD_PHP_INI_ENTRY("ogr.global_value",      "42", PHP_INI_ALL, 
+    OnUpdateInt, global_value, zend_ogr_globals, ogr_globals)
+    STD_PHP_INI_ENTRY("ogr.global_string", "foobar", PHP_INI_ALL,
+    OnUpdateString, global_string, zend_ogr_globals, ogr_globals)
 PHP_INI_END()
 */
 /* }}} */
@@ -518,17 +533,20 @@ PHP_MINIT_FUNCTION(ogr)
                                                      NULL, "OGRLayer", 
                                                      module_number);
 
-    le_SpatialReference = zend_register_list_destructors_ex(ogr_free_SpatialReference,
-                                                     NULL, "OGRSpatialReference", 
-                                                     module_number);
+    le_SpatialReference = zend_register_list_destructors_ex
+                               (ogr_free_SpatialReference,
+                                NULL, "OGRSpatialReference", 
+                                module_number);
 
-    le_SpatialReferenceRef = zend_register_list_destructors_ex(ogr_free_SpatialReferenceRef,
-                                                     NULL, "OGRSpatialReferenceRef", 
-                                                     module_number);
+    le_SpatialReferenceRef = zend_register_list_destructors_ex
+                               (ogr_free_SpatialReferenceRef,
+                                NULL, "OGRSpatialReferenceRef", 
+                                module_number);
 
-    le_CoordinateTransformation = zend_register_list_destructors_ex(ogr_free_CoordinateTransformation,
-                                                     NULL, "OGRCoordinateTransformation", 
-                                                     module_number);
+    le_CoordinateTransformation = zend_register_list_destructors_ex
+                               (ogr_free_CoordinateTransformation,
+                                NULL, "OGRCoordinateTransformation", 
+                                module_number);
 
     le_Geometry = zend_register_list_destructors_ex(ogr_free_Geometry,
                                                      NULL, "OGRGeometry", 
@@ -558,9 +576,10 @@ PHP_MINIT_FUNCTION(ogr)
                                                      NULL, "OGRFeatureDefn", 
                                                      module_number);
 
-    le_FeatureDefnRef = zend_register_list_destructors_ex(ogr_free_FeatureDefnRef,
-                                                     NULL, "OGRFeatureDefn", 
-                                                     module_number);
+    le_FeatureDefnRef = zend_register_list_destructors_ex
+                              (ogr_free_FeatureDefnRef,
+                               NULL, "OGRFeatureDefn", 
+                               module_number);
 
     le_Feature = zend_register_list_destructors_ex(ogr_free_Feature,
                                                      NULL, "OGRFeature", 
@@ -572,68 +591,173 @@ PHP_MINIT_FUNCTION(ogr)
 #define OGR_CONST_FLAG CONST_CS | CONST_PERSISTENT
 
 
-    REGISTER_LONG_CONSTANT("OGRERR_NONE",                       OGRERR_NONE,                        OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRERR_NOT_ENOUGH_DATA",            OGRERR_NOT_ENOUGH_DATA,             OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRERR_NOT_ENOUGH_MEMORY",          OGRERR_NOT_ENOUGH_MEMORY,           OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRERR_UNSUPPORTED_GEOMETRY_TYPE",  OGRERR_UNSUPPORTED_GEOMETRY_TYPE,   OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRERR_UNSUPPORTED_OPERATION",      OGRERR_UNSUPPORTED_OPERATION,       OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRERR_CORRUPT_DATA",               OGRERR_CORRUPT_DATA,                OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRERR_FAILURE",                    OGRERR_FAILURE,                     OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRERR_UNSUPPORTED_SRS",            OGRERR_UNSUPPORTED_SRS,             OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_NONE",
+                           OGRERR_NONE,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_NOT_ENOUGH_DATA",
+                           OGRERR_NOT_ENOUGH_DATA,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_NOT_ENOUGH_MEMORY",
+                           OGRERR_NOT_ENOUGH_MEMORY,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_UNSUPPORTED_GEOMETRY_TYPE",
+                           OGRERR_UNSUPPORTED_GEOMETRY_TYPE,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_UNSUPPORTED_OPERATION",
+                           OGRERR_UNSUPPORTED_OPERATION,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_CORRUPT_DATA",
+                           OGRERR_CORRUPT_DATA,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_FAILURE",
+                           OGRERR_FAILURE,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRERR_UNSUPPORTED_SRS",
+                           OGRERR_UNSUPPORTED_SRS,
+                           OGR_CONST_FLAG);
 
-    REGISTER_LONG_CONSTANT("wkb25DBit",              wkb25DBit,               OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("ogrZMarker",             ogrZMarker,              OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbXDR",                 wkbXDR,                  OGR_CONST_FLAG);    
-    REGISTER_LONG_CONSTANT("wkbNDR",                 wkbNDR,                  OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbUnknown",             wkbUnknown,              OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbPoint",               wkbPoint,                OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbLineString",          wkbLineString,           OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbPolygon",             wkbPolygon,              OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbMultiPoint",          wkbMultiPoint,           OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbMultiLineString",     wkbMultiLineString,      OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbMultiPolygon",        wkbMultiPolygon,         OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbGeometryCollection",  wkbGeometryCollection,   OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbNone",                wkbNone,                 OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbLinearRing",          wkbLinearRing,           OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbPoint25D",               wkbPoint25D,                OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbLineString25D",          wkbLineString25D,           OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbPolygon25D",             wkbPolygon25D,              OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbMultiPoint25D",          wkbMultiPoint25D,           OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbMultiLineString25D",     wkbMultiLineString25D,      OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbMultiPolygon25D",        wkbMultiPolygon25D,         OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("wkbGeometryCollection25D",  wkbGeometryCollection25D,   OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkb25DBit",
+                           wkb25DBit,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("ogrZMarker",
+                           ogrZMarker,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbXDR",
+                           wkbXDR,
+                           OGR_CONST_FLAG);    
+    REGISTER_LONG_CONSTANT("wkbNDR",
+                           wkbNDR,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbUnknown",
+                           wkbUnknown,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbPoint",
+                           wkbPoint,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbLineString",
+                           wkbLineString,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbPolygon",
+                           wkbPolygon,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbMultiPoint",
+                           wkbMultiPoint,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbMultiLineString",
+                           wkbMultiLineString,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbMultiPolygon",
+                           wkbMultiPolygon,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbGeometryCollection",
+                           wkbGeometryCollection,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbNone",
+                           wkbNone,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbLinearRing",
+                           wkbLinearRing,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbPoint25D",
+                           wkbPoint25D,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbLineString25D",
+                           wkbLineString25D,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbPolygon25D",
+                           wkbPolygon25D,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbMultiPoint25D",
+                           wkbMultiPoint25D,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbMultiLineString25D",
+                           wkbMultiLineString25D,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbMultiPolygon25D",
+                           wkbMultiPolygon25D,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("wkbGeometryCollection25D",
+                           wkbGeometryCollection25D,
+                           OGR_CONST_FLAG);
 
 
-    REGISTER_LONG_CONSTANT("OFTInteger",          OFTInteger,            OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTIntegerList",      OFTIntegerList,        OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTReal",             OFTReal,               OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTRealList",         OFTRealList,           OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTString",           OFTString,             OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTStringList",       OFTStringList,         OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTWideString",       OFTWideString,         OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTWideStringList",   OFTWideStringList,     OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OFTBinary",           OFTBinary,             OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTInteger",
+                           OFTInteger,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTIntegerList",
+                           OFTIntegerList,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTReal",
+                           OFTReal,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTRealList",
+                           OFTRealList,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTString",
+                           OFTString,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTStringList",
+                           OFTStringList,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTWideString",
+                           OFTWideString,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTWideStringList",
+                           OFTWideStringList,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTBinary",
+                           OFTBinary,
+                           OGR_CONST_FLAG);
 
-    REGISTER_LONG_CONSTANT("OJUndefined",    OJUndefined,         OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OJLeft",         OJLeft,              OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OJRight",        OJRight,             OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OJUndefined",
+                           OJUndefined,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OJLeft",
+                           OJLeft,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OJRight",
+                           OJRight,
+                           OGR_CONST_FLAG);
 
 
-    REGISTER_LONG_CONSTANT("OGRNullFID",          OGRNullFID,            OGR_CONST_FLAG);
-    REGISTER_LONG_CONSTANT("OGRUnsetMarker",      OGRUnsetMarker,        OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRNullFID",
+                           OGRNullFID,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OGRUnsetMarker",
+                           OGRUnsetMarker,
+                           OGR_CONST_FLAG);
 
-    REGISTER_STRING_CONSTANT("OLCRandomRead",         OLCRandomRead,         OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("OLCSequentialWrite",    OLCSequentialWrite,    OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("OLCRandomWrite",        OLCRandomWrite,        OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("OLCFastSpatialFilter",  OLCFastSpatialFilter,  OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("OLCFastFeatureCount",   OLCFastFeatureCount,   OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("OLCFastGetExtent",      OLCFastGetExtent,      OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("OLCCreateField",        OLCCreateField,        OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("OLCTransactions",       OLCTransactions,        OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCRandomRead",
+                             OLCRandomRead,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCSequentialWrite",
+                             OLCSequentialWrite,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCRandomWrite",
+                             OLCRandomWrite,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCFastSpatialFilter",
+                             OLCFastSpatialFilter,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCFastFeatureCount",
+                             OLCFastFeatureCount,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCFastGetExtent",
+                             OLCFastGetExtent,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCCreateField",
+                             OLCCreateField,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("OLCTransactions",
+                             OLCTransactions,
+                             OGR_CONST_FLAG);
 
-    REGISTER_STRING_CONSTANT("ODsCCreateLayer",         ODsCCreateLayer,        OGR_CONST_FLAG);
-    REGISTER_STRING_CONSTANT("ODrCCreateDataSource",    ODrCCreateDataSource,   OGR_CONST_FLAG);
-
+    REGISTER_STRING_CONSTANT("ODsCCreateLayer",
+                             ODsCCreateLayer,
+                             OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("ODrCCreateDataSource",
+                             ODrCCreateDataSource,
+                             OGR_CONST_FLAG);
 
     return SUCCESS;
 }
@@ -694,7 +818,6 @@ static void php_report_ogr_error(int nErrLevel)
     if (CPLGetLastErrorMsg() && (CPLGetLastErrorNo() != OGRERR_NONE))
         php_error(nErrLevel, CPLGetLastErrorMsg());
 
-    CPLErrorReset();
 }
 
 
@@ -717,6 +840,10 @@ static char **  php_array2string(char **papszStrList, zval *refastrvalues)
     return papszStrList;
 }
 
+/**********************************************************************
+ * Error handling functions 
+ **********************************************************************/
+
 /* }}} */
 /* The previous line is meant for vim and emacs, so it can correctly fold and 
    unfold functions in source code. See the corresponding marks just before 
@@ -724,6 +851,60 @@ static char **  php_array2string(char **papszStrList, zval *refastrvalues)
    follow this convention for the convenience of others editing your code.
 */
 
+/* {{{ proto void cplerrorreset()
+    */
+PHP_FUNCTION(cplerrorreset)
+{
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+
+    CPLErrorReset();
+}
+
+/* }}} */
+/* {{{ proto int cplgetlasterrorno()
+    */
+PHP_FUNCTION(cplgetlasterrorno)
+{
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+
+    RETURN_LONG(CPLGetLastErrorNo());
+}
+
+/* }}} */
+/* {{{ proto CPLErr cplgetlasterrortype()
+    */
+PHP_FUNCTION(cplgetlasterrortype)
+{
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+    RETURN_LONG(CPLGetLastErrorType());
+}
+
+/* }}} */
+/* {{{ proto int cplgetlasterrormsg()
+    */
+PHP_FUNCTION(cplgetlasterrormsg)
+{
+    const char *pszMsg;
+
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+
+    if ((pszMsg = CPLGetLastErrorMsg()) != NULL)
+            RETURN_STRING((char *)pszMsg, 1);
+}
+
+/**********************************************************************
+ * OGR functions 
+ **********************************************************************/
+
+/* }}} */
 /* {{{ proto int ogr_g_createfromwkb(string strbydata, resource hsrs, resource refhnewgeom)
     */
 PHP_FUNCTION(ogr_g_createfromwkb)
@@ -4022,7 +4203,6 @@ PHP_FUNCTION(ogr_ds_executesql)
     }
 
     if (hDataSource){
-        CPLErrorReset();
         hLayer = OGR_DS_ExecuteSQL(hDataSource, strsqlcommand, hGeometry, strdialect);
     }
 
@@ -4211,6 +4391,7 @@ PHP_FUNCTION(ogropen)
     {
         php_error(E_WARNING, "Unable to open datasource file");
         php_report_ogr_error(E_WARNING);
+        RETURN_LONG(OGRERR_FAILURE);
         RETURN_FALSE;
     }
 
