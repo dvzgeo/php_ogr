@@ -1,26 +1,20 @@
 <?php
-require_once 'phpunit-0.5/phpunit.php';
+//require_once 'phpunit-0.5/phpunit.php';
 require_once 'util.php';
 
 class OGRLayerTest2 extends PHPUnit_TestCase {
+    var $strDirName;
+    var $strPathToOutputData;
+    var $strTmpDumpFile;
     var $strPathToData;
     var $strPathToStandardData;
-    var $strPathToOutputData;
-    var $strPathToDumpData;
-    var $strTmpDumpFile;
     var $bUpdate;
     var $bForce;
     var $hOGRSFDriver;
-    var $strFilename;
-    var $strOutputFilename;
-    var $strCapability;
-    var $strLayerName;
-    var $hSRS;
     var $eGeometryType;
-    var $strDialect;
-    var $strFormat;
+    var $strSrcDataSource;
+    var $strOutputLayer;
     var $strDestDataSource;
-    var $strLayerOutput;
 
     // constructor of the test suite
     function OGRLayerTest2($name){
@@ -30,49 +24,55 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here
     function setUp() {
+        $this->strDirName = "testcase/";
+	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
+        $this->strTmpDumpFile = "DumpFile.tmp";
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/testcase/";
-        $this->strPathToDumpData = "../../ogrtests/testcase/";
-        $this->strFilename = "NewDataSource";
-        $this->strOutputFilename = "";
-        $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = FALSE;
         $this->bForce = TRUE;
         $this->iSpatialFilter[0] = 3350000;  /*xmin*/
         $this->iSpatialFilter[1] = 4210400;  /*ymin*/
         $this->iSpatialFilter[2] = 3580000;  /*xmax*/
         $this->iSpatialFilter[3] = 4280000;  /*ymax*/
-        $this->strCapability = "OLCFastGetExtent";
-        $this->strLayerName = "LayerPoint";
-        $this->hSRS = null;
         $this->eGeometryType = wkbUnknown;
-        $this->strDialect = ""; /*"Generic SQL"*/
-        $this->strFormat = "MapInfo File";
-        $this->strDestDataSource = "DSOutput";
-        $this->strLayerOutput = "LayerOutput";
+        $this->strOutputLayer = "OutputLayer";
+        $this->strDestDataSource = "OutputDS";
+
+        if (file_exists($this->strPathToOutputData)) {
+            system( "rm -R ".$this->strPathToOutputData);
+        }
+
+        mkdir($this->strPathToOutputData, 0777);
+
+        OGRRegisterAll();
+
+        $this->hOGRSFDriver = OGRGetDriver(5);
+
+        $this->hSrcDataSource =  OGR_Dr_Open($this->hOGRSFDriver,
+                                            $this->strPathToData,
+                                            $this->bUpdate);
+
     }
     // called after the test functions are executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance
+        OGR_DS_Destroy($this->hSrcDataSource);
+
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
-        unset($this->strPathToDumpData);
+        unset($this->strDirName);
         unset($this->strPathToOutputData);
-        unset($this->strFilename);
         unset($this->strTmpDumpFile);
-        unset($this->strOutputFilename);
         unset($this->bUpdate);
         unset($this->bForce);
-        unset($this->strCapability);
-        unset($this->strLayerName);
-        unset($this->hSRS);
+        unset($this->hOGRSFDriver);
         unset($this->eGeometryType);
-        unset($this->strFormat);
+        unset($this->hSrcDataSource);
+        unset($this->strOutputLayer);
         unset($this->strDestDataSource);
-        unset($this->strLayerOutput);
     }
 
 /***********************************************************************
@@ -86,20 +86,15 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         $nFeatureId = 12;
 
-        $hDriver = OGRGetDriver(5);
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 5);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                            $this->strPathToData,
-                                            $this->bUpdate);
+        $hFeature = OGR_L_GetFeature($hSrcLayer, $nFeatureId);
 
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 5);
+        $this->assertNotNull($hFeature, "Problem with ".
+                             "OGR_L_GetFeature():  Feature handle ".
+                             "is not supposed to be NULL.\n");
 
-        $hFeature = OGR_L_GetFeature($hLayer, $nFeatureId);
-
-        $this->assertNotNull($hFeature, "Feature handle ".
-                       "is not supposed to be NULL.\n");
-
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -111,17 +106,14 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         fclose($fpOut);
 
-
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
-
-        OGR_DS_Destroy($hExistingDataSource);
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_L_GetFeature() ".
+                           "Files comparison did not matched.\n");
 
     }
 /***********************************************************************
@@ -135,24 +127,20 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         $nFeatureId = 12;
 
-        $hDriver = OGRGetDriver(5);
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 5);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                            $this->strPathToData,
-                                            $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 5);
-
-        OGR_L_ResetReading($hLayer);
+        OGR_L_ResetReading($hSrcLayer);
 
         for($i=0; $i<$nFeatureId; $i++)
         {
-            $hFeature = OGR_L_GetNextFeature($hLayer);
-            $this->assertNotNull($hFeature, "Feature handle got from ".
-                   "OGR_L_GetNextFeature() is not supposed to be NULL.\n");
+            $hFeature = OGR_L_GetNextFeature($hSrcLayer);
+            $this->assertNotNull($hFeature, "Problem   with ".
+                                 "OGR_L_GetNextFeature():  ".
+                                 "Feature handle is not supposed ".
+                                 "to be NULL.\n");
         }
 
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -164,17 +152,14 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         fclose($fpOut);
 
-
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
-
-        OGR_DS_Destroy($hExistingDataSource);
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_L_GetNextFeature() ".
+                           "Files comparison did not matched.\n");
 
     }
 /***********************************************************************
@@ -185,57 +170,47 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         $strStandardFile = "testOGR_L_GetSpatialRef0.std";
 
-        system( "rm -R ".$this->strPathToOutputData.$this->strDestDataSource);
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 6);
 
-        $hDriver = OGRGetDriver(5);
+        $hSpatialRef = OGR_L_GetSpatialRef($hSrcLayer);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                            $this->strPathToData,
-                                            $this->bUpdate);
+        $this->assertNotNull($hSpatialRef, "Problem with ".
+                             "OGR_L_GetSpatialRef():  Spatial reference ".
+                             "handle is not supposed to be NULL.\n");
 
-        $hExistingLayer = OGR_DS_GetLayer($hExistingDataSource, 6);
+        $hDestDS = OGR_Dr_CreateDataSource($this->hOGRSFDriver, 
+                                           $this->strPathToOutputData.
+                                           $this->strDestDataSource, 
+                                           null /*Options*/);
 
-        $hSpatialRef = OGR_L_GetSpatialRef($hExistingLayer);
+        $hDestLayer = OGR_DS_CreateLayer($hDestDS, 
+                                         $this->strOutputLayer, 
+                                         $hSpatialRef,
+                                         $this->eGeometryType,
+                                         null /*Options*/);
 
-        $this->assertNotNull($hSpatialRef, "Spatial reference ".
-                       "is not supposed to be NULL.\n");
+        $hFDefn = OGR_L_GetLayerDefn($hSrcLayer);
 
-        $hODS = OGR_Dr_CreateDataSource($hDriver, $this->strPathToOutputData.
-                                    $this->strDestDataSource, 
-                                        null /*Options*/);
-
-        $hLayer = OGR_DS_CreateLayer($hODS, $this->strLayerOutput, 
-                                     $hSpatialRef,
-                                     $this->eGeometryType,
-                                     null /*Options*/);
-
-        $hFDefn = OGR_L_GetLayerDefn($hExistingLayer);
-
-        if( OGR_L_CreateField( $hLayer, OGR_FD_GetFieldDefn( $hFDefn, 0),
+        if( OGR_L_CreateField( $hDestLayer, OGR_FD_GetFieldDefn( $hFDefn, 0),
                                0 /*bApproOK*/ ) != OGRERR_NONE ){
             return(FALSE);
         }
 
-        OGR_DS_Destroy($hODS);
+        OGR_DS_Destroy($hDestDS);
 
         system("ogrinfo -al ".$this->strPathToOutputData.
-               $this->strDestDataSource." >".
-               $this->strPathToDumpData.
+               $this->strDestDataSource." > ".
+               $this->strPathToOutputData.
                $this->strTmpDumpFile);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
-
-
-        OGR_DS_Destroy($hExistingDataSource);
-
-
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_L_GetSpatialRef() ".
+                           "Files comparison did not matched.\n");
     }
 /***********************************************************************
 *                         testOGR_L_ResetReading0()                    
@@ -248,15 +223,9 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         $nFeatureId = 12;
 
-        $hDriver = OGRGetDriver(5);
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 5);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                            $this->strPathToData,
-                                            $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 5);
-
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -264,77 +233,66 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
             return FALSE;
         }
 
-        OGR_L_ResetReading($hLayer);
+        OGR_L_ResetReading($hSrcLayer);
 
-        $hFeature = OGR_L_GetNextFeature($hLayer);
+        $hFeature = OGR_L_GetNextFeature($hSrcLayer);
 
         OGR_F_DumpReadable($fpOut, $hFeature);
 
         for($i=0; $i<$nFeatureId; $i++)
         {
-            $hFeature = OGR_L_GetNextFeature($hLayer);
+            $hFeature = OGR_L_GetNextFeature($hSrcLayer);
         }
 
-        OGR_L_ResetReading($hLayer);
+        OGR_L_ResetReading($hSrcLayer);
 
-        $hFeature = OGR_L_GetNextFeature($hLayer);
+        $hFeature = OGR_L_GetNextFeature($hSrcLayer);
 
         OGR_F_DumpReadable($fpOut, $hFeature);
 
         fclose($fpOut);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
-
-        OGR_DS_Destroy($hExistingDataSource);
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_L_ResetReading() ".
+                           "Files comparison did not matched.\n");
 
     }
 /***********************************************************************
 *                         testOGR_L_GetExtent0()                    
 *                         
 ************************************************************************/
-    function testOGR_L_GetExtent() {
+    function testOGR_L_GetExtent0() {
 
         $strStandardFile = "testOGR_L_GetExtent0.std";
 
-        $hDriver = OGRGetDriver(5);
-
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                            $this->strPathToData,
-                                            $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 7);
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 7);
 
         CPLErrorReset();
 
-        $eErr = OGR_L_GetExtent($hLayer, $hEnvelope, $bForce /*bForce*/);
+        $eErr = OGR_L_GetExtent($hSrcLayer, $hEnvelope, 
+                                $this->bForce /*bForce*/);
 
         $eErrMsg = CPLGetLastErrorMsg();
 
         $expected = OGRERR_NONE;
 
-        $this->assertEquals($expected, $eErr, $eErrMsg);
+        $this->assertEquals($expected, $eErr, "Problem with ".
+                            "OGR_L_GetExtent():  ".$eErrMsg);
 
         $strEnvelope = serialize(&$hEnvelope);
-        printf("env = %s\n",$strEnvelope);
 
         $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:-2340603.72;s:4:".
          "\"maxx\";d:3009430.5;s:4:\"miny\";d:-719746.05;s:4:".
          "\"maxy\";d:3836605.245;}";
 
-        printf("expected = %s\n",$expected);
-
         $this->assertEquals($expected, $strEnvelope, 
+                            "Problem with OGR_L_GetExten():  ".
                             "Extent is not corresponding.", 0 /*Delta*/);
-
-        OGR_DS_Destroy($hExistingDataSource);
-
     }
 
 /***********************************************************************
@@ -345,26 +303,69 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         $strStandardFile = "testOGR_L_GetFeatureCount0.std";
 
-        $hDriver = OGRGetDriver(5);
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 7);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                            $this->strPathToData,
-                                            $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 7);
-
-        $nFeatureCount = OGR_L_GetFeatureCount($hLayer, $bForce /*bForce*/);
+        $nFeatureCount = OGR_L_GetFeatureCount($hSrcLayer, 
+                                               $this->bForce /*bForce*/);
 
         $expected = 1068;
 
-        $this->assertEquals($expected, $nFeatureCount, "Feature Count is ".
+        $this->assertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_L_GetFeatureCount():  Features count is ".
                             "not corresponding");
+    }
 
-        OGR_DS_Destroy($hExistingDataSource);
+/***********************************************************************
+*                         testOGR_L_CreateField0()                    
+*                       
+************************************************************************/
+    function testOGR_L_CreateField0() {
+
+        $strStandardFile = "testOGR_L_CreateField0.std";
+
+        $hDestDS = OGR_Dr_CreateDataSource($this->hOGRSFDriver, 
+                                           $this->strPathToOutputData.
+                                           $this->strDestDataSource, 
+                                           null /*Options*/);
+
+        $hSpatialRef = null;
+
+        $hDestLayer = OGR_DS_CreateLayer($hDestDS, 
+                                         $this->strOutputLayer, 
+                                         $hSpatialRef,
+                                         $this->eGeometryType,
+                                         null /*Options*/);
+
+        if( OGR_L_CreateField( $hDestLayer, 
+                               OGR_Fld_Create( "NewField", OFTInteger),
+                               0 /*bApproOK*/ ) != OGRERR_NONE ){
+            return(FALSE);
+        }
+
+        OGR_DS_Destroy($hDestDS);
+
+
+        system("ogrinfo -al ".$this->strPathToOutputData.
+               $this->strDestDataSource." >".
+               $this->strPathToOutputData.
+               $this->strTmpDumpFile);
+
+
+
+        system("diff --brief ".$this->strPathToOutputData.
+               $this->strTmpDumpFile.
+               " ".$this->strPathToStandardData.$strStandardFile,
+               $iRetval);
+
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_L_CreateField() ".
+                           "Files comparison did not matched.\n");
+
 
     }
 /***********************************************************************
 *                         testOGR_L_CreateFeature0()                    
+*                        To use with other format.
 *                        Randow write not supported for mif. 
 ************************************************************************/
 
@@ -376,15 +377,9 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
 
         $nFeatureId = 10;
 
-        $hDriver = OGRGetDriver(5);
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 5);
 
-        $hExistingDataSource =  OGR_Dr_Open($hDriver,
-                                            $this->strPathToData,
-                                            $this->bUpdate);
-
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 5);
-
-        $fpOut = fopen($this->strPathToDumpData.
+        $fpOut = fopen($this->strPathToOutputData.
                        $this->strTmpDumpFile, "w");
 
         if ($fpOut == FALSE) {
@@ -392,96 +387,110 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
             return FALSE;
         }
 
-        $hFeature = OGR_L_GetFeature($hLayer, $nFeatureId);
+        $hFeature = OGR_L_GetFeature($hSrcLayer, $nFeatureId);
 
         OGR_F_DumpReadable($fpOut, $hFeature);
 
         CPLErrorReset();
 
-        $eErr = OGR_L_CreateFeature($hLayer, $hFeature);
+        $eErr = OGR_L_CreateFeature($hSrcLayer, $hFeature);
 
         $eErrMsg = CPLGetLastErrorMsg();
         printf("msg=%s\n", $eErrMsg);
 
         $expected = OGRERR_NONE;
 
-        $this->assertEquals($expected, $eErr, $eErrMsg);
+        $this->assertEquals($expected, $eErr, "Problem with ".
+                            "OGR_L_CreateFeature():  ".$eErrMsg);
 
-        $nFeatureCount = OGR_L_GetFeatureCount($hLayer, $bForce );
+        $nFeatureCount = OGR_L_GetFeatureCount($hSrcLayer, $this->bForce );
 
-        $hFeature = OGR_L_GetFeature($hLayer, $nFeatureCount + 1);
+        $hFeature = OGR_L_GetFeature($hSrcLayer, $nFeatureCount + 1);
 
         OGR_F_DumpReadable($fpOut, $hFeature);
 
         fclose($fpOut);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
-
-        OGR_DS_Destroy($hExistingDataSource);
-
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_L_CreateFeature() ".
+                           "Files comparison did not matched.\n");
     }
 */
-
 /***********************************************************************
-*                         testOGR_L_CreateField0()                    
-*                       
+*                         testOGR_L_CreateFeature0()                    
+*                        Randow write not supported for mif. 
 ************************************************************************/
-    function testOGR_L_CreateField0() {
 
-        $strStandardFile = "testOGR_L_CreateField0.std";
+    function testOGR_L_CreateFeature0() {
 
-        system( "rm -R ".$this->strPathToOutputData.$this->strDestDataSource);
+        $strStandardFile = "testOGR_L_CreateFeature0.std";
 
-        $hDriver = OGRGetDriver(5);
+        $hDestDS = OGR_Dr_CreateDataSource($this->hOGRSFDriver, 
+                                           $this->strPathToOutputData.
+                                           $this->strDestDataSource, 
+                                           null /*Options*/);
 
         $hSpatialRef = null;
 
-        $hODS = OGR_Dr_CreateDataSource($hDriver, $this->strPathToOutputData.
-                                    $this->strDestDataSource, 
-                                        null /*Options*/);
+        $hDestLayer = OGR_DS_CreateLayer($hDestDS, 
+                                         $this->strOutputLayer, 
+                                         $hSpatialRef,
+                                         $this->eGeometryType,
+                                         null /*Options*/);
 
-        $hLayer = OGR_DS_CreateLayer($hODS, $this->strLayerOutput, 
-                                     $hSpatialRef,
-                                     $this->eGeometryType,
-                                     null /*Options*/);
-
-        if( OGR_L_CreateField( $hLayer, OGR_Fld_Create( "NewField", 
-                                                        OFTInteger),
+        if( OGR_L_CreateField( $hDestLayer, 
+                               OGR_Fld_Create( "NewField", OFTInteger),
                                0 /*bApproOK*/ ) != OGRERR_NONE ){
             return(FALSE);
         }
 
-        OGR_DS_Destroy($hODS);
+        $nFeatureId = 12;
+        $iLayer = 5;
+
+        $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, $iLayer);
+
+        $hFeature = OGR_L_GetFeature($hSrcLayer, $nFeatureId);
+
+        CPLErrorReset();
+
+        $eErr = OGR_L_CreateFeature($hDestLayer, $hFeature);
+
+        $eErrMsg = CPLGetLastErrorMsg();
+
+        $expected = OGRERR_NONE;
+
+        $this->assertEquals($expected, $eErr, "Problem with ".
+                            "OGR_L_CreateFeature():  ".$eErrMsg);
+
+        $expected = 1;
+
+        $nFeatureCount = OGR_L_GetFeatureCount($hDestLayer, $this->bForce );
+
+        $this->assertEquals($expected, $nFeatureCount, "Problem with ".
+                            "OGR_L_CreateFeature():  ".
+                            "supposed to have at least one feature.");
+
+        OGR_DS_Destroy($hDestDS);
 
         system("ogrinfo -al ".$this->strPathToOutputData.
                $this->strDestDataSource." >".
-               $this->strPathToDumpData.
+               $this->strPathToOutputData.
                $this->strTmpDumpFile);
 
-        system("diff --brief ".$this->strPathToDumpData.
+        system("diff --brief ".$this->strPathToOutputData.
                $this->strTmpDumpFile.
                " ".$this->strPathToStandardData.$strStandardFile,
                $iRetval);
 
-        printf("retval = %d\n", $iRetval);
-
-        $this->assertFalse($iRetval, "Files have changed.\n");
-
+        $this->assertFalse($iRetval, "Problem with ".
+                           "OGR_L_CreateFeature() ".
+                           "Files comparison did not matched.\n");
     }
-
-
 
 }
 ?> 
-
-
-
-
-
