@@ -115,7 +115,8 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
 
         $iGeometry = 1;
         $hGeometry = OGR_G_GetGeometryRef($this->hContainer, $iGeometry);
-        $this->AssertNotNull($hGeometry, "Problem with OGR_G_GetGeometryRef(): ".
+        $this->AssertNotNull($hGeometry, "Problem with ".
+                                          "OGR_G_GetGeometryRef(): ".
                                          "handle is not supposed to be NULL.");
         $expected = 5;
         $nPointCount = OGR_G_GetPointCount($hGeometry);
