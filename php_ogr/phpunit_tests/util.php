@@ -265,7 +265,7 @@ function OGR_G_DumpReadable($fp, $hGeom)
 
 
 /**********************************************************************
- *                      OGRFeatureDump()
+ *                      OGR_F_DumpReadable()
  *
  * Dump all features on a layer.
  *
@@ -282,6 +282,7 @@ function OGR_F_DumpReadable( $fp, $hFeature)
             OGR_FD_GetName($hFeatureDefn), 
             OGR_F_GetFID($hFeature) );
 
+    printf("normfid=%d\n",OGR_F_GetFID($hFeature));
     fputs($fp, $strOutput,strlen($strOutput)); 
 
     $numFields = OGR_FD_GetFieldCount($hFeatureDefn);
@@ -322,7 +323,26 @@ function OGR_F_DumpReadable( $fp, $hFeature)
     fputs($fp, "\n",strlen("\n")); 
 }
 
+/**********************************************************************
+ *                      OGRFieldDefnDump()
+ *
+ * Dump a specific field definition.
+ *
+ **********************************************************************/
 
+function OGRFieldDefnDump( $fp, $hFieldDefn)
+
+{
+
+        $strFieldDefn = OGR_FLD_GetNameRef($hFieldDefn);
+
+        $strTypeName = OGR_GetFieldTypeName(OGR_FLD_GetType($hFieldDefn));
+
+        $strOutput =  sprintf( "  %s (%s) = ", $strFieldDefn, $strTypeName  );
+
+        fputs($fp, $strOutput,strlen($strOutput));
+
+}
 /**********************************************************************
  *                      OGRDumpAllLayers()
  *
