@@ -1,0 +1,300 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.72 [en] (X11; U; Linux 2.2.14-5.0 i686) [Netscape]">
+</head>
+<body>
+
+<h1>
+<b><font face="Arial,Helvetica"><font size=+4>OGR/PHP Extension</font></font></b></h1>
+&nbsp;
+<h2>
+<font face="Arial,Helvetica">Introduction</font></h2>
+<font face="Arial,Helvetica">The <a href="http://gdal.velocet.ca/projects/opengis/">OGR
+library </a>is a C++ open source library (and commandline tools) providing
+read (and sometimes write) access to a variety of vector <a href="http://gdal.velocet.ca/projects/opengis/ogrhtml/ogr_formats.html">file
+formats</a>&nbsp; including ESRI Shapefiles, S-57, SDTS, PostGIS, Oracle
+Spatial, and Mapinfo mid/mif and TAB formats.</font>
+<p><font face="Arial,Helvetica">he C API is generally easy to call from
+other languages which allow call out to DLLs functions, such as Visual
+Basic, or Delphi.</font>
+<p><font face="Arial,Helvetica">The OGR/PHP extension enables PHP users
+to access the functionnalities included in the OGR library.&nbsp; This
+extension can be use as built-in PHP or as dynamic library (".dll" on Windows
+or ".so" on Unix).</font>
+<br>&nbsp;
+<h2>
+<font face="Arial,Helvetica">Download</font></h2>
+<font face="Arial,Helvetica">To use the OGR/PHP extension, the following
+is needed:</font>
+<br>&nbsp;
+<ul>
+<li>
+<font face="Arial,Helvetica">PHP 4.2.3 or higher</font></li>
+
+<li>
+<font face="Arial,Helvetica">GDAL library 1.1.8</font></li>
+
+<li>
+<font face="Arial,Helvetica">OGR/PHP extension module(???)</font></li>
+</ul>
+
+<h4>
+<font face="Arial,Helvetica">PHP</font></h4>
+<font face="Arial,Helvetica">Check if you have PHP already installed (several
+Linux distributions have it built in).</font>
+<br><font face="Arial,Helvetica">If not, download the 4.2.3 or higher PHP
+version source code or binaries.</font>
+<p><font face="Arial,Helvetica">Only binaries of PHP Win32 librairy are
+available on the <a href="http://www.php.net/downloads.php">PHP web site</a>.</font>
+<p><font face="Arial,Helvetica">The PHP source code is available by anonymous
+CVS:</font>
+<p><font face="Arial,Helvetica">cvs -d :pserver:cvsread@cvs.php.net:/repository
+login</font>
+<br><font face="Arial,Helvetica">Password:&nbsp; phpfi</font>
+<br><font face="Arial,Helvetica">cvs -d :pserver:cvsread@cvs.php.net:/repository
+co -r PHP_4_2_3 php4</font>
+<p><font face="Arial,Helvetica">More information can be found on the <a href="http://www.php.net/anoncvs.php">PHP
+cvs page</a> and the CVS tree can be <a href="http://cvs.php.net/cvs.php?login=1&php=e7525c1c915fd33ae1fa9469da1b23c9">browsed
+on the web</a>.</font>
+<p><font face="Arial,Helvetica">The full source release is also available
+as a tar ball on <a href="http://www.php.net/downloads.php">PHP download
+</a>page.</font>
+<h4>
+<font face="Arial,Helvetica">GDAL</font></h4>
+Binaries of the GDAL utility programs and the shared libraries are available
+as part of <a href="ftp://ftp.remotesensing.org/pub/gdal/openev/">OpenEV_FW</a>
+releases on Windows and Linux. GDAL is also a component of the FreeGIS
+CDs available from <a href="www.freegis.org">www.freegis.org</a> in RPM
+format.
+<p>The GDAL source is available by anonymous CVS:
+<p>% export CVSROOT=:pserver:<a href="mailto:anonymous@cvs.remotesensing.org">anonymous@cvs.remotesensing.org</a>:/cvsroot
+<br>% cvs login
+<br>Password: anonymous
+<br>% cvs checkout gdal
+<p>The CVS tree can be <a href="http://www.remotesensing.org/cgi-bin/cvsweb.cgi/osrs/gdal/">browsed
+on the web</a>, and <a href="ftp://ftp.remotesensing.org/gdal/daily/">daily
+CVS snapshots</a> are available.
+<p>The last full source release is also available as <a href="gdal118.zip">gdal118.zip</a>
+or <a href="gdal-1.1.8.tar.gz">gdal-1.1.8.tar.gz</a>.
+<p><font face="Arial,Helvetica">GDAL library download information can be
+found on <a href="www.remotesensing.ogr/gdal/.">www.remotesensing.ogr/gdal/.</a></font>
+<br>&nbsp;
+<h4>
+<font face="Arial,Helvetica">OGR/PHP</font></h4>
+<a href="www.tobedetermined.com">Source&nbsp; code</a> or <a href="www.tobedetermined2.com">Win32
+dll</a> for the OGR/PHP extension can be obtained from DM Solutions web
+site.
+<h2>
+<font face="Arial,Helvetica">Build/Installation/Test</font></h2>
+
+<h4>
+<font face="Arial,Helvetica">GDAL</font></h4>
+<font face="Arial,Helvetica">GDAL library must be built before compiling
+PHP and PHP/OGR extension.</font>
+<p><font face="Arial,Helvetica">Currently a build mechanism only exists
+for Unix, and the C wrapper functions are built and installed as a standard
+part of GDAL/OGR.&nbsp; It does live in the GDAL/OGR source tree.</font>
+<p><font face="Arial,Helvetica">The source (such as a nightly CVS snapshot)
+can be downloaded from the <a href="http://www.remotesensing.org/gdal/">GDAL/OGR
+web site</a>.</font>
+<br><font face="Arial,Helvetica">Once unpacked, build GDAL/OGR according
+to the <a href="http://www.remotesensing.org/gdal/gdal_building.html">provided
+instructions</a>, and then install.</font>
+<p><font face="Arial,Helvetica">% cd gdal</font>
+<br><font face="Arial,Helvetica">% ./configure</font>
+<br><font face="Arial,Helvetica">...</font>
+<br><font face="Arial,Helvetica">% make</font>
+<br><font face="Arial,Helvetica">% su</font>
+<br><font face="Arial,Helvetica">Password: ********</font>
+<br><font face="Arial,Helvetica">$ make install</font>
+<br><font face="Arial,Helvetica">$ exit</font>
+<h4>
+<font face="Arial,Helvetica">PHP - PHP/OGR</font></h4>
+
+<h4>
+<u><font face="Arial,Helvetica">Building on Unix</font></u></h4>
+
+<ul>
+<li>
+<font face="Arial,Helvetica">tar xzvf php-x.x.x.tar.gz</font></li>
+
+<li>
+<font face="Arial,Helvetica">tar xzvf php_ogr_1.0.tar.gz into the "ext"
+directory.</font></li>
+
+<li>
+<font face="Arial,Helvetica">Run ./buildconf in the PHP main directory.</font></li>
+
+<li>
+<font face="Arial,Helvetica">Run ./configure --with-ogr[=dir] - share in
+the PHP main directory where dir is corresponding to the GDAL/OGR directory.</font></li>
+
+<li>
+<font face="Arial,Helvetica">Run make in the PHP main directory.</font></li>
+
+<li>
+<font face="Arial,Helvetica">Copy the php_ogr.so library to your PHP extensions
+directory and then use dl() function to load the module at the beginning
+of your PHP scripts.</font></li>
+</ul>
+
+<p><br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp; More information
+can be found into the <a href="http://php.net/manual/en/install.unix.php">PHP
+manual</a>.</font>
+<h4>
+<u><font face="Arial,Helvetica">Installing on Windows</font></u></h4>
+
+<ul>
+<li>
+Unzip php-4.x.x-Win32.zip into your prefered folder and follow the <a href="http://www.php.net/manual/en/install.windows.php">install
+instruction</a>.</li>
+
+<li>
+Unzip php_ogr_1.0.zip.</li>
+
+<li>
+Copy the 'dll' into your extensions library folder.</li>
+</ul>
+
+<h4>
+<u><font face="Arial,Helvetica">Testing all</font></u></h4>
+<font face="Arial,Helvetica">To verify that PHP and PHP/OGR were installed
+properly, create a '.php' file containing the following code and try to
+access it through your web server:</font>
+<p><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;HTML></font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;BODY></font>
+<p><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;?php</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if
+(PHP_OS == "WINNT" || PHP_OS == "WIN32")</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+dl("php_ogr.dll");</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+dl("php_ogr.so");</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; phpinfo();</font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ?></font>
+<p><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/BODY></font>
+<br><font face="Arial,Helvetica">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/HTML></font>
+<br>&nbsp;
+<p><font face="Arial,Helvetica">If PHP and PHP/OGR were installed properly,
+several tables should be displayed on your page, and 'OGR' should be listed
+in the 'Extensions' table.</font>
+<br>&nbsp;
+<h2>
+<font face="Arial,Helvetica">Functions documentation</font></h2>
+The C API documentation&nbsp; was created using Doxygen and can be found
+on the <a href="www2.dmsolutions.ca/tmp/org-docs">DM Solutions web site</a>.
+<h2>
+<font face="Arial,Helvetica">Information and bug reporting</font></h2>
+The OGR mailing list can be used for discussion of developement and user
+issues related to OGR and related technology.&nbsp; Mailing list can be
+used to report bugs as well.&nbsp; Subscriptions can be done, and archives
+reviewed <a href="http://remotesensing.org/mailman/listinfo/gdal-dev/">on
+the web.</a>
+<h2>
+<font face="Arial,Helvetica">Examples</font></h2>
+There are a few examples showing how to use the functions in PHP/OGR extension
+module.&nbsp; Consult the README_EXAMPLES.TXT in the extension directory
+to get more information on what is the purpose of each example.
+<p>Each example must be invoked from the command-line.
+<p>Example:&nbsp; ./php -q ogr2tab.php /path/to/outputfilename.tab /path/to/sourcefilename.tab
+<p>"ogr2ogr.php" shows mostly the following:
+<br>&nbsp;
+<ul>
+<li>
+Opening an existing data source with a specific driver</li>
+
+<li>
+Creating a new data source</li>
+
+<li>
+Accessing a layer</li>
+
+<li>
+Creating a new layer</li>
+
+<li>
+Adding fields on a layer</li>
+
+<li>
+Getting features from a layer</li>
+
+<li>
+Creating new features on a layer</li>
+
+<li>
+Testing capabilities of a data source or a layer</li>
+</ul>
+"ogr2tab.php" is accomplishing the same operations as "ogr2ogr.php" but
+is concerned especially with the MapInfo File format.
+<p>"ogr_spatialfilter.php" shows mostly how to set a spatial filter and
+an attribute filter.
+<p>"ogr2tab_spatialfilter.php" is accomplishing the same operations as
+"ogr_spatialfilter.php" but is used exclusively with MapInfo File format.
+<p>"ogr_sql.php" demonstrates how to build an SQL statement and apply an
+SQL request to a data source.
+<p>"ogr2tab_sql.php" is a copy of "ogr_sql.php" and is concerned with the
+MapInfo File format.
+<p>"ogr_update.php" demonstrates the following items:
+<ul>
+<li>
+Accessing a specific feature by specifying a feature id</li>
+
+<li>
+Getting a field definition</li>
+
+<li>
+Getting a field name</li>
+
+<li>
+Setting a field value</li>
+
+<li>
+Getting a geometry from a feature</li>
+
+<li>
+Setting a geometry to a feature</li>
+</ul>
+
+<p><br>"ogr2tab_update.php" is a copy of "ogr_update.php" but is concerned
+with the MapInfo File format.
+<p>"ogr_dump.php" shows the following functionalities:
+<ul>
+<li>
+Getting geometry components from which geometry is built from like point
+coordinates for a linestring, linestring for a polygon and so on</li>
+
+<li>
+Getting geometry name</li>
+
+<li>
+Getting the number of geometry components</li>
+</ul>
+"ogr_write.php" demonstrates the following functionalities:
+<ul>
+<li>
+Accessing a specific layer</li>
+
+<li>
+Creating a new field definition and assigning it to a layer</li>
+
+<li>
+Creating a new feature on a layer</li>
+
+<li>
+Setting a field value</li>
+
+<li>
+Creating a new geometry (point, linestring, polygon) and adding it to a
+feature</li>
+</ul>
+"ogr_setgetfield.php" shows how to get and to set field values of various
+types inside a feature.
+</body>
+</html>
