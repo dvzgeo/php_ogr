@@ -35,7 +35,7 @@
 
 
 
-   $eErr = OGR2OGR_main();
+   $eErr = OGR2Tab_main();
 
    if ($eErr != OGRERR_NONE)
    {
@@ -47,10 +47,10 @@
    }
 
 /************************************************************************/
-/*                                OGR2OGR_main()                        */
+/*                                OGR2Tab_main()                        */
 /************************************************************************/
 
-function OGR2OGR_main()
+function OGR2Tab_main()
 {
     $strFormat = "MapInfo File";
     $strDataSource = NULL;
