@@ -4,9 +4,9 @@
 
 -ogr2tab.php:  Read an OGR MapInfo dataset and copy to a new OGR MapInfo dataset.
 
-Example:  /home/httpd/cgi-bin/php4 ogr2ogr.php 
+Example:  ./php -q ogr2tab.php 
           /home/msapps/user/outputfilename.tab 
-          /home/msapps/user/sourcefilename.tab layername
+          /home/msapps/user/sourcefilename.tab
 
 
 /************************************************************************/
@@ -16,10 +16,11 @@ Example:  /home/httpd/cgi-bin/php4 ogr2ogr.php
 -ogr2tab_spatialfilter.php:  A copy of ogr2tab.php to which the ability
  to set a spatial filter (bounding box search) has been added.
 
-Example:  /home/httpd/cgi-bin/php4 ogr2tab_spatialfilter.php 
-        /home/msapps/outputfilename.tab
-         /home/msapps/user/sourcefilename.tab 
-        -spat Xmin Ymin Xmax Ymax "any_attribute <= a_certain_value"
+Example:  ./php -q ogr2tab_spatialfilter.php 
+          /home/msapps/outputfilename.tab
+          /home/msapps/user/sourcefilename.tab 
+          -spat Xmin Ymin Xmax Ymax 
+          -where "any_attribute <= a_certain_value"
 
 
 /************************************************************************/
@@ -29,9 +30,10 @@ Example:  /home/httpd/cgi-bin/php4 ogr2tab_spatialfilter.php
 -ogr2tab_sql.php:  A copy of ogr2tab_spatialfilter.php to which the ability
  of setting a SQL attribute filter has been added.
 
-Example:  /home/httpd/cgi-bin/php4 ogr2tab_sql.php 
+Example:  ./php -q ogr2tab_sql.php 
           /home/msapps/user/outputfilename.tab
-          /home/msapps/user/sourcefilename.tab -spat Xmin Ymin Xmax Ymax
+          /home/msapps/user/sourcefilename.tab 
+          -spat Xmin Ymin Xmax Ymax
           -sql "SELECT any_attribute from layername 
           WHERE any_attribute < a_certain_value
           ORDER BY any_attribute ASC"
@@ -46,9 +48,9 @@ Example:  /home/httpd/cgi-bin/php4 ogr2tab_sql.php
  feature id as it copies the features from the source to the
  destination.
 
-Example:  /home/httpd/cgi-bin/php4 ogr2tab_update.php 
+Example:  ./php -q ogr2tab_update.php 
           /home/msapps/user/outputfilename.tab
-          /home/msapps/user/sourcefilename.tab layername 
+          /home/msapps/user/sourcefilename.tab 
           -fid a_fid attribute_to_update new_attribute_value
 
 /************************************************************************/
@@ -58,7 +60,8 @@ Example:  /home/httpd/cgi-bin/php4 ogr2tab_update.php
 -ogr_dump.php:  Dump the contents of an OGR data source. 
  Shows how to read feature and geometry members, attribute fields, etc.
 
-Example:  /home/httpd/cgi-bin/php4 ogr_dump.php /home/msapps/usr/sourcefilename
+Example:  ./php -q ogr_dump.php 
+          /home/msapps/usr/sourcefilename
 
 /************************************************************************/
 /*                                ogr_write.php                         */
@@ -67,7 +70,8 @@ Example:  /home/httpd/cgi-bin/php4 ogr_dump.php /home/msapps/usr/sourcefilename
 -ogr_write.php:  Write various types of objects to a MapInfo file.  
  Shows how to create new features and geometries.
 
-Example:  /home/httpd/cgi-bin/php4 ogr_write.php /home/msapps/user/outputfilename
+Example:  ./php -q ogr_write.php 
+          /home/msapps/user/outputfilename
 
 /************************************************************************/
 /*                                ogr2ogr.php                           */
@@ -76,8 +80,10 @@ Example:  /home/httpd/cgi-bin/php4 ogr_write.php /home/msapps/user/outputfilenam
 -ogr2ogr.php:  Read an OGR dataset and copy to a new OGR dataset
  in specified format.
 
-Example:  /home/httpd/cgi-bin/php4 ogr2ogr.php /home/msapps/user/outputdirectory 
-          /home/msapps/user/sourcedirectory -f "MapInfo File" layername
+Example:  ./php -q ogr2ogr.php 
+          /home/msapps/user/outputdirectory 
+          /home/msapps/user/sourcedirectory 
+          -f "MapInfo File" layername
 
 
 /************************************************************************/
@@ -88,7 +94,7 @@ Example:  /home/httpd/cgi-bin/php4 ogr2ogr.php /home/msapps/user/outputdirectory
  not tested by other scripts, especially with attributes of list
  types.  Not pertinent for MapInfo datasets.
 
-Example:  /home/httpd/cgi-bin/php4 ogr_setgetfield.php
+Example:  ./php -q ogr_setgetfield.php
 
 
 /************************************************************************/
@@ -98,9 +104,10 @@ Example:  /home/httpd/cgi-bin/php4 ogr_setgetfield.php
 -ogr_spatialfilter.php:  A copy of ogr2ogr.php to which the ability
  to set a spatial filter (bounding box search) has been added.
 
-Example:  /home/httpd/cgi-bin/php4 ogr_spatialfilter.php /home/msapps/outputdirectory
-         /home/msapps/user/sourcedirectory -f "MapInfo File" 
-        -spat Xmin Ymin Xmax Ymax "any_attribute <= a_certain_value"
+Example:  ./php -q ogr_spatialfilter.php 
+          /home/msapps/outputdirectory
+          /home/msapps/user/sourcedirectory -f "MapInfo File" 
+          -spat Xmin Ymin Xmax Ymax -where "any_attribute <= a_certain_value"
 
 
 /************************************************************************/
@@ -110,10 +117,13 @@ Example:  /home/httpd/cgi-bin/php4 ogr_spatialfilter.php /home/msapps/outputdire
 -ogr_sql.php:  A copy of ogr_spatialfilter.php to which the ability
  of setting a SQL attribute filter has been added.
 
-Example:  /home/httpd/cgi-bin/php4 ogr_sql.php /home/msapps/user/outputdirectory
-         /home/msapps/user/sourcedirectory -f "MapInfo File" -spat Xmin Ymin Xmax Ymax
-         -sql "SELECT any_attribute from layername WHERE any_attribute < a_certain_value
-         ORDER BY any_attribute ASC"
+Example:  ./php -q ogr_sql.php 
+          /home/msapps/user/outputdirectory
+          /home/msapps/user/sourcedirectory 
+          -f "MapInfo File" -spat Xmin Ymin Xmax Ymax
+          -sql "SELECT any_attribute from layername 
+          WHERE any_attribute < a_certain_value
+          ORDER BY any_attribute ASC"
 
 
 
@@ -126,13 +136,8 @@ Example:  /home/httpd/cgi-bin/php4 ogr_sql.php /home/msapps/user/outputdirectory
  feature id as it copies the features from the source to the
  destination.
 
-Example:  /home/httpd/cgi-bin/php4 ogr_update.php /home/msapps/user/outputdirectory
-         /home/msapps/user/sourcedirectory -f "MapInfo File" layername 
-        -fid a_fid attribute_to_update new_attribute_value
-
-
-
-
-
-
-
+Example:  ./php -q ogr_update.php 
+          /home/msapps/user/outputdirectory
+          /home/msapps/user/sourcedirectory 
+         -f "MapInfo File" layername 
+         -fid a_fid attribute_to_update new_attribute_value
