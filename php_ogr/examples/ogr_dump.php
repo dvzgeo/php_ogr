@@ -387,11 +387,11 @@ else
         }
         printf("\n");
 
-        /* And dump each feature individually */
-
-        printf("Features count= %d", OGR_L_GetFeatureCount($hLayer, $i)); 
+        printf("Feature(s) count= %d", OGR_L_GetFeatureCount($hLayer, 
+                                                   TRUE /*bforce*/)); 
         printf("\n\n");
 
+        /* And dump each feature individually */
 
         while( ($hFeature = OGR_L_GetNextFeature( $hLayer )) != NULL )
         {
