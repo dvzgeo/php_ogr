@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.20  2004/10/06 16:02:42  gdallaire
+ * Set module version to 1.0.1
+ *
  * Revision 1.19  2003/10/17 12:41:26  daniel
  * Set module version to 1.0.0
  *
@@ -320,7 +323,7 @@ zend_module_entry ogr_module_entry = {
                            request end */
     PHP_MINFO(ogr),
 #if ZEND_MODULE_API_NO >= 20010901
-    "1.0.1", /* Replace with version number for your extension */
+    "1.1.0", /* Replace with version number for your extension */
 #endif
     STANDARD_MODULE_PROPERTIES
 };
@@ -936,12 +939,13 @@ PHP_FUNCTION(ogr_g_createfromwkb)
     int strbydata_len;
     zval *hsrs = NULL;
     zval *refhnewgeom = NULL;
+    long nbytes;
     OGRGeometryH hNewGeom = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z", &strbydata, 
-                              &strbydata_len,  &hsrs, &refhnewgeom) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "sr!zl", &strbydata, 
+                              &strbydata_len,  &hsrs, &refhnewgeom, &nbytes) 
                               == FAILURE) 
         return;
 
@@ -951,7 +955,8 @@ PHP_FUNCTION(ogr_g_createfromwkb)
                              le_SpatialReference, le_SpatialReferenceRef);
     }
     if (hSpatialReference)
-        eErr = (OGR_G_CreateFromWkb(strbydata, hSpatialReference, hNewGeom));
+        eErr = (OGR_G_CreateFromWkb(strbydata, hSpatialReference, hNewGeom, 
+                                    nbytes));
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
