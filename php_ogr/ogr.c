@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.22  2005/10/20 16:19:27  julien
+ * Change some variable casting to compile under gcc4
+ *
  * Revision 1.21  2005/10/12 20:05:35  julien
  * Update to version 1.1.0 to support GDAL 1.3.0 and up.
  *
@@ -142,6 +145,34 @@ static int le_Feature;
 
 
 /*Force some resource arguments to be passed as reference.*/
+#ifdef ZEND_ENGINE_2
+ZEND_BEGIN_ARG_INFO(five_args_third_fourth_fifth_args_force_ref, 0)
+	ZEND_ARG_PASS_INFO(0)
+	ZEND_ARG_PASS_INFO(0)
+	ZEND_ARG_PASS_INFO(1)
+	ZEND_ARG_PASS_INFO(1)
+	ZEND_ARG_PASS_INFO(1)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(three_args_first_arg_force_ref, 0)
+	ZEND_ARG_PASS_INFO(1)
+	ZEND_ARG_PASS_INFO(0)
+	ZEND_ARG_PASS_INFO(0)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(three_args_third_arg_force_ref, 0)
+	ZEND_ARG_PASS_INFO(0)
+	ZEND_ARG_PASS_INFO(0)
+	ZEND_ARG_PASS_INFO(1)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(three_args_second_arg_force_ref, 0)
+	ZEND_ARG_PASS_INFO(0)
+	ZEND_ARG_PASS_INFO(1)
+	ZEND_ARG_PASS_INFO(0)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO(two_args_first_arg_force_ref, 0)
+	ZEND_ARG_PASS_INFO(1)
+	ZEND_ARG_PASS_INFO(0)
+ZEND_END_ARG_INFO()
+#else
 static unsigned char five_args_third_fourth_fifth_args_force_ref[] = 
     { 5,  BYREF_NONE, BYREF_NONE, BYREF_FORCE, BYREF_FORCE, BYREF_FORCE };
 static unsigned char three_args_first_arg_force_ref[] = 
@@ -152,6 +183,7 @@ static unsigned char three_args_second_arg_force_ref[] =
     { 3, BYREF_NONE, BYREF_FORCE, BYREF_NONE };
 static unsigned char two_args_first_arg_force_ref[] = 
     { 2, BYREF_FORCE, BYREF_NONE };
+#endif
 
 
 /* {{{ ogr_functions[]
