@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.21  2005/10/12 20:05:35  julien
+ * Update to version 1.1.0 to support GDAL 1.3.0 and up.
+ *
  * Revision 1.20  2004/10/06 16:02:42  gdallaire
  * Set module version to 1.0.1
  *
@@ -935,7 +938,7 @@ PHP_FUNCTION(ogr_g_createfromwkb)
     int argc = ZEND_NUM_ARGS();
     int hsrs_id = -1;
     int refhnewgeom_id = -1;
-    char *strbydata = NULL;
+    unsigned char *strbydata = NULL;
     int strbydata_len;
     zval *hsrs = NULL;
     zval *refhnewgeom = NULL;
@@ -955,8 +958,8 @@ PHP_FUNCTION(ogr_g_createfromwkb)
                              le_SpatialReference, le_SpatialReferenceRef);
     }
     if (hSpatialReference)
-        eErr = (OGR_G_CreateFromWkb(strbydata, hSpatialReference, hNewGeom, 
-                                    nbytes));
+        eErr = OGR_G_CreateFromWkb(strbydata, hSpatialReference, hNewGeom, 
+                                    nbytes);
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
@@ -3226,6 +3229,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
     OGRFeatureH hFeat = NULL;
     int numelements = 0;
     long *panList = NULL;
+    const int *ttt;
     int ncount = 0;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield, 
@@ -3237,7 +3241,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
-        (int *) panList = OGR_F_GetFieldAsIntegerList(hFeat, ifield, &ncount);
+        panList = (long*)OGR_F_GetFieldAsIntegerList(hFeat, ifield, &ncount);
 
     if ((!panList) || (ncount <= 0)){
         php_report_ogr_error(E_WARNING);
@@ -3283,7 +3287,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 "OGRFeature", le_Feature);
     }
     if (hFeat)
-        (double *) padfList =(double *) OGR_F_GetFieldAsDoubleList(hFeat, 
+        padfList =(double *) OGR_F_GetFieldAsDoubleList(hFeat, 
                                      ifield, &ncount);
 
     if ((!padfList) || (ncount <= 0)){
