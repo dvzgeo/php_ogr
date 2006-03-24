@@ -15,14 +15,10 @@
 #To use the PHP4 module uncomment the following line
 PHP4 = 1
 
-#OPTFLAGS =	/nologo /Zi /W3 /DDEBUG
-!ifdef PHP4
-OPTFLAGS =	/nologo /Zi /W3 /DNO_REGEX_EXTRA_H
+
+OPTFLAGS =	/nologo /MD /GX  /Zi /W3 /DNO_REGEX_EXTRA_H
 BASE_CFLAGS = 	$(OPTFLAGS) /DWIN32 /DZEND_WIN32 /DPHP_WIN32 /DPHP4 /DZTS /DCOMPILE_DL_OGR
-!else
-OPTFLAGS =	/nologo /Zi /W3
-BASE_CFLAGS = 	$(OPTFLAGS) /DWIN32
-!endif
+
 
 
 LINK_OPT =	/dll /debug
@@ -30,41 +26,34 @@ LINK_OPT =	/dll /debug
 #
 # Set PHP_SOURCE_DIR to point to the root of the PHP source tree
 #
-!ifdef PHP4
-#PHP_SOURCE_DIR = ../../php-4.2.3
-PHP_SOURCE_DIR = ../../php-4.3.0
+
+PHP_SOURCE_DIR = ../../php-4.4.2
 PHP_INC = -I$(PHP_SOURCE_DIR) -I$(PHP_SOURCE_DIR)/main -I$(PHP_SOURCE_DIR)/zend -I$(PHP_SOURCE_DIR)/include -I$(PHP_SOURCE_DIR)/tsrm
 $PHPDLLDIR='c:\apache\php4\extensions'
-!else
-PHP_SOURCE_DIR = ../../php-3.0.14
-PHP_INC = -I$(PHP_SOURCE_DIR) -I$(PHP_SOURCE_DIR)/dl
-$PHPDLLDIR='c:\apache\php3'
-!endif
 
+
+#xerces
+XERCES_DIR =	c:\projects\xerces-c-2.7.0
+XERCES_INCLUDE = -I$(XERCES_DIR)/src -I$(XERCES_DIR)/src/xercesc 
+XERCES_LIB = $(XERCES_DIR)/Build\Win32\VC7.1\Release/xerces-c_2.lib
+
+
+ODBC_LIB = "odbc32.lib"
 
 #
 # Where do you want the dll to be installed?
 #
-!ifdef PHP4
-PHP_INSTALL_DIR =  c:\Apache\php4\extensions
-!else
-PHP_INSTALL_DIR =  c:\Apache\php3
-!endif
+PHP_INSTALL_DIR =  c:\php\php4\extensions
 
-#
-#MS_INC = -I../.. -I../../regex-0.12 -I../../gd-1.2 -I../../../tiff-v3.5.4/libtiff
-#MS_LIBS = ../../mapserver.lib ../../gd-1.2/gd.lib \
-#	../../../tiff-v3.5.4/libtiff/libtiff.lib \
-#	../../gdft/gdft.lib \
-#	../../../freetype/lib/freetype.lib 
 
+#GDAL_DIR= ../../gdal-1.3.1
 GDAL_DIR= ../../gdal
 
 
-PHPOGR_INC =  -I../../gd-1.8.4 -I$(GDAL_DIR)/ogr/ogrsf_frmts -I$(GDAL_DIR)/ogr -I$(GDAL_DIR)/ogr/../port -I$(GDAL_DIR)/core -I$(GDAL_DIR)/alg
 
-PHPOGR_LIBS = ../../gd-1.8.4/gd.lib $(GDAL_DIR)/gdal.lib $(GDAL_DIR)/ogr/ogrsf_frmts/ogrsf_frmts.lib $(GDAL_DIR)/ogr/ogrsf_frmts/ogrsf_frmts_sup.lib $(GDAL_DIR)/ogr/ogr.lib $(GDAL_DIR)/ogr/../port/cpl.lib
-        
+PHPOGR_INC =  -I../../gd-2.0.28 -I$(GDAL_DIR)/ogr/ogrsf_frmts -I$(GDAL_DIR)/ogr -I$(GDAL_DIR)/ogr/../port -I$(GDAL_DIR)/gcore -I$(GDAL_DIR)/alg
+
+PHPOGR_LIBS = ../../gd-2.0.28/gd.lib $(GDAL_DIR)/gdal_i.lib $(XERCES_LIB) $(ODBC_LIB)
 
 #
 # The rest of the file should not have to be edited...
@@ -85,15 +74,9 @@ all:		$(PHPOGR_DLL)
 install:	all
 	copy $(PHPOGR_DLL) $(PHP_INSTALL_DIR)
 
-!ifdef PHP4
 $(PHPOGR_DLL):	$(PHPOGR_OBJS)
 	link $(LINK_OPT) /out:$(PHPOGR_DLL) $(PHPOGR_OBJS) $(PHPOGR_LIBS)\
 		$(PHP_SOURCE_DIR)\lib\php4ts.lib 
-!else
-$(PHPOGR_DLL):	$(PHPOGR_OBJS)
-	link $(LINK_OPT) /out:$(PHPOGR_DLL) $(PHPOGR_OBJS) $(PHPOGR_LIBS)\
-		$(PHP_SOURCE_DIR)\win32\cgi_debug\php.lib
-!endif
 
 $(PHPOGR_OBJS): php_ogr.h
 
