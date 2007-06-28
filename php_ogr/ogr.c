@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.23  2005/10/20 16:52:53  julien
+ * BYREF_FORCE no longer used with PHP5
+ *
  * Revision 1.22  2005/10/20 16:19:27  julien
  * Change some variable casting to compile under gcc4
  *
@@ -2470,7 +2473,7 @@ PHP_FUNCTION(ogr_fd_create)
     hFeatureDefn = OGR_FD_Create(strname);
 
     if (hFeatureDefn){
-        ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefn);
+        ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefnRef);
     }
 
 }
@@ -2618,7 +2621,7 @@ PHP_FUNCTION(ogr_fd_addfielddefn)
     OGRFeatureDefnH hFeatureDefn = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hdefin, &hnewdefn) 
+   if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hdefin, &hnewdefn) 
                               == FAILURE) 
         return;
 
