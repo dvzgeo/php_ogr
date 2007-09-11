@@ -150,6 +150,7 @@ PHP_FUNCTION(ogr_l_getnextfeature);
 PHP_FUNCTION(ogr_l_getfeature);
 PHP_FUNCTION(ogr_l_setfeature);
 PHP_FUNCTION(ogr_l_createfeature);
+PHP_FUNCTION(ogr_l_deletefeature);
 PHP_FUNCTION(ogr_l_getlayerdefn);
 PHP_FUNCTION(ogr_l_getspatialref);
 PHP_FUNCTION(ogr_l_getfeaturecount);

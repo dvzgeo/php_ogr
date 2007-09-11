@@ -314,6 +314,7 @@ function_entry ogr_functions[] = {
     PHP_FE(ogr_l_getfeature,    NULL)
     PHP_FE(ogr_l_setfeature,    NULL)
     PHP_FE(ogr_l_createfeature, NULL)
+    PHP_FE(ogr_l_deletefeature, NULL)
     PHP_FE(ogr_l_getlayerdefn,  NULL)
     PHP_FE(ogr_l_getspatialref, NULL)
     PHP_FE(ogr_l_getfeaturecount,   NULL)
@@ -2473,7 +2474,7 @@ PHP_FUNCTION(ogr_fd_create)
     hFeatureDefn = OGR_FD_Create(strname);
 
     if (hFeatureDefn){
-        ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefnRef);
+        ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefn);
     }
 
 }
@@ -2621,7 +2622,7 @@ PHP_FUNCTION(ogr_fd_addfielddefn)
     OGRFeatureDefnH hFeatureDefn = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-   if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hdefin, &hnewdefn) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hdefin, &hnewdefn) 
                               == FAILURE) 
         return;
 
@@ -4056,6 +4057,37 @@ PHP_FUNCTION(ogr_l_createfeature)
 
     if (hLayerResource && hNewFeature){
         eErr = (OGR_L_CreateFeature(hLayerResource, hNewFeature));
+    }
+    if (eErr != OGRERR_NONE){
+        php_report_ogr_error(E_WARNING);
+    }
+    RETURN_LONG(eErr);
+}
+
+/* {{{ proto int ogr_l_deletefeature(resource hlayer, long ifeatureid)
+    */
+PHP_FUNCTION(ogr_l_deletefeature)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hlayer_id = -1;
+    long ifeatureid;
+    zval *hlayer = NULL;
+    zval *hfeature = NULL;
+    OGRLayerH hLayerResource = NULL;
+    OGRErr eErr = OGRERR_FAILURE;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hlayer, &ifeatureid) 
+                             == FAILURE) 
+        return;
+
+    if (hlayer) {
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+                            "OGRLayer", le_Layer);
+    }
+
+
+    if (hLayerResource){
+        eErr = (OGR_L_DeleteFeature(hLayerResource, ifeatureid));
     }
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
