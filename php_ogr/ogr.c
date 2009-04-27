@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.25  2007-09-11 15:00:01  pspencer
+ * added OGR_L_DeleteFeature wrapper
+ *
  * Revision 1.23  2005/10/20 16:52:53  julien
  * BYREF_FORCE no longer used with PHP5
  *
@@ -63,7 +66,7 @@
  *
  * Revision 1.12  2003/04/01 22:44:47  nsavard
  * Corrected bug in OGR_DS_ExecuteSQL() when call to C API return NULL and
- * there is no error, corrected bug in php_report_ogr_error() to avoid 
+ * there is no error, corrected bug in php_report_ogr_error() to avoid
  * printing empty string
  *
  * Revision 1.11  2003/03/31 22:03:35  nsavard
@@ -176,15 +179,15 @@ ZEND_BEGIN_ARG_INFO(two_args_first_arg_force_ref, 0)
 	ZEND_ARG_PASS_INFO(0)
 ZEND_END_ARG_INFO()
 #else
-static unsigned char five_args_third_fourth_fifth_args_force_ref[] = 
+static unsigned char five_args_third_fourth_fifth_args_force_ref[] =
     { 5,  BYREF_NONE, BYREF_NONE, BYREF_FORCE, BYREF_FORCE, BYREF_FORCE };
-static unsigned char three_args_first_arg_force_ref[] = 
+static unsigned char three_args_first_arg_force_ref[] =
     { 3, BYREF_FORCE, BYREF_NONE, BYREF_NONE };
-static unsigned char three_args_third_arg_force_ref[] = 
+static unsigned char three_args_third_arg_force_ref[] =
     { 3, BYREF_NONE, BYREF_NONE, BYREF_FORCE };
-static unsigned char three_args_second_arg_force_ref[] = 
+static unsigned char three_args_second_arg_force_ref[] =
     { 3, BYREF_NONE, BYREF_FORCE, BYREF_NONE };
-static unsigned char two_args_first_arg_force_ref[] = 
+static unsigned char two_args_first_arg_force_ref[] =
     { 2, BYREF_FORCE, BYREF_NONE };
 #endif
 
@@ -206,7 +209,7 @@ function_entry ogr_functions[] = {
     PHP_FE(ogr_g_getcoordinatedimension,    NULL)
     PHP_FE(ogr_g_clone, NULL)
     PHP_FE(ogr_g_getenvelope,   two_args_first_arg_force_ref)
-#ifdef CONSTRUCT_FLAG    
+#ifdef CONSTRUCT_FLAG
     PHP_FE(ogr_g_importfromwkb, NULL)
     PHP_FE(ogr_g_exporttowkb,   three_args_first_arg_force_ref)
 #endif
@@ -214,7 +217,7 @@ function_entry ogr_functions[] = {
 #ifdef CONSTRUCT_FLAG
     PHP_FE(ogr_g_importfromwkt, NULL)
     PHP_FE(ogr_g_exporttowkt,   two_args_first_arg_force_ref)
-#endif    
+#endif
     PHP_FE(ogr_g_getgeometrytype,   NULL)
     PHP_FE(ogr_g_getgeometryname,   NULL)
 #ifdef CONSTRUCT_FLAG
@@ -356,7 +359,7 @@ zend_module_entry ogr_module_entry = {
     ogr_functions,
     PHP_MINIT(ogr),
     PHP_MSHUTDOWN(ogr),
-    PHP_RINIT(ogr),     /* Replace with NULL if there's nothing to do at 
+    PHP_RINIT(ogr),     /* Replace with NULL if there's nothing to do at
                            request start */
     PHP_RSHUTDOWN(ogr), /* Replace with NULL if there's nothing to do at
                            request end */
@@ -376,7 +379,7 @@ ZEND_GET_MODULE(ogr)
  */
 /* Remove comments and fill if you need to have entries in php.ini
 PHP_INI_BEGIN()
-    STD_PHP_INI_ENTRY("ogr.global_value",      "42", PHP_INI_ALL, 
+    STD_PHP_INI_ENTRY("ogr.global_value",      "42", PHP_INI_ALL,
     OnUpdateInt, global_value, zend_ogr_globals, ogr_globals)
     STD_PHP_INI_ENTRY("ogr.global_string", "foobar", PHP_INI_ALL,
     OnUpdateString, global_string, zend_ogr_globals, ogr_globals)
@@ -405,7 +408,7 @@ ogr_free_Datasource(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
     OGRDataSourceH hds = (OGRDataSourceH)rsrc->ptr;
 
-    OGR_DS_Destroy( hds ); 
+    OGR_DS_Destroy( hds );
 
 }
 
@@ -469,7 +472,7 @@ static void
 ogr_free_Geometry(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
     OGRGeometryH hGeom = (OGRGeometryH)rsrc->ptr;
-    OGR_G_DestroyGeometry( hGeom ); 
+    OGR_G_DestroyGeometry( hGeom );
 
 }
 
@@ -494,7 +497,7 @@ static void
 ogr_free_FieldDefn(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
     OGRFieldDefnH hFieldDefn = (OGRFieldDefnH)rsrc->ptr;
-    OGR_Fld_Destroy( hFieldDefn ); 
+    OGR_Fld_Destroy( hFieldDefn );
 
 }
 
@@ -542,7 +545,7 @@ static void
 ogr_free_FeatureDefn(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
     OGRFeatureDefnH hFeatureDefn = (OGRFeatureDefnH)rsrc->ptr;
-    OGR_FD_Destroy( hFeatureDefn ); 
+    OGR_FD_Destroy( hFeatureDefn );
 
 }
 
@@ -566,7 +569,7 @@ static void
 ogr_free_Feature(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
     OGRFeatureH hFeature = (OGRFeatureH)rsrc->ptr;
-    OGR_F_Destroy( hFeature ); 
+    OGR_F_Destroy( hFeature );
 
 }
 
@@ -578,76 +581,76 @@ ogr_free_Feature(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 PHP_MINIT_FUNCTION(ogr)
 {
 
-    /* If you have INI entries, uncomment these lines 
+    /* If you have INI entries, uncomment these lines
     ZEND_INIT_MODULE_GLOBALS(ogr, php_ogr_init_globals, NULL);
     REGISTER_INI_ENTRIES();
     */
     le_Datasource = zend_register_list_destructors_ex(ogr_free_Datasource,
-                                                     NULL, "OGRDatasource", 
+                                                     NULL, "OGRDatasource",
                                                      module_number);
 
     le_SFDriver = zend_register_list_destructors_ex(ogr_free_SFDriver,
-                                                     NULL, "OGRSFDriver", 
+                                                     NULL, "OGRSFDriver",
                                                      module_number);
 
     le_Layer = zend_register_list_destructors_ex(ogr_free_Layer,
-                                                     NULL, "OGRLayer", 
+                                                     NULL, "OGRLayer",
                                                      module_number);
 
     le_SpatialReference = zend_register_list_destructors_ex
                                (ogr_free_SpatialReference,
-                                NULL, "OGRSpatialReference", 
+                                NULL, "OGRSpatialReference",
                                 module_number);
 
     le_SpatialReferenceRef = zend_register_list_destructors_ex
                                (ogr_free_SpatialReferenceRef,
-                                NULL, "OGRSpatialReferenceRef", 
+                                NULL, "OGRSpatialReferenceRef",
                                 module_number);
 
     le_CoordinateTransformation = zend_register_list_destructors_ex
                                (ogr_free_CoordinateTransformation,
-                                NULL, "OGRCoordinateTransformation", 
+                                NULL, "OGRCoordinateTransformation",
                                 module_number);
 
     le_Geometry = zend_register_list_destructors_ex(ogr_free_Geometry,
-                                                     NULL, "OGRGeometry", 
+                                                     NULL, "OGRGeometry",
                                                      module_number);
-    
+
     le_GeometryRef = zend_register_list_destructors_ex(ogr_free_GeometryRef,
-                                                     NULL, "OGRGeometryRef", 
+                                                     NULL, "OGRGeometryRef",
                                                      module_number);
- 
+
     le_FieldDefn = zend_register_list_destructors_ex(ogr_free_FieldDefn,
-                                                     NULL, "OGRFieldDefn", 
+                                                     NULL, "OGRFieldDefn",
                                                      module_number);
 
     le_FieldDefnRef = zend_register_list_destructors_ex(ogr_free_FieldDefnRef,
-                                                     NULL, "OGRFieldDefnRef", 
+                                                     NULL, "OGRFieldDefnRef",
                                                      module_number);
 
     le_Field = zend_register_list_destructors_ex(ogr_free_Field,
-                                                     NULL, "OGRField", 
+                                                     NULL, "OGRField",
                                                      module_number);
 
     le_FieldRef = zend_register_list_destructors_ex(ogr_free_FieldRef,
-                                                     NULL, "OGRFieldRef", 
+                                                     NULL, "OGRFieldRef",
                                                      module_number);
 
     le_FeatureDefn = zend_register_list_destructors_ex(ogr_free_FeatureDefn,
-                                                     NULL, "OGRFeatureDefn", 
+                                                     NULL, "OGRFeatureDefn",
                                                      module_number);
 
     le_FeatureDefnRef = zend_register_list_destructors_ex
                               (ogr_free_FeatureDefnRef,
-                               NULL, "OGRFeatureDefn", 
+                               NULL, "OGRFeatureDefn",
                                module_number);
 
     le_Feature = zend_register_list_destructors_ex(ogr_free_Feature,
-                                                     NULL, "OGRFeature", 
+                                                     NULL, "OGRFeature",
                                                      module_number);
 
 
- 
+
     /*Register constants*/
 #define OGR_CONST_FLAG CONST_CS | CONST_PERSISTENT
 
@@ -685,7 +688,7 @@ PHP_MINIT_FUNCTION(ogr)
                            OGR_CONST_FLAG);
     REGISTER_LONG_CONSTANT("wkbXDR",
                            wkbXDR,
-                           OGR_CONST_FLAG);    
+                           OGR_CONST_FLAG);
     REGISTER_LONG_CONSTANT("wkbNDR",
                            wkbNDR,
                            OGR_CONST_FLAG);
@@ -871,7 +874,7 @@ PHP_MINFO_FUNCTION(ogr)
 
 
 /**********************************************************************
- * Support functions 
+ * Support functions
  **********************************************************************/
 
 static void php_report_ogr_error(int nErrLevel)
@@ -890,7 +893,7 @@ static char **  php_array2string(char **papszStrList, zval *refastrvalues)
 	numelems = zend_hash_num_elements(Z_ARRVAL_P(refastrvalues));
 
 	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refastrvalues));
-	while (zend_hash_get_current_data(Z_ARRVAL_P(refastrvalues), 
+	while (zend_hash_get_current_data(Z_ARRVAL_P(refastrvalues),
 										 (void **) &tmp) == SUCCESS) {
 		convert_to_string_ex(tmp);
 
@@ -902,13 +905,13 @@ static char **  php_array2string(char **papszStrList, zval *refastrvalues)
 }
 
 /**********************************************************************
- * Error handling functions 
+ * Error handling functions
  **********************************************************************/
 
 /* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and 
-   unfold functions in source code. See the corresponding marks just before 
-   function definition, where the functions purpose is also documented. Please 
+/* The previous line is meant for vim and emacs, so it can correctly fold and
+   unfold functions in source code. See the corresponding marks just before
+   function definition, where the functions purpose is also documented. Please
    follow this convention for the convenience of others editing your code.
 */
 
@@ -962,11 +965,11 @@ PHP_FUNCTION(cplgetlasterrormsg)
 }
 
 /**********************************************************************
- * OGR functions 
+ * OGR functions
  **********************************************************************/
 
 /* }}} */
-/* {{{ proto int ogr_g_createfromwkb(string strbydata, resource hsrs, 
+/* {{{ proto int ogr_g_createfromwkb(string strbydata, resource hsrs,
    resource refhnewgeom)
     */
 PHP_FUNCTION(ogr_g_createfromwkb)
@@ -983,18 +986,18 @@ PHP_FUNCTION(ogr_g_createfromwkb)
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sr!zl", &strbydata, 
-                              &strbydata_len,  &hsrs, &refhnewgeom, &nbytes) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "sr!zl", &strbydata,
+                              &strbydata_len,  &hsrs, &refhnewgeom, &nbytes)
+                              == FAILURE)
         return;
 
     if (hsrs) {
-        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs, 
-                             hsrs_id, "OGRSpatialReference", 
+        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs,
+                             hsrs_id, "OGRSpatialReference",
                              le_SpatialReference, le_SpatialReferenceRef);
     }
     if (hSpatialReference)
-        eErr = OGR_G_CreateFromWkb(strbydata, hSpatialReference, hNewGeom, 
+        eErr = OGR_G_CreateFromWkb(strbydata, hSpatialReference, hNewGeom,
                                     nbytes);
 
     if (eErr != OGRERR_NONE){
@@ -1009,7 +1012,7 @@ PHP_FUNCTION(ogr_g_createfromwkb)
 
 /* }}} */
 
-/* {{{ proto int ogr_g_createfromwkt(string refadata, resource hsrs, 
+/* {{{ proto int ogr_g_createfromwkt(string refadata, resource hsrs,
    resource refhnewgeom)
     */
 PHP_FUNCTION(ogr_g_createfromwkt)
@@ -1025,14 +1028,14 @@ PHP_FUNCTION(ogr_g_createfromwkt)
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z", &refstrdata, 
-                              &refstrdata_len,  &hsrs, &refhnewgeom) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z", &refstrdata,
+                              &refstrdata_len,  &hsrs, &refhnewgeom)
+                              == FAILURE)
         return;
 
     if (hsrs) {
-        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, 
-                             &hsrs, hsrs_id, "OGRSpatialReference", 
+        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH,
+                             &hsrs, hsrs_id, "OGRSpatialReference",
                              le_SpatialReference, le_SpatialReferenceRef);
     }
     if (hSpatialReference)
@@ -1059,11 +1062,11 @@ PHP_FUNCTION(ogr_g_destroygeometry)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1080,7 +1083,7 @@ PHP_FUNCTION(ogr_g_creategeometry)
     long igeometrytype;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "l", &igeometrytype) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "l", &igeometrytype) == FAILURE)
         return;
 
     hGeometry = OGR_G_CreateGeometry(igeometrytype);
@@ -1101,15 +1104,15 @@ PHP_FUNCTION(ogr_g_getdimension)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
-        RETURN_LONG(OGR_G_GetDimension(hGeometry)); 
+        RETURN_LONG(OGR_G_GetDimension(hGeometry));
     }
 }
 
@@ -1124,15 +1127,15 @@ PHP_FUNCTION(ogr_g_getcoordinatedimension)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
-        RETURN_LONG(OGR_G_GetCoordinateDimension(hGeometry)); 
+        RETURN_LONG(OGR_G_GetCoordinateDimension(hGeometry));
 }
 
 /* }}} */
@@ -1146,11 +1149,11 @@ PHP_FUNCTION(ogr_g_clone)
     zval *hgeom = NULL;
     OGRGeometryH hNewGeom = NULL, hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1176,12 +1179,12 @@ PHP_FUNCTION(ogr_g_getenvelope)
     OGREnvelope oEnvelope;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rz", &hgeom, &oenvel) == 
-                              FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rz", &hgeom, &oenvel) ==
+                              FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
 
@@ -1218,14 +1221,14 @@ PHP_FUNCTION(ogr_g_importfromwkb)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ral", &hgeom, &abydata, 
-    &nsize) == FAILURE) 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsl", &hgeom, &abydata, 
-        &abydata_len,  &nsize) == FAILURE) 
+//  if (zend_parse_parameters(argc TSRMLS_CC, "ral", &hgeom, &abydata,
+    &nsize) == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "rsl", &hgeom, &abydata,
+        &abydata_len,  &nsize) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1241,7 +1244,7 @@ PHP_FUNCTION(ogr_g_importfromwkb)
 
 /* }}} */
 
-/* {{{ proto int ogr_g_exporttowkb(resource hgeom, int ibyteorder, 
+/* {{{ proto int ogr_g_exporttowkb(resource hgeom, int ibyteorder,
    array abydata)
     */
 PHP_FUNCTION(ogr_g_exporttowkb)
@@ -1256,14 +1259,14 @@ PHP_FUNCTION(ogr_g_exporttowkb)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hgeom, &ibyteorder, 
-&abydata) == FAILURE) 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rls", &hgeom, &ibyteorder, 
-        &abydata, &abydata) == FAILURE) 
+//  if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hgeom, &ibyteorder,
+&abydata) == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "rls", &hgeom, &ibyteorder,
+        &abydata, &abydata) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1290,11 +1293,11 @@ PHP_FUNCTION(ogr_g_wkbsize)
     OGRGeometryH hGeometry = NULL;
     int wkbsize = -1;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1318,14 +1321,14 @@ PHP_FUNCTION(ogr_g_importfromwkt)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput) 
-                             == FAILURE) 
-    if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput, 
-                              &refainput_len) == FAILURE) 
+//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput)
+                             == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput,
+                              &refainput_len) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
 
@@ -1355,14 +1358,14 @@ PHP_FUNCTION(ogr_g_exporttowkt)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refadsttext) 
-                              == FAILURE) 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hgeom, &refadsttext, 
-                              &refadsttext_len) == FAILURE) 
+//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refadsttext)
+                              == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hgeom, &refadsttext,
+                              &refadsttext_len) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1390,11 +1393,11 @@ PHP_FUNCTION(ogr_g_getgeometrytype)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1413,11 +1416,11 @@ PHP_FUNCTION(ogr_g_getgeometryname)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1430,7 +1433,7 @@ PHP_FUNCTION(ogr_g_getgeometryname)
 #ifdef CONSTRUCT_FLAG
 /* }}} */
 
-/* {{{ proto void ogr_g_dumpreadable(resource hgeom, resource hfile, 
+/* {{{ proto void ogr_g_dumpreadable(resource hgeom, resource hfile,
    string strprefix)
     */
 PHP_FUNCTION(ogr_g_dumpreadable)
@@ -1444,16 +1447,16 @@ PHP_FUNCTION(ogr_g_dumpreadable)
     zval *hfile = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rrs", &hgeom, &hfile, 
-                              &strprefix, &strprefix_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rrs", &hgeom, &hfile,
+                              &strprefix, &strprefix_len) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hfile) {
-        ZEND_FETCH_RESOURCE(???, ???, hfile, hfile_id, "Text File Ptr", 
+        ZEND_FETCH_RESOURCE(???, ???, hfile, hfile_id, "Text File Ptr",
         ???_rsrc_id);
     }
 
@@ -1472,11 +1475,11 @@ PHP_FUNCTION(ogr_g_flattento2d)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1498,17 +1501,17 @@ PHP_FUNCTION(ogr_g_assignspatialreference)
     OGRGeometryH hGeometry = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr!", &hgeom, &hsrs) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr!", &hgeom, &hsrs)
+                              == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hsrs) {
-        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs, 
-                             hsrs_id, "OGRSpatialReference", 
+        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs,
+                             hsrs_id, "OGRSpatialReference",
                              le_SpatialReference, le_SpatialReferenceRef);
     }
     if (hGeometry)
@@ -1528,11 +1531,11 @@ PHP_FUNCTION(ogr_g_getspatialreference)
     OGRGeometryH hGeometry = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1541,7 +1544,7 @@ PHP_FUNCTION(ogr_g_getspatialreference)
     if (!hSpatialReference)
         RETURN_NULL();
 
-    ZEND_REGISTER_RESOURCE(return_value, hSpatialReference, 
+    ZEND_REGISTER_RESOURCE(return_value, hSpatialReference,
                            le_SpatialReference);
 
 }
@@ -1561,16 +1564,16 @@ PHP_FUNCTION(ogr_g_transform)
     OGRCoordinateTransformationH hCoordTransfo= NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hct) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hct) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hct) {
-        ZEND_FETCH_RESOURCE(hCoordTransfo, OGRCoordinateTransformationH, 
-                            &hct, hct_id, "OGRCoordinateTransformationH", 
+        ZEND_FETCH_RESOURCE(hCoordTransfo, OGRCoordinateTransformationH,
+                            &hct, hct_id, "OGRCoordinateTransformationH",
                             le_CoordinateTransformation);
     }
 
@@ -1598,17 +1601,17 @@ PHP_FUNCTION(ogr_g_transformto)
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hsrs) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hsrs) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hsrs) {
-        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs, 
-                             hsrs_id, "OGRSpatialReference", 
-                             le_SpatialReference, 
+        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, &hsrs,
+                             hsrs_id, "OGRSpatialReference",
+                             le_SpatialReference,
                              le_SpatialReferenceRef);
     }
     if (hSpatialReference && hGeometry)
@@ -1635,17 +1638,17 @@ PHP_FUNCTION(ogr_g_intersect)
     OGRGeometryH hGeometry = NULL, hOtherGeometry =NULL;
 
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom) 
-        == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom)
+        == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hothergeom) {
-        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom, 
-                             hothergeom_id, "OGRGeometryH", le_Geometry, 
+        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom,
+                             hothergeom_id, "OGRGeometryH", le_Geometry,
                              le_GeometryRef);
     }
     if (hOtherGeometry && hGeometry){
@@ -1666,17 +1669,17 @@ PHP_FUNCTION(ogr_g_equal)
     zval *hothergeom = NULL;
     OGRGeometryH hGeometry = NULL, hOtherGeometry =NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom) 
-        == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom)
+        == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hothergeom) {
-        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom, 
-                             hothergeom_id, "OGRGeometryH", le_Geometry, 
+        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom,
+                             hothergeom_id, "OGRGeometryH", le_Geometry,
                              le_GeometryRef);
     }
     if (hOtherGeometry && hGeometry){
@@ -1696,11 +1699,11 @@ PHP_FUNCTION(ogr_g_empty)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1718,11 +1721,11 @@ PHP_FUNCTION(ogr_g_getpointcount)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,     
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1742,12 +1745,12 @@ PHP_FUNCTION(ogr_g_getx)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &ipoint) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &ipoint)
+                              == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1767,12 +1770,12 @@ PHP_FUNCTION(ogr_g_gety)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &ipoint) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &ipoint)
+                              == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1792,12 +1795,12 @@ PHP_FUNCTION(ogr_g_getz)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &ipoint) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &ipoint)
+                              == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1807,7 +1810,7 @@ PHP_FUNCTION(ogr_g_getz)
 
 /* }}} */
 
-/* {{{ proto void ogr_g_getpoint(resource hgeom, int ipoint, double refdfx, 
+/* {{{ proto void ogr_g_getpoint(resource hgeom, int ipoint, double refdfx,
    double refdfy, double refdfz)
     */
 PHP_FUNCTION(ogr_g_getpoint)
@@ -1824,12 +1827,12 @@ PHP_FUNCTION(ogr_g_getpoint)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlzzz", &hgeom, &ipoint, 
-                              &refdfx, &refdfy, &refdfz) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlzzz", &hgeom, &ipoint,
+                              &refdfx, &refdfy, &refdfz) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (!hGeometry){
@@ -1849,7 +1852,7 @@ PHP_FUNCTION(ogr_g_getpoint)
 
 /* }}} */
 
-/* {{{ proto void ogr_g_setpoint(resource hgeom, int ipoint, double fx, 
+/* {{{ proto void ogr_g_setpoint(resource hgeom, int ipoint, double fx,
    double fy, double fz)
     */
 PHP_FUNCTION(ogr_g_setpoint)
@@ -1863,12 +1866,12 @@ PHP_FUNCTION(ogr_g_setpoint)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlddd", &hgeom, &ipoint, 
-                              &dfx, &dfy, &dfz) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlddd", &hgeom, &ipoint,
+                              &dfx, &dfy, &dfz) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1877,7 +1880,7 @@ PHP_FUNCTION(ogr_g_setpoint)
 
 /* }}} */
 
-/* {{{ proto void ogr_g_addpoint(resource hgeom, double dfx, double dfy, 
+/* {{{ proto void ogr_g_addpoint(resource hgeom, double dfx, double dfy,
    double dfz)
     */
 PHP_FUNCTION(ogr_g_addpoint)
@@ -1890,12 +1893,12 @@ PHP_FUNCTION(ogr_g_addpoint)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rddd", &hgeom, &dfx, &dfy, 
-                              &dfz) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rddd", &hgeom, &dfx, &dfy,
+                              &dfz) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1913,11 +1916,11 @@ PHP_FUNCTION(ogr_g_getgeometrycount)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry){
@@ -1937,12 +1940,12 @@ PHP_FUNCTION(ogr_g_getgeometryref)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL, hGeometryRef = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &isubgeom) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hgeom, &isubgeom)
+                              == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -1969,17 +1972,17 @@ PHP_FUNCTION(ogr_g_addgeometry)
     OGRGeometryH hGeometry = NULL, hOtherGeometry;
     OGRErr eErr = OGRERR_NONE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom)
+                              == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hothergeom) {
-        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom, 
-                             hothergeom_id, "hGeometryH", le_Geometry, 
+        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom,
+                             hothergeom_id, "hGeometryH", le_Geometry,
                              le_GeometryRef);
     }
     if (hGeometry && hOtherGeometry)
@@ -1996,7 +1999,7 @@ PHP_FUNCTION(ogr_g_addgeometry)
 
 /* }}} */
 
-/* {{{ proto int ogr_g_addgeometrydirectly(resource hgeom, 
+/* {{{ proto int ogr_g_addgeometrydirectly(resource hgeom,
    resource hothergeom )
  */
 PHP_FUNCTION(ogr_g_addgeometrydirectly)
@@ -2009,17 +2012,17 @@ PHP_FUNCTION(ogr_g_addgeometrydirectly)
     OGRGeometryH hGeometry = NULL, hOtherGeometry;
     OGRErr eErr = OGRERR_NONE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom)
+                              == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hothergeom) {
-        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom, 
-                             hothergeom_id, "hGeometryH", le_Geometry, 
+        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom,
+                             hothergeom_id, "hGeometryH", le_Geometry,
                              le_GeometryRef);
     }
     if (hGeometry &&hOtherGeometry)
@@ -2036,7 +2039,7 @@ PHP_FUNCTION(ogr_g_addgeometrydirectly)
 
 /* }}} */
 
-/* {{{ proto int ogr_g_removegeometry(resource hgeom, int igeom, 
+/* {{{ proto int ogr_g_removegeometry(resource hgeom, int igeom,
    boolean bdelete)
     */
 PHP_FUNCTION(ogr_g_removegeometry)
@@ -2049,12 +2052,12 @@ PHP_FUNCTION(ogr_g_removegeometry)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_NONE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlb", &hgeom, &igeom, 
-                              &bdelete) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlb", &hgeom, &igeom,
+                              &bdelete) == FAILURE)
         return;
 
     if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
@@ -2068,7 +2071,7 @@ PHP_FUNCTION(ogr_g_removegeometry)
 
 /* }}} */
 
-/* {{{ proto resource ogrbuildpolygonfromedges(resource hlinesascollection, 
+/* {{{ proto resource ogrbuildpolygonfromedges(resource hlinesascollection,
    boolean bbesteffort, boolean bautoclose, double dftolerance, int referr)
     */
 PHP_FUNCTION(ogrbuildpolygonfromedges)
@@ -2083,19 +2086,19 @@ PHP_FUNCTION(ogrbuildpolygonfromedges)
     zval *hlinesascollection = NULL;
     OGRGeometryH hLines = NULL, hNewGeometry =NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rbbdz", &hlinesascollection, 
-                              &bbesteffort, &bautoclose, &dftolerance, 
-                              &referr) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rbbdz", &hlinesascollection,
+                              &bbesteffort, &bautoclose, &dftolerance,
+                              &referr) == FAILURE)
         return;
 
     if (hlinesascollection) {
         ZEND_FETCH_RESOURCE2(hLines, OGRGeometryH, &hlinesascollection,
-                             hlinesascollection_id, "OGRGeometryH", 
+                             hlinesascollection_id, "OGRGeometryH",
                              le_Geometry, le_GeometryRef);
     }
     if (hLines)
-        hNewGeometry = OGRBuildPolygonFromEdges(hlinesascollection, 
-                                                bbesteffort, bautoclose, 
+        hNewGeometry = OGRBuildPolygonFromEdges(hlinesascollection,
+                                                bbesteffort, bautoclose,
                                                 dftolerance,(int*) &eErr);
 
     if (!hNewGeometry){
@@ -2119,8 +2122,8 @@ PHP_FUNCTION(ogr_fld_create)
     long itype;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sl", &strnamein, 
-                              &strnamein_len, &itype) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "sl", &strnamein,
+                              &strnamein_len, &itype) == FAILURE)
         return;
 
     hFieldDefn = OGR_Fld_Create(strnamein, itype);
@@ -2141,11 +2144,11 @@ PHP_FUNCTION(ogr_fld_destroy)
     zval *hfield = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfield) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfield) == FAILURE)
         return;
 
     if (hfield) {
-        ZEND_FETCH_RESOURCE(hFieldDefn, OGRFieldDefnH, &hfield, hfield_id, 
+        ZEND_FETCH_RESOURCE(hFieldDefn, OGRFieldDefnH, &hfield, hfield_id,
                             "OGRFieldDefn", le_FieldDefn);
     }
 
@@ -2166,13 +2169,13 @@ PHP_FUNCTION(ogr_fld_setname)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hfieldh, &strnamein, 
-                              &strnamein_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hfieldh, &strnamein,
+                              &strnamein_len) == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn)
@@ -2191,12 +2194,12 @@ PHP_FUNCTION(ogr_fld_getnameref)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2217,12 +2220,12 @@ PHP_FUNCTION(ogr_fld_gettype)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2242,13 +2245,13 @@ PHP_FUNCTION(ogr_fld_settype)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &itype) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &itype)
+                              == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2267,12 +2270,12 @@ PHP_FUNCTION(ogr_fld_getjustify)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2292,13 +2295,13 @@ PHP_FUNCTION(ogr_fld_setjustify)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &ijustify) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &ijustify)
+                              == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2317,12 +2320,12 @@ PHP_FUNCTION(ogr_fld_getwidth)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2343,13 +2346,13 @@ PHP_FUNCTION(ogr_fld_setwidth)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &nwidth) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &nwidth)
+                              == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2368,12 +2371,12 @@ PHP_FUNCTION(ogr_fld_getprecision)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfieldh) == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2392,13 +2395,13 @@ PHP_FUNCTION(ogr_fld_setprecision)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &nprecision) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfieldh, &nprecision)
+                              == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, 
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
+                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2408,7 +2411,7 @@ PHP_FUNCTION(ogr_fld_setprecision)
 
 /* }}} */
 
-/* {{{ proto void ogr_fld_set(resource hfieldh, string strnamein, 
+/* {{{ proto void ogr_fld_set(resource hfieldh, string strnamein,
    int itypein, int nwidthin, int nprecisionin, int justifyin)
     */
 PHP_FUNCTION(ogr_fld_set)
@@ -2424,17 +2427,17 @@ PHP_FUNCTION(ogr_fld_set)
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsllll", &hfieldh, &strnamein, 
-                              &strnamein_len, &itypein, &nwidthin, 
-                              &nprecisionin, &justifyin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rsllll", &hfieldh, &strnamein,
+                              &strnamein_len, &itypein, &nwidthin,
+                              &nprecisionin, &justifyin) == FAILURE)
         return;
 
     if (hfieldh) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, hfieldh_id, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, hfieldh_id,
                              "OGFieldDefn", le_FieldDefn, le_FieldDefnRef);
     }
     if (hFieldDefn){
-        OGR_Fld_Set(hFieldDefn, strnamein, itypein, nwidthin, nprecisionin, 
+        OGR_Fld_Set(hFieldDefn, strnamein, itypein, nwidthin, nprecisionin,
                     justifyin);
     }
 }
@@ -2449,7 +2452,7 @@ PHP_FUNCTION(ogr_getfieldtypename)
     long itype;
     const char *pszName;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "l", &itype) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "l", &itype) == FAILURE)
         return;
 
     if ((pszName = OGR_GetFieldTypeName(itype)) != NULL)
@@ -2467,8 +2470,8 @@ PHP_FUNCTION(ogr_fd_create)
     int strname_len;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "s", &strname, &strname_len) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "s", &strname, &strname_len)
+                              == FAILURE)
         return;
 
     hFeatureDefn = OGR_FD_Create(strname);
@@ -2490,12 +2493,12 @@ PHP_FUNCTION(ogr_fd_destroy)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn)
@@ -2513,12 +2516,12 @@ PHP_FUNCTION(ogr_fd_getname)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2539,12 +2542,12 @@ PHP_FUNCTION(ogr_fd_getfieldcount)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2565,13 +2568,13 @@ PHP_FUNCTION(ogr_fd_getfielddefn)
     OGRFeatureDefnH hFeatureDefn = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hdefin, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hdefin, &ifield)
+                              == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2594,13 +2597,13 @@ PHP_FUNCTION(ogr_fd_getfieldindex)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hdefin, &strfieldname, 
-                              &strfieldname_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hdefin, &strfieldname,
+                              &strfieldname_len) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2622,18 +2625,18 @@ PHP_FUNCTION(ogr_fd_addfielddefn)
     OGRFeatureDefnH hFeatureDefn = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hdefin, &hnewdefn) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hdefin, &hnewdefn)
+                              == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hnewdefn) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hnewdefn, 
-                             hnewdefn_id, "OGRFieldDefn", le_FieldDefn, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hnewdefn,
+                             hnewdefn_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFeatureDefn && hFieldDefn)
@@ -2651,12 +2654,12 @@ PHP_FUNCTION(ogr_fd_getgeomtype)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
 
@@ -2679,13 +2682,13 @@ PHP_FUNCTION(ogr_fd_setgeomtype)
     OGRFeatureDefnH hFeatureDefn = NULL;
     int iRefCount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hdefin, &itype) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hdefin, &itype)
+                              == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2711,12 +2714,12 @@ PHP_FUNCTION(ogr_fd_reference)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2735,12 +2738,12 @@ PHP_FUNCTION(ogr_fd_dereference)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2759,12 +2762,12 @@ PHP_FUNCTION(ogr_fd_getreferencecount)
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeature", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeature", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2784,12 +2787,12 @@ PHP_FUNCTION(ogr_f_create)
     OGRFeatureH hFeature = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hdefin) == FAILURE)
         return;
 
     if (hdefin) {
-        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin, 
-                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn, 
+        ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
 
@@ -2812,11 +2815,11 @@ PHP_FUNCTION(ogr_f_destroy)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -2835,11 +2838,11 @@ PHP_FUNCTION(ogr_f_getdefnref)
     OGRFeatureH hFeat = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -2864,17 +2867,17 @@ PHP_FUNCTION(ogr_f_setgeometrydirectly)
     OGRGeometryH hGeometry = NULL;
     OGRFeatureH hFeat = NULL;
     OGRErr eErr = OGRERR_NONE;
-    
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, &hgeomin) 
-                              == FAILURE) 
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, &hgeomin)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hgeomin) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeomin, hgeomin_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeomin, hgeomin_id,
                              "OGRFeature", le_Geometry, le_GeometryRef);
     }
 
@@ -2909,16 +2912,16 @@ PHP_FUNCTION(ogr_f_setgeometry)
     OGRErr eErr = OGRERR_FAILURE;
 
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, &hgeomin) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, &hgeomin)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hgeomin) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeomin, hgeomin_id, 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeomin, hgeomin_id,
                              "OGRFeature", le_Geometry, le_GeometryRef);
     }
 
@@ -2944,11 +2947,11 @@ PHP_FUNCTION(ogr_f_getgeometryref)
     OGRFeatureH hFeat = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -2971,11 +2974,11 @@ PHP_FUNCTION(ogr_f_clone)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL, hNewFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3001,15 +3004,15 @@ PHP_FUNCTION(ogr_f_equal)
     zval *hotherfeature = NULL;
     OGRFeatureH hFeat = NULL, hOtherFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, 
-                              &hotherfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature,
+                              &hotherfeature) == FAILURE)
         return;
 
     if (hfeature) {
         ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, "OGRFeature", le_Feature);
     }
     if (hotherfeature) {
-        ZEND_FETCH_RESOURCE(hOtherFeat, OGRFeatureH, &hotherfeature, 
+        ZEND_FETCH_RESOURCE(hOtherFeat, OGRFeatureH, &hotherfeature,
                             hotherfeature_id, "OGRFeature", le_Feature);
     }
 
@@ -3029,11 +3032,11 @@ PHP_FUNCTION(ogr_f_getfieldcount)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat){
@@ -3054,12 +3057,12 @@ PHP_FUNCTION(ogr_f_getfielddefnref)
     OGRFeatureH hFeat = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3082,12 +3085,12 @@ PHP_FUNCTION(ogr_f_getfieldindex)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hfeature, &strname, 
-                              &strname_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hfeature, &strname,
+                              &strname_len) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3106,12 +3109,12 @@ PHP_FUNCTION(ogr_f_isfieldset)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3130,12 +3133,12 @@ PHP_FUNCTION(ogr_f_unsetfield)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3155,12 +3158,12 @@ PHP_FUNCTION(ogr_f_getrawfieldref)
     OGRFeatureH hFeat = NULL;
     OGRField *hField = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
 
@@ -3183,12 +3186,12 @@ PHP_FUNCTION(ogr_f_getfieldasinteger)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if(hFeat){
@@ -3208,12 +3211,12 @@ PHP_FUNCTION(ogr_f_getfieldasdouble)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if(hFeat){
@@ -3235,12 +3238,12 @@ PHP_FUNCTION(ogr_f_getfieldasstring)
     int numelems = 0;
     zval **tmp = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if(hFeat){
@@ -3252,7 +3255,7 @@ PHP_FUNCTION(ogr_f_getfieldasstring)
 
 /* }}} */
 
-/* {{{ proto array int ogr_f_getfieldasintegerlist(resource hfeature, 
+/* {{{ proto array int ogr_f_getfieldasintegerlist(resource hfeature,
    int ifield, int refncount)
     */
 PHP_FUNCTION(ogr_f_getfieldasintegerlist)
@@ -3265,15 +3268,14 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
     OGRFeatureH hFeat = NULL;
     int numelements = 0;
     long *panList = NULL;
-    const int *ttt;
     int ncount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield, 
-                              &refncount) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield,
+                              &refncount) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3299,7 +3301,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
 
 /* }}} */
 
-/* {{{ proto array double ogr_f_getfieldasdoublelist(resource hfeature, 
+/* {{{ proto array double ogr_f_getfieldasdoublelist(resource hfeature,
    int ifield, int refncount)
     */
 PHP_FUNCTION(ogr_f_getfieldasdoublelist)
@@ -3314,16 +3316,16 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
     double *padfList = NULL;
     int ncount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield, 
-                              &refncount) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield,
+                              &refncount) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
 "OGRFeature", le_Feature);
     }
     if (hFeat)
-        padfList =(double *) OGR_F_GetFieldAsDoubleList(hFeat, 
+        padfList =(double *) OGR_F_GetFieldAsDoubleList(hFeat,
                                      ifield, &ncount);
 
     if ((!padfList) || (ncount <= 0)){
@@ -3347,7 +3349,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 
 /* }}} */
 
-/* {{{ proto array string ogr_f_getfieldasstringlist(resource hfeature, 
+/* {{{ proto array string ogr_f_getfieldasstringlist(resource hfeature,
 int ifield)
     */
 PHP_FUNCTION(ogr_f_getfieldasstringlist)
@@ -3362,12 +3364,12 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
     zval **tmp = NULL;
     int ncount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3391,7 +3393,7 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
 	}
 
 	while (numelements <= ncount) {
-        add_next_index_string(return_value, (char *) 
+        add_next_index_string(return_value, (char *)
                               CSLGetField(papszStrList, numelements), 1);
         numelements++;
 	}
@@ -3399,7 +3401,7 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
 
 /* }}} */
 
-/* {{{ proto void ogr_f_setfieldinteger(resource hfeature, int ifield, 
+/* {{{ proto void ogr_f_setfieldinteger(resource hfeature, int ifield,
    int nvalue)
     */
 PHP_FUNCTION(ogr_f_setfieldinteger)
@@ -3411,12 +3413,12 @@ PHP_FUNCTION(ogr_f_setfieldinteger)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rll", &hfeature, &ifield, 
-                              &nvalue) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rll", &hfeature, &ifield,
+                              &nvalue) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if(hFeat){
@@ -3426,7 +3428,7 @@ PHP_FUNCTION(ogr_f_setfieldinteger)
 
 /* }}} */
 
-/* {{{ proto void ogr_f_setfielddouble(resource hfeature, int ifield, 
+/* {{{ proto void ogr_f_setfielddouble(resource hfeature, int ifield,
    double dfvalue)
     */
 PHP_FUNCTION(ogr_f_setfielddouble)
@@ -3438,12 +3440,12 @@ PHP_FUNCTION(ogr_f_setfielddouble)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rld", &hfeature, &ifield, 
-                              &dfvalue) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rld", &hfeature, &ifield,
+                              &dfvalue) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if(hFeat){
@@ -3452,7 +3454,7 @@ PHP_FUNCTION(ogr_f_setfielddouble)
 }
 /* }}} */
 
-/* {{{ proto void ogr_f_setfieldstring(resource hfeature, int ifield, 
+/* {{{ proto void ogr_f_setfieldstring(resource hfeature, int ifield,
    string strvalue)
     */
 PHP_FUNCTION(ogr_f_setfieldstring)
@@ -3465,12 +3467,12 @@ PHP_FUNCTION(ogr_f_setfieldstring)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rls", &hfeature, &ifield, 
-                              &strvalue, &strvalue_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rls", &hfeature, &ifield,
+                              &strvalue, &strvalue_len) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if(hFeat){
@@ -3480,7 +3482,7 @@ PHP_FUNCTION(ogr_f_setfieldstring)
 
 /* }}} */
 
-/* {{{ proto void ogr_f_setfieldintegerlist(resource hfeature, int ifield, 
+/* {{{ proto void ogr_f_setfieldintegerlist(resource hfeature, int ifield,
    int ncount, int refanvalues)
     */
 PHP_FUNCTION(ogr_f_setfieldintegerlist)
@@ -3496,12 +3498,12 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
     int numelements = 0;
     zval **tmp = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlla", &hfeature, &ifield, 
-                              &ncount, &refanvalues) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlla", &hfeature, &ifield,
+                              &ncount, &refanvalues) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
 
@@ -3516,7 +3518,7 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
     numelements = 0;
 
 	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refanvalues));
-	while (zend_hash_get_current_data(Z_ARRVAL_P(refanvalues), 
+	while (zend_hash_get_current_data(Z_ARRVAL_P(refanvalues),
 										 (void **) &tmp) == SUCCESS) {
 
 
@@ -3534,7 +3536,7 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
 
 /* }}} */
 
-/* {{{ proto void ogr_f_setfielddoublelist(resource hfeature, int ifield, 
+/* {{{ proto void ogr_f_setfielddoublelist(resource hfeature, int ifield,
    int ncount, double refadfvalues)
     */
 PHP_FUNCTION(ogr_f_setfielddoublelist)
@@ -3550,12 +3552,12 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
     int numelements = 0;
     zval **tmp = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlla", &hfeature, &ifield, 
-                              &ncount, &refadfvalues) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlla", &hfeature, &ifield,
+                              &ncount, &refadfvalues) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
 
@@ -3571,7 +3573,7 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
     numelements = 0;
 
 	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refadfvalues));
-	while (zend_hash_get_current_data(Z_ARRVAL_P(refadfvalues), 
+	while (zend_hash_get_current_data(Z_ARRVAL_P(refadfvalues),
 										 (void **) &tmp) == SUCCESS) {
 
         adfTmp[numelements] = Z_DVAL_PP(tmp);
@@ -3588,7 +3590,7 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
 
 /* }}} */
 
-/* {{{ proto void ogr_f_setfieldstringlist(resource hfeature, int ifield, 
+/* {{{ proto void ogr_f_setfieldstringlist(resource hfeature, int ifield,
    array refastrvalues)
     */
 PHP_FUNCTION(ogr_f_setfieldstringlist)
@@ -3601,12 +3603,12 @@ PHP_FUNCTION(ogr_f_setfieldstringlist)
     OGRFeatureH hFeat = NULL;
     char **papszStrList = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hfeature, &ifield, 
-                              &refastrvalues) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hfeature, &ifield,
+                              &refastrvalues) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
 
@@ -3620,7 +3622,7 @@ PHP_FUNCTION(ogr_f_setfieldstringlist)
 
 /* }}} */
 
-/* {{{ proto void ogr_f_setfieldraw(resource hfeature, int ifield, 
+/* {{{ proto void ogr_f_setfieldraw(resource hfeature, int ifield,
    resource hogrfield)
     */
 PHP_FUNCTION(ogr_f_setfieldraw)
@@ -3635,19 +3637,19 @@ PHP_FUNCTION(ogr_f_setfieldraw)
     OGRField *hField = NULL;
 
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlr", &hfeature, &ifield, 
-                              &hogrfield) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlr", &hfeature, &ifield,
+                              &hogrfield) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hogrfield) {
-        ZEND_FETCH_RESOURCE2(hField, OGRField *, &hogrfield, hogrfield_id, 
+        ZEND_FETCH_RESOURCE2(hField, OGRField *, &hogrfield, hogrfield_id,
                              "OGRField", le_Field, le_FieldRef);
     }
-    
+
     if (hFeat && hField)
         OGR_F_SetFieldRaw(hFeat, ifield, hField);
 }
@@ -3663,11 +3665,11 @@ PHP_FUNCTION(ogr_f_getfid)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3688,12 +3690,12 @@ PHP_FUNCTION(ogr_f_setfid)
     OGRFeatureH hFeat = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifidin) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifidin)
+                              == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
@@ -3716,11 +3718,11 @@ PHP_FUNCTION(ogr_f_dumpreadable)
     int hfeature_id = -1;
     zval *hfeature = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(???, ???, hfeature, hfeature_id, "???", 
+        ZEND_FETCH_RESOURCE(???, ???, hfeature, hfeature_id, "???",
         ???_rsrc_id);
     }
 
@@ -3731,7 +3733,7 @@ PHP_FUNCTION(ogr_f_dumpreadable)
 
 /* }}} */
 
-/* {{{ proto int ogr_f_setfrom(resource hdstfeature, resource hsrcfeature, 
+/* {{{ proto int ogr_f_setfrom(resource hdstfeature, resource hsrcfeature,
    boolean bforgiving ) */
 PHP_FUNCTION(ogr_f_setfrom)
 {
@@ -3744,17 +3746,17 @@ PHP_FUNCTION(ogr_f_setfrom)
     OGRFeatureH hDstFeat = NULL, hSrcFeat = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rrb", &hdstfeature, 
-                              &hsrcfeature, &bforgiving) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rrb", &hdstfeature,
+                              &hsrcfeature, &bforgiving) == FAILURE)
         return;
 
     if (hdstfeature) {
-        ZEND_FETCH_RESOURCE(hDstFeat, OGRFeatureH, &hdstfeature, 
+        ZEND_FETCH_RESOURCE(hDstFeat, OGRFeatureH, &hdstfeature,
                             hdstfeature_id, "OGRFeature", le_Feature);
     }
 
     if (hsrcfeature) {
-        ZEND_FETCH_RESOURCE(hSrcFeat, OGRFeatureH, &hsrcfeature, 
+        ZEND_FETCH_RESOURCE(hSrcFeat, OGRFeatureH, &hsrcfeature,
                             hsrcfeature_id, "OGRFeature", le_Feature);
     }
 
@@ -3779,11 +3781,11 @@ PHP_FUNCTION(ogr_f_getstylestring)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
 
@@ -3807,12 +3809,12 @@ PHP_FUNCTION(ogr_f_setstylestring)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hfeature, &strstring, 
-                              &strstring_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hfeature, &strstring,
+                              &strstring_len) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
 
@@ -3833,14 +3835,14 @@ PHP_FUNCTION(ogr_l_getspatialfilter)
     OGRGeometryH hGeom = NULL;
     int eType = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
-    if (hLayerResource) 
+    if (hLayerResource)
         hGeom = OGR_L_GetSpatialFilter(hLayerResource);
 
     if (!hGeom)
@@ -3851,7 +3853,7 @@ PHP_FUNCTION(ogr_l_getspatialfilter)
 
 /* }}} */
 
-/* {{{ proto void ogr_l_setspatialfilter(resource hlayer, 
+/* {{{ proto void ogr_l_setspatialfilter(resource hlayer,
    resource hspatialfilter)
     */
 PHP_FUNCTION(ogr_l_setspatialfilter)
@@ -3864,17 +3866,17 @@ PHP_FUNCTION(ogr_l_setspatialfilter)
     OGRLayerH hLayerResource = NULL;
     OGRGeometryH hGeom = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr!", &hlayer, 
-                              &hspatialfilter) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr!", &hlayer,
+                              &hspatialfilter) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hspatialfilter) {
-        ZEND_FETCH_RESOURCE2(hGeom, OGRGeometryH, &hspatialfilter, 
-                             hspatialfilter_id, "OGRGeometry", le_Geometry, 
+        ZEND_FETCH_RESOURCE2(hGeom, OGRGeometryH, &hspatialfilter,
+                             hspatialfilter_id, "OGRGeometry", le_Geometry,
                              le_GeometryRef);
     }
     if (hLayerResource && hGeom)
@@ -3894,12 +3896,12 @@ PHP_FUNCTION(ogr_l_setattributefilter)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hlayer, &strquery, 
-                              &strquery_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hlayer, &strquery,
+                              &strquery_len) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource)
@@ -3923,11 +3925,11 @@ PHP_FUNCTION(ogr_l_resetreading)
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource)
@@ -3946,11 +3948,11 @@ PHP_FUNCTION(ogr_l_getnextfeature)
     OGRLayerH hLayerResource = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource)
@@ -3973,12 +3975,12 @@ PHP_FUNCTION(ogr_l_getfeature)
     OGRLayerH hLayerResource = NULL;
     OGRFeatureH hFeat = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hlayer, &ifeatureid) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hlayer, &ifeatureid)
+                              == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource)
@@ -4004,16 +4006,16 @@ PHP_FUNCTION(ogr_l_setfeature)
     OGRFeatureH hFeat = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hlayer, &hfeature) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hlayer, &hfeature)
+                              == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
     if (hLayerResource && hFeat)
@@ -4041,17 +4043,17 @@ PHP_FUNCTION(ogr_l_createfeature)
     OGRFeatureH hNewFeature = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hlayer, &hfeature) 
-                             == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hlayer, &hfeature)
+                             == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(hNewFeature, OGRFeatureH, &hfeature, hfeature_id, 
+        ZEND_FETCH_RESOURCE(hNewFeature, OGRFeatureH, &hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
 
@@ -4076,12 +4078,12 @@ PHP_FUNCTION(ogr_l_deletefeature)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hlayer, &ifeatureid) 
-                             == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hlayer, &ifeatureid)
+                             == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
 
@@ -4107,12 +4109,12 @@ PHP_FUNCTION(ogr_l_getlayerdefn)
     OGRLayerH hLayerResource = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
     int numFields =0;
-    
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource)
@@ -4134,11 +4136,11 @@ PHP_FUNCTION(ogr_l_getspatialref)
     OGRLayerH hLayerResource = NULL;
     OGRSpatialReferenceH hSpatialRef = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource)
@@ -4162,12 +4164,12 @@ PHP_FUNCTION(ogr_l_getfeaturecount)
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rb", &hlayer, &bforce) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rb", &hlayer, &bforce)
+                              == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource){
@@ -4177,7 +4179,7 @@ PHP_FUNCTION(ogr_l_getfeaturecount)
 
 /* }}} */
 
-/* {{{ proto int ogr_l_getextent(resource hlayer, object oextent, 
+/* {{{ proto int ogr_l_getextent(resource hlayer, object oextent,
    boolean bforce)
     */
 PHP_FUNCTION(ogr_l_getextent)
@@ -4191,12 +4193,12 @@ PHP_FUNCTION(ogr_l_getextent)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rzb", &hlayer, &oextent, 
-                              &bforce) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rzb", &hlayer, &oextent,
+                              &bforce) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
 
@@ -4235,7 +4237,7 @@ PHP_FUNCTION(ogr_l_testcapability)
     OGRLayerH hLayerResource = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hlayer, &strcapability,
-                              &strcapability_len) == FAILURE) 
+                              &strcapability_len) == FAILURE)
         return;
 
     if (hlayer) {
@@ -4249,7 +4251,7 @@ PHP_FUNCTION(ogr_l_testcapability)
 
 /* }}} */
 
-/* {{{ proto int ogr_l_createfield(resource hlayer, resource hfield, 
+/* {{{ proto int ogr_l_createfield(resource hlayer, resource hfield,
    boolean bapproxok)
     */
 PHP_FUNCTION(ogr_l_createfield)
@@ -4264,16 +4266,16 @@ PHP_FUNCTION(ogr_l_createfield)
     OGRFieldDefnH hFieldDefn = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rrb", &hlayer, &hfield, 
-                              &bapproxok) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rrb", &hlayer, &hfield,
+                              &bapproxok) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hfield) {
-        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfield, hfield_id, 
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfield, hfield_id,
                              "OGRFieldDefn", le_FieldDefn, le_FieldDefnRef);
     }
     if(hLayerResource && hFieldDefn)
@@ -4294,11 +4296,11 @@ PHP_FUNCTION(ogr_l_starttransaction)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
 
@@ -4320,11 +4322,11 @@ PHP_FUNCTION(ogr_l_committransaction)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
 
@@ -4345,11 +4347,11 @@ PHP_FUNCTION(ogr_l_rollbacktransaction)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
 
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
 
@@ -4370,11 +4372,11 @@ PHP_FUNCTION(ogr_ds_destroy)
     zval *hDS = NULL;
     OGRDataSourceH hDataSource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hDS) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hDS) == FAILURE)
         return;
 
     if (hDS) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH , &hDS, hDS_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH , &hDS, hDS_id,
                             "OGRDataSource", le_Datasource);
     }
 
@@ -4393,13 +4395,13 @@ PHP_FUNCTION(ogr_ds_getname)
     zval *hds = NULL;
     OGRDataSourceH hDataSource = NULL;
 
- 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hds) == FAILURE) 
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hds) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
-                            "OGRDataSource", le_Datasource); 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
+                            "OGRDataSource", le_Datasource);
     }
     if (hDataSource){
         const char *pszName;
@@ -4419,16 +4421,16 @@ PHP_FUNCTION(ogr_ds_getlayercount)
     OGRDataSourceH hDataSource = NULL;
 
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hds) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hds) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
                             "OGRDataSource", le_Datasource);
 
     }
     if (hDataSource){
-        RETURN_LONG(OGR_DS_GetLayerCount(hDataSource));        
+        RETURN_LONG(OGR_DS_GetLayerCount(hDataSource));
     }
 }
 
@@ -4445,11 +4447,11 @@ PHP_FUNCTION(ogr_ds_getlayer)
     OGRDataSourceH hDataSource = NULL;
     OGRLayerH hLayer = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hds, &ilayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hds, &ilayer) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
                             "OGRDataSource", le_Datasource);
     }
 
@@ -4478,12 +4480,12 @@ PHP_FUNCTION(ogr_ds_getlayerbyname)
     OGRDataSourceH hDataSource = NULL;
     OGRLayerH hLayer = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hds, &strlayername, 
-                              &strname_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hds, &strlayername,
+                              &strname_len) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
                             "OGRDataSource", le_Datasource);
     }
 
@@ -4500,7 +4502,7 @@ PHP_FUNCTION(ogr_ds_getlayerbyname)
 
 /* }}} */
 
-/* {{{ proto resource ogr_ds_createlayer(resource hds, string strname, 
+/* {{{ proto resource ogr_ds_createlayer(resource hds, string strname,
    resource hsrs, int igeometrytype, array astroptions)
     */
 PHP_FUNCTION(ogr_ds_createlayer)
@@ -4520,19 +4522,19 @@ PHP_FUNCTION(ogr_ds_createlayer)
     OGRLayerH hLayer = NULL;
 
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsr!la!", &hds, &strname, 
-                              &strname_len, &hsrs, &igeometrytype, 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rsr!la!", &hds, &strname,
+                              &strname_len, &hsrs, &igeometrytype,
                               &astroptions) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
                             "OGRDataSource", le_Datasource);
     }
 
     if (hsrs) {
-        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, 
-                             &hsrs, hsrs_id, "OGRSpatialReference", 
+        ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH,
+                             &hsrs, hsrs_id, "OGRSpatialReference",
                              le_SpatialReference, le_SpatialReferenceRef);
         }
 
@@ -4541,7 +4543,7 @@ PHP_FUNCTION(ogr_ds_createlayer)
     }
 
     if (hDataSource){
-        hLayer = OGR_DS_CreateLayer(hDataSource, strname, hSpatialReference, 
+        hLayer = OGR_DS_CreateLayer(hDataSource, strname, hSpatialReference,
                                     igeometrytype, papszoptions);
     }
 
@@ -4568,12 +4570,12 @@ PHP_FUNCTION(ogr_ds_testcapability)
     zval *hds = NULL;
     OGRDataSourceH hDataSource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hds, &strcapability, 
-                              &strcapability_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hds, &strcapability,
+                              &strcapability_len) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
                             "OGRDataSource", le_Datasource);
     }
     if (hDataSource){
@@ -4583,7 +4585,7 @@ PHP_FUNCTION(ogr_ds_testcapability)
 
 /* }}} */
 
-/* {{{ proto resource ogr_ds_executesql(resource hds, string strsqlcommand, 
+/* {{{ proto resource ogr_ds_executesql(resource hds, string strsqlcommand,
    resource hspatialfilter, string strdialect)
     */
 PHP_FUNCTION(ogr_ds_executesql)
@@ -4601,24 +4603,24 @@ PHP_FUNCTION(ogr_ds_executesql)
     OGRGeometryH hGeometry = NULL;
     OGRLayerH hLayer = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsr!s", &hds, &strsqlcommand, 
-                              &strsqlcommand_len, &hspatialfilter, 
-                              &strdialect, &strdialect_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rsr!s", &hds, &strsqlcommand,
+                              &strsqlcommand_len, &hspatialfilter,
+                              &strdialect, &strdialect_len) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
                             "OGRDataSource", le_Datasource);
 
     }
     if (hspatialfilter) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hspatialfilter, 
-                             hspatialfilter_id, "OGRSpatialFilter", 
+        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hspatialfilter,
+                             hspatialfilter_id, "OGRSpatialFilter",
                              le_Geometry, le_GeometryRef);
     }
 
     if (hDataSource){
-        hLayer = OGR_DS_ExecuteSQL(hDataSource, strsqlcommand, hGeometry, 
+        hLayer = OGR_DS_ExecuteSQL(hDataSource, strsqlcommand, hGeometry,
                                    strdialect);
     }
 
@@ -4644,15 +4646,15 @@ PHP_FUNCTION(ogr_ds_releaseresultset)
     OGRLayerH hLayerResource = NULL;
     OGRDataSourceH hDataSource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hds, &hlayer) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hds, &hlayer) == FAILURE)
         return;
 
     if (hds) {
-        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id, 
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
                             "OGRDataSource", le_Datasource);
     }
     if (hlayer) {
-        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id, 
+        ZEND_FETCH_RESOURCE(hLayerResource, OGRLayerH, &hlayer, hlayer_id,
                             "OGRLayer", le_Layer);
     }
     if (hDataSource && hLayerResource){
@@ -4672,11 +4674,11 @@ PHP_FUNCTION(ogr_dr_getname)
     zval *hsfdriver = NULL;
     OGRSFDriverH hDriver = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hsfdriver) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hsfdriver) == FAILURE)
         return;
 
     if (hsfdriver){
-        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id, 
+        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id,
                             "OGRSFDriverH", le_SFDriver);
     }
     if (hDriver){
@@ -4686,7 +4688,7 @@ PHP_FUNCTION(ogr_dr_getname)
     }
 }
 
-/* {{{ proto resource ogr_dr_open(resource hsfdriver, string strname, 
+/* {{{ proto resource ogr_dr_open(resource hsfdriver, string strname,
    boolean bupdate)
     */
 PHP_FUNCTION(ogr_dr_open)
@@ -4701,7 +4703,7 @@ PHP_FUNCTION(ogr_dr_open)
     OGRDataSourceH hDataSource = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rsb", &hsfdriver, &strname,
-                              &strname_len, &bupdate) == FAILURE) 
+                              &strname_len, &bupdate) == FAILURE)
         return;
 
     if (hsfdriver){
@@ -4721,7 +4723,7 @@ PHP_FUNCTION(ogr_dr_open)
 
 /* }}} */
 
-/* {{{ proto int ogr_dr_testcapability(resource hsfdriver, 
+/* {{{ proto int ogr_dr_testcapability(resource hsfdriver,
    string strcapability)
     */
 PHP_FUNCTION(ogr_dr_testcapability)
@@ -4733,12 +4735,12 @@ PHP_FUNCTION(ogr_dr_testcapability)
     zval *hsfdriver = NULL;
     OGRSFDriverH hDriver = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hsfdriver, 
-                              &strcapability, &strcapability_len) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hsfdriver,
+                              &strcapability, &strcapability_len) == FAILURE)
         return;
 
     if (hsfdriver){
-        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id, 
+        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id,
                             "OGRSFDriverH", le_SFDriver);
     }
     if (hDriver){
@@ -4748,7 +4750,7 @@ PHP_FUNCTION(ogr_dr_testcapability)
 
 /* }}} */
 
-/* {{{ proto resource ogr_dr_createdatasource(resource hsfdriver, 
+/* {{{ proto resource ogr_dr_createdatasource(resource hsfdriver,
    string strname, array astroptions)
     */
 PHP_FUNCTION(ogr_dr_createdatasource)
@@ -4763,12 +4765,12 @@ PHP_FUNCTION(ogr_dr_createdatasource)
     OGRSFDriverH hDriver = NULL;
     OGRDataSourceH hDataSource = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsa!", &hsfdriver, &strname, 
-                              &strname_len, &astroptions) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "rsa!", &hsfdriver, &strname,
+                              &strname_len, &astroptions) == FAILURE)
         return;
 
     if (hsfdriver) {
-        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id, 
+        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id,
                             "OGRSFDriverH", le_SFDriver);
     }
 
@@ -4791,7 +4793,7 @@ PHP_FUNCTION(ogr_dr_createdatasource)
 
 /* }}} */
 
-/* {{{ proto resource OGROpen(string strName, boolean bUpdate, 
+/* {{{ proto resource OGROpen(string strName, boolean bUpdate,
    resource refhSFDriver)
     */
 PHP_FUNCTION(ogropen)
@@ -4805,9 +4807,9 @@ PHP_FUNCTION(ogropen)
     OGRSFDriverH hDriver=NULL;
     OGRDataSourceH hFile = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sb|r!", &strName, 
-                              &strName_len, &bUpdate, &refhSFDriver) 
-                              == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "sb|r!", &strName,
+                              &strName_len, &bUpdate, &refhSFDriver)
+                              == FAILURE)
         return;
 
     if (OGRGetDriverCount() == 0)
@@ -4851,11 +4853,11 @@ PHP_FUNCTION(ogrregisterdriver)
     zval *hsfdriver = NULL;
     OGRSFDriverH hDriver = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hsfdriver) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hsfdriver) == FAILURE)
         return;
 
     if (hsfdriver){
-        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id, 
+        ZEND_FETCH_RESOURCE(hDriver, OGRSFDriverH, &hsfdriver, hsfdriver_id,
                             "OGRSFDriverH", le_SFDriver);
     }
     if (hDriver)
@@ -4882,7 +4884,7 @@ PHP_FUNCTION(ogrgetdriver)
     long idriver;
     OGRSFDriverH hDriver=NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "l", &idriver) == FAILURE) 
+    if (zend_parse_parameters(argc TSRMLS_CC, "l", &idriver) == FAILURE)
         return;
 
     hDriver = OGRGetDriver(idriver);
