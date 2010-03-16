@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.26  2009-04-27 21:07:59  jmckenna
+ * remove unnecessary 'ttt' variable
+ *
  * Revision 1.25  2007-09-11 15:00:01  pspencer
  * added OGR_L_DeleteFeature wrapper
  *
@@ -996,9 +999,8 @@ PHP_FUNCTION(ogr_g_createfromwkb)
                              hsrs_id, "OGRSpatialReference",
                              le_SpatialReference, le_SpatialReferenceRef);
     }
-    if (hSpatialReference)
-        eErr = OGR_G_CreateFromWkb(strbydata, hSpatialReference, hNewGeom,
-                                    nbytes);
+    eErr = OGR_G_CreateFromWkb(strbydata, hSpatialReference, &hNewGeom,
+                               nbytes);
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
@@ -1038,8 +1040,7 @@ PHP_FUNCTION(ogr_g_createfromwkt)
                              &hsrs, hsrs_id, "OGRSpatialReference",
                              le_SpatialReference, le_SpatialReferenceRef);
     }
-    if (hSpatialReference)
-        eErr = (OGR_G_CreateFromWkt(&refstrdata, hSpatialReference, hNewGeom));
+    eErr = OGR_G_CreateFromWkt(&refstrdata, hSpatialReference, &hNewGeom);
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
