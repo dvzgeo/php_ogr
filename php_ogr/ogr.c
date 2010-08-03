@@ -28,6 +28,9 @@
  ******************************************************************************
  *
  * $Log$
+ * Revision 1.27  2010-03-16 12:36:18  yassefa
+ * Correct function ogr_g_createfromwkt
+ *
  * Revision 1.26  2009-04-27 21:07:59  jmckenna
  * remove unnecessary 'ttt' variable
  *
@@ -219,8 +222,8 @@ function_entry ogr_functions[] = {
     PHP_FE(ogr_g_wkbsize,   NULL)
 #ifdef CONSTRUCT_FLAG
     PHP_FE(ogr_g_importfromwkt, NULL)
-    PHP_FE(ogr_g_exporttowkt,   two_args_first_arg_force_ref)
 #endif
+    PHP_FE(ogr_g_exporttowkt,   two_args_first_arg_force_ref)
     PHP_FE(ogr_g_getgeometrytype,   NULL)
     PHP_FE(ogr_g_getgeometryname,   NULL)
 #ifdef CONSTRUCT_FLAG
@@ -1032,7 +1035,7 @@ PHP_FUNCTION(ogr_g_createfromwkt)
 
     if (zend_parse_parameters(argc TSRMLS_CC, "sr!z", &refstrdata,
                               &refstrdata_len,  &hsrs, &refhnewgeom)
-                              == FAILURE)
+        == FAILURE)
         return;
 
     if (hsrs) {
@@ -1046,10 +1049,10 @@ PHP_FUNCTION(ogr_g_createfromwkt)
         php_report_ogr_error(E_WARNING);
     }
     if (hNewGeom) {
-        zval_dtor(refhnewgeom);
-        ZEND_REGISTER_RESOURCE(refhnewgeom, hNewGeom, le_Geometry);
+        ZEND_REGISTER_RESOURCE(return_value, hNewGeom, le_Geometry);
     }
-    RETURN_LONG(eErr);
+    else
+        RETURN_NULL();
 }
 
 /* }}} */
@@ -1222,8 +1225,7 @@ PHP_FUNCTION(ogr_g_importfromwkb)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ral", &hgeom, &abydata,
-    &nsize) == FAILURE)
+//  if (zend_parse_parameters(argc TSRMLS_CC, "ral", &hgeom, &abydata,&nsize) == FAILURE)
     if (zend_parse_parameters(argc TSRMLS_CC, "rsl", &hgeom, &abydata,
         &abydata_len,  &nsize) == FAILURE)
         return;
@@ -1260,8 +1262,7 @@ PHP_FUNCTION(ogr_g_exporttowkb)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hgeom, &ibyteorder,
-&abydata) == FAILURE)
+//  if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hgeom, &ibyteorder,&abydata) == FAILURE)
     if (zend_parse_parameters(argc TSRMLS_CC, "rls", &hgeom, &ibyteorder,
         &abydata, &abydata) == FAILURE)
         return;
@@ -1322,8 +1323,7 @@ PHP_FUNCTION(ogr_g_importfromwkt)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput)
-                             == FAILURE)
+//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput)                             == FAILURE)
     if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput,
                               &refainput_len) == FAILURE)
         return;
@@ -1345,6 +1345,7 @@ PHP_FUNCTION(ogr_g_importfromwkt)
 }
 
 /* }}} */
+#endif
 
 /* {{{ proto int ogr_g_exporttowkt(resource hgeom, array refadsttext)
     */
@@ -1359,10 +1360,9 @@ PHP_FUNCTION(ogr_g_exporttowkt)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refadsttext)
-                              == FAILURE)
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hgeom, &refadsttext,
-                              &refadsttext_len) == FAILURE)
+  if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
+    // if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hgeom, &refadsttext,
+    //                        &refadsttext_len) == FAILURE)
         return;
 
     if (hgeom) {
@@ -1372,15 +1372,14 @@ PHP_FUNCTION(ogr_g_exporttowkt)
     if (hGeometry)
         eErr = OGR_G_ExportToWkt(hGeometry, &refadsttext);
 
-    if (eErr != OGRERR_NONE){
-        php_report_ogr_error(E_WARNING);
+    if (refadsttext)
+    {
+        RETURN_STRING(refadsttext,1);
     }
-
-    RETURN_LONG(eErr);
+    RETURN_STRING("",1);
 
 }
 
-#endif
 
 
 /* }}} */
