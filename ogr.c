@@ -354,6 +354,7 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogrregisterdriver,  NULL)
     PHP_FE(ogrgetdrivercount,   NULL)
     PHP_FE(ogrgetdriver,    NULL)
+    PHP_FE(ogrgetdriverbyname, NULL)
     PHP_FE(ogrregisterall,  NULL)
     {NULL, NULL, NULL}  /* Must be the last line in ogr_functions[] */
 };
@@ -5018,6 +5019,29 @@ PHP_FUNCTION(ogrgetdriver)
         return;
 
     hDriver = OGRGetDriver(idriver);
+
+    if (!hDriver){
+        php_report_ogr_error(E_WARNING);
+        RETURN_NULL();
+    }
+    ZEND_REGISTER_RESOURCE(return_value, hDriver, le_SFDriver);
+}
+
+/* }}} */
+
+/* {{{ proto resource ogrgetdriverbyname(string strname)
+    */
+PHP_FUNCTION(ogrgetdriverbyname)
+{
+    int argc = ZEND_NUM_ARGS();
+    char* strname = NULL;
+    int strname_len;
+    OGRSFDriverH hDriver=NULL;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "s", &strname, &strname_len) == FAILURE)
+        return;
+
+    hDriver = OGRGetDriverByName(strname);
 
     if (!hDriver){
         php_report_ogr_error(E_WARNING);

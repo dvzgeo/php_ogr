@@ -180,6 +180,7 @@ PHP_FUNCTION(ogropen);
 PHP_FUNCTION(ogrregisterdriver);
 PHP_FUNCTION(ogrgetdrivercount);
 PHP_FUNCTION(ogrgetdriver);
+PHP_FUNCTION(ogrgetdriverbyname);
 PHP_FUNCTION(ogrregisterall);
 
 /* 
