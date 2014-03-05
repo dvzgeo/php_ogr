@@ -215,16 +215,12 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_g_getdimension,  NULL)
     PHP_FE(ogr_g_getcoordinatedimension,    NULL)
     PHP_FE(ogr_g_clone, NULL)
-    PHP_FE(ogr_g_getenvelope,   two_args_first_arg_force_ref)
-#ifdef CONSTRUCT_FLAG
+    PHP_FE(ogr_g_getenvelope,   two_args_second_arg_force_ref)
     PHP_FE(ogr_g_importfromwkb, NULL)
-    PHP_FE(ogr_g_exporttowkb,   three_args_first_arg_force_ref)
-#endif
+    PHP_FE(ogr_g_exporttowkb,   three_args_third_arg_force_ref)
     PHP_FE(ogr_g_wkbsize,   NULL)
-#ifdef CONSTRUCT_FLAG
     PHP_FE(ogr_g_importfromwkt, NULL)
-#endif
-    PHP_FE(ogr_g_exporttowkt,   two_args_first_arg_force_ref)
+    PHP_FE(ogr_g_exporttowkt,   two_args_second_arg_force_ref)
     PHP_FE(ogr_g_getgeometrytype,   NULL)
     PHP_FE(ogr_g_getgeometryname,   NULL)
 #ifdef CONSTRUCT_FLAG
@@ -1227,26 +1223,22 @@ PHP_FUNCTION(ogr_g_getenvelope)
     add_property_double(oenvel, "maxy", oEnvelope.MaxY);
 }
 
-#ifdef CONSTRUCT_FLAG
 /* }}} */
 
-/* {{{ proto int ogr_g_importfromwkb(resource hgeom, array abydata, int nsize)
+/* {{{ proto int ogr_g_importfromwkb(resource hgeom, string strdata)
     */
 PHP_FUNCTION(ogr_g_importfromwkb)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long nsize;
     zval *hgeom = NULL;
-//  zval *abydata = NULL;  TOVERIFY
-    char *abydata = NULL;
-    int abydata_len;
+    char *strdata = NULL;
+    int strdata_len;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ral", &hgeom, &abydata,&nsize) == FAILURE)
-    if (zend_parse_parameters(argc TSRMLS_CC, "rsl", &hgeom, &abydata,
-        &abydata_len,  &nsize) == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hgeom, &strdata,
+        &strdata_len) == FAILURE)
         return;
 
     if (hgeom) {
@@ -1254,7 +1246,7 @@ PHP_FUNCTION(ogr_g_importfromwkb)
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
-        eErr = OGR_G_ImportFromWkb(hGeometry, abydata, nsize);
+        eErr = OGR_G_ImportFromWkb(hGeometry, strdata, strdata_len);
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
@@ -1267,7 +1259,7 @@ PHP_FUNCTION(ogr_g_importfromwkb)
 /* }}} */
 
 /* {{{ proto int ogr_g_exporttowkb(resource hgeom, int ibyteorder,
-   array abydata)
+   string strdata)
     */
 PHP_FUNCTION(ogr_g_exporttowkb)
 {
@@ -1275,32 +1267,37 @@ PHP_FUNCTION(ogr_g_exporttowkb)
     int hgeom_id = -1;
     long ibyteorder;
     zval *hgeom = NULL;
-//  zval *abydata = NULL;  TOVERIFY
-    char *abydata = NULL;
-    int *abydata_len;
+    zval *strdata = NULL;
+    unsigned char *strwkb = NULL;
+    int isize;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "rla", &hgeom, &ibyteorder,&abydata) == FAILURE)
-    if (zend_parse_parameters(argc TSRMLS_CC, "rls", &hgeom, &ibyteorder,
-        &abydata, &abydata) == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hgeom, &ibyteorder,
+        &strdata) == FAILURE)
         return;
 
     if (hgeom) {
         ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
-    if (hGeometry)
-        eErr = (OGR_G_ExportToWkb(hGeometry, ibyteorder, abydata));
+    if (hGeometry) {
+    	isize = OGR_G_WkbSize(hGeometry);
+    	strwkb = emalloc(isize);
+   		eErr = OGR_G_ExportToWkb(hGeometry, ibyteorder, strwkb);
+    }
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
     }
 
+
+    convert_to_null(strdata);
+    ZVAL_STRINGL(strdata, strwkb, isize, 1);
+    efree(strwkb);
+
      RETURN_LONG(eErr);
 }
-
-#endif
 
 /* }}} */
 
@@ -1326,25 +1323,22 @@ PHP_FUNCTION(ogr_g_wkbsize)
     }
 }
 
-#ifdef CONSTRUCT_FLAG
 /* }}} */
 
-/* {{{ proto int ogr_g_importfromwkt(resource hgeom, array refainput)
+/* {{{ proto int ogr_g_importfromwkt(resource hgeom, string strinput)
     */
 PHP_FUNCTION(ogr_g_importfromwkt)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
     zval *hgeom = NULL;
-//  zval *refainput = NULL;  TOVERIFY
-    char *refainput = NULL;
-    int refainput_len;
+    char *strinput = NULL;
+    int strinput_len;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-//  if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput)                             == FAILURE)
-    if (zend_parse_parameters(argc TSRMLS_CC, "ra", &hgeom, &refainput,
-                              &refainput_len) == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hgeom, &strinput,
+                              &strinput_len) == FAILURE)
         return;
 
     if (hgeom) {
@@ -1353,7 +1347,7 @@ PHP_FUNCTION(ogr_g_importfromwkt)
     }
 
     if (hGeometry)
-        eErr = OGR_G_ImportFromWkt(hGeometry, &refainput);
+        eErr = OGR_G_ImportFromWkt(hGeometry, &strinput);
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
@@ -1364,24 +1358,20 @@ PHP_FUNCTION(ogr_g_importfromwkt)
 }
 
 /* }}} */
-#endif
 
-/* {{{ proto int ogr_g_exporttowkt(resource hgeom, array refadsttext)
+/* {{{ proto int ogr_g_exporttowkt(resource hgeom, string strtext)
     */
 PHP_FUNCTION(ogr_g_exporttowkt)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
     zval *hgeom = NULL;
-//  zval *refadsttext = NULL;
-    char *refadsttext = NULL;
-    int refadsttext_len;
+    zval *strtext = NULL;
+    char *strwkt = NULL;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-  if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
-    // if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hgeom, &refadsttext,
-    //                        &refadsttext_len) == FAILURE)
+  if (zend_parse_parameters(argc TSRMLS_CC, "rz", &hgeom, &strtext) == FAILURE)
         return;
 
     if (hgeom) {
@@ -1389,13 +1379,16 @@ PHP_FUNCTION(ogr_g_exporttowkt)
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
-        eErr = OGR_G_ExportToWkt(hGeometry, &refadsttext);
+        eErr = OGR_G_ExportToWkt(hGeometry, &strwkt);
 
-    if (refadsttext)
-    {
-        RETURN_STRING(refadsttext,1);
+    if (eErr != OGRERR_NONE){
+        php_report_ogr_error(E_WARNING);
     }
-    RETURN_STRING("",1);
+
+    convert_to_null(strtext);
+    ZVAL_STRING(strtext, strwkt, 1);
+
+    RETURN_LONG(eErr);
 
 }
 
