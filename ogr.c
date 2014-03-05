@@ -342,6 +342,7 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_ds_testcapability,  NULL)
     PHP_FE(ogr_ds_executesql,   NULL)
     PHP_FE(ogr_ds_releaseresultset, NULL)
+    PHP_FE(ogr_ds_getdriver, NULL)
     PHP_FE(ogr_dr_getname,  NULL)
     PHP_FE(ogr_dr_open, NULL)
     PHP_FE(ogr_dr_testcapability,  NULL)
@@ -4687,6 +4688,37 @@ PHP_FUNCTION(ogr_dr_getname)
         if ((pszName = OGR_Dr_GetName(hDriver)) != NULL)
             RETURN_STRING((char *)pszName, 1);
     }
+}
+
+/* }}} */
+
+/* {{{ proto resource ogr_ds_getdriver(resource hds)
+    */
+PHP_FUNCTION(ogr_ds_getdriver)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hds_id = -1;
+    zval *hds = NULL;
+    OGRDataSourceH hDataSource = NULL;
+    OGRSFDriverH hDriver = NULL;
+    
+    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hds) == FAILURE)
+        return;
+    
+    if (hds) {
+        ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, &hds, hds_id,
+                            "OGRDataSource", le_Datasource);
+    }
+    if (hDataSource) {
+        hDriver = OGR_DS_GetDriver(hDataSource);
+    }
+    
+    if (!hDriver) {
+        php_report_ogr_error(E_WARNING);
+        RETURN_NULL();
+    }
+    
+    ZEND_REGISTER_RESOURCE(return_value, hDriver, le_SFDriver)
 }
 
 /* {{{ proto resource ogr_dr_open(resource hsfdriver, string strname,

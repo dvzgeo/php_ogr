@@ -169,6 +169,7 @@ PHP_FUNCTION(ogr_ds_createlayer);
 PHP_FUNCTION(ogr_ds_testcapability);
 PHP_FUNCTION(ogr_ds_executesql);
 PHP_FUNCTION(ogr_ds_releaseresultset);
+PHP_FUNCTION(ogr_ds_getdriver);
 PHP_FUNCTION(ogr_dr_getname);
 PHP_FUNCTION(ogr_dr_open);
 PHP_FUNCTION(ogr_dr_testcapability);
