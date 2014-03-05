@@ -1049,10 +1049,11 @@ PHP_FUNCTION(ogr_g_createfromwkt)
         php_report_ogr_error(E_WARNING);
     }
     if (hNewGeom) {
-        ZEND_REGISTER_RESOURCE(return_value, hNewGeom, le_Geometry);
+		zval_dtor(refhnewgeom);
+        ZEND_REGISTER_RESOURCE(refhnewgeom, hNewGeom, le_Geometry);
     }
     else
-        RETURN_NULL();
+        RETURN_LONG(eErr);
 }
 
 /* }}} */
