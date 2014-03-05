@@ -123,6 +123,7 @@
 /* Include OGR C Wrappers declarations */
 #include "ogr_srs_api.h"
 #include "ogr_api.h"
+#include "gdal_version.h"
 #include "cpl_error.h"
 #include "cpl_conv.h"
 #include "cpl_string.h"
@@ -300,12 +301,14 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_f_getfieldasintegerlist, NULL)
     PHP_FE(ogr_f_getfieldasdoublelist,  NULL)
     PHP_FE(ogr_f_getfieldasstringlist,  NULL)
+    PHP_FE(ogr_f_getfieldasdatetime, NULL)
     PHP_FE(ogr_f_setfieldinteger,   NULL)
     PHP_FE(ogr_f_setfielddouble,    NULL)
     PHP_FE(ogr_f_setfieldstring,    NULL)
     PHP_FE(ogr_f_setfieldintegerlist,   NULL)
     PHP_FE(ogr_f_setfielddoublelist,    NULL)
     PHP_FE(ogr_f_setfieldstringlist,    NULL)
+    PHP_FE(ogr_f_setfielddatetime, NULL)
     PHP_FE(ogr_f_setfieldraw,   NULL)
     PHP_FE(ogr_f_getfid,    NULL)
     PHP_FE(ogr_f_setfid,    NULL)
@@ -797,6 +800,19 @@ PHP_MINIT_FUNCTION(ogr)
     REGISTER_LONG_CONSTANT("OGRUnsetMarker",
                            OGRUnsetMarker,
                            OGR_CONST_FLAG);
+#if GDAL_VERSION_NUM >= 1630
+    REGISTER_LONG_CONSTANT("OFTDate",
+                           OFTDate,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTDateTime",
+                           OFTDateTime,
+                           OGR_CONST_FLAG);
+#endif
+#if GDAL_VERSION_NUM >= 1320
+    REGISTER_LONG_CONSTANT("OFTTime",
+                           OFTTime,
+                           OGR_CONST_FLAG);
+#endif
 
     REGISTER_STRING_CONSTANT("OLCRandomRead",
                              OLCRandomRead,
@@ -3257,6 +3273,50 @@ PHP_FUNCTION(ogr_f_getfieldasstring)
 
 /* }}} */
 
+/* {{{ proto array ogr_f_getfieldasdatetime(resource hfeature, int ifield,
+   int &hYear, int &hMonth, int &hDay, int &hHours, int &hMinutes,
+   int &hSeconds, int &hTZFlag)
+    */
+PHP_FUNCTION(ogr_f_getfieldasdatetime)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    long ifield;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+    int iYear;
+    int iMonth;
+    int iDay;
+    int iHour;
+    int iMinute;
+    int iSecond;
+    int iTZFlag;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
+        return;
+
+    if (hfeature) {
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if(hFeat){
+        if (OGR_F_GetFieldAsDateTime(hFeat, ifield, &iYear, &iMonth, &iDay,
+                &iHour, &iMinute, &iSecond, &iTZFlag)) {
+            array_init(return_value);
+            add_assoc_long(return_value, "year", iYear);
+            add_assoc_long(return_value, "month", iMonth);
+            add_assoc_long(return_value, "day", iDay);
+            add_assoc_long(return_value, "hour", iHour);
+            add_assoc_long(return_value, "minute", iMinute);
+            add_assoc_long(return_value, "second", iSecond);
+            add_assoc_long(return_value, "tzflag", iTZFlag);
+        }
+    }
+}
+
+/* }}} */
+
 /* {{{ proto array int ogr_f_getfieldasintegerlist(resource hfeature,
    int ifield, int refncount)
     */
@@ -3479,6 +3539,43 @@ PHP_FUNCTION(ogr_f_setfieldstring)
     }
     if(hFeat){
         OGR_F_SetFieldString(hFeat, ifield, strvalue);
+    }
+}
+
+/* }}} */
+
+/* {{{ proto void ogr_f_setfielddatetime(resource hfeature, int ifield,
+   int iYear, int iMonth = 1, int iDay = 1, int iHour = 0, int iMinute = 0,
+   int iSecond = 0, int iTZFlag = 0)
+    */
+PHP_FUNCTION(ogr_f_setfielddatetime)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    long ifield;
+    long iYear = 0;
+    long iMonth = 1;
+    long iDay = 1;
+    long iHour = 0;
+    long iMinute = 0;
+    long iSecond = 0;
+    long iTZFlag = 0;
+
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rll|llllll", &hfeature, &ifield,
+                              &iYear, &iMonth, &iDay,
+                              &iHour, &iMinute, &iSecond, &iTZFlag) == FAILURE)
+        return;
+
+    if (hfeature) {
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if(hFeat){
+        OGR_F_SetFieldDateTime(hFeat, ifield, iYear, iMonth, iDay,
+        		iHour, iMinute, iSecond, iTZFlag);
     }
 }
 
