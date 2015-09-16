@@ -9,17 +9,20 @@ if test "$PHP_OGR" != "no"; then
 
   dnl # --with-ogr -> check with-path
   SEARCH_PATH="/usr/local /usr"
-  SEARCH_FOR="/include/ogr_api.h"
+  SEARCH_DIRS="include include/gdal"
+  SEARCH_FOR="ogr_api.h"
 
   if test -r $PHP_OGR/; then
     OGR_DIR=$PHP_OGR
   else # search default path list
     AC_MSG_CHECKING([for ORG files in default path])
     for i in $SEARCH_PATH ; do
-      if test -r $i/$SEARCH_FOR; then
-        OGR_DIR=$i
-        AC_MSG_RESULT(found in $i)
-      fi
+      for j in $SEARCH_DIRS ; do
+        if test -r $i/$j/$SEARCH_FOR; then
+          OGR_DIR=$i
+          AC_MSG_RESULT(found in $i)
+        fi
+      done
     done
   fi
 
