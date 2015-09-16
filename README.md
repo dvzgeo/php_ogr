@@ -8,6 +8,10 @@ The original webpage/documentation for OGR/PHP is still available at http://dl.m
 
 The code is available under a MIT-style license - see LICENSE, which is the original license file from DM Solutions (originally README.TXT).
 
+## Supported PHP version
+
+Currently PHP5 >= 5.4 is supported. The last version known to support PHP 5 <= 5.3 is tagged as php53 for reference.
+
 ## Why here?
 
 OGR/PHP (or PHP_OGR) still does a good job of making the OGR library available in PHP, but being stuck in CVS obscurity it seems to no longer be maintained or developed further to take advantage of new features in OGR. By "forking" it onto GitHub I hope that that may change.
