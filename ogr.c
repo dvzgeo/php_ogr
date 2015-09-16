@@ -202,7 +202,7 @@ static unsigned char two_args_first_arg_force_ref[] =
  *
  * Every user visible function must have an entry in ogr_functions[].
  */
-function_entry ogr_functions[] = {
+zend_function_entry ogr_functions[] = {
     PHP_FE(cplerrorreset, NULL)
     PHP_FE(cplgetlasterrorno, NULL)
     PHP_FE(cplgetlasterrortype, NULL)
