@@ -903,7 +903,7 @@ static char **  php_array2string(char **papszStrList, zval *refastrvalues)
 										 (void **) &tmp) == SUCCESS) {
 		convert_to_string_ex(tmp);
 
-        papszStrList = (char **)CSLAddString(papszStrList, (char *)tmp);
+        papszStrList = (char **)CSLAddString(papszStrList, Z_STRVAL_PP(tmp));
 
 		zend_hash_move_forward(Z_ARRVAL_P(refastrvalues));
 	}
