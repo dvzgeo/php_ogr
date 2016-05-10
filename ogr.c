@@ -1652,7 +1652,7 @@ PHP_FUNCTION(ogr_g_intersect)
                              le_GeometryRef);
     }
     if (hOtherGeometry && hGeometry){
-        RETURN_LONG(OGR_G_Intersect(hGeometry, hOtherGeometry));
+        RETURN_LONG(OGR_G_Intersects(hGeometry, hOtherGeometry));
     }
 }
 
@@ -1683,7 +1683,7 @@ PHP_FUNCTION(ogr_g_equal)
                              le_GeometryRef);
     }
     if (hOtherGeometry && hGeometry){
-        RETURN_LONG(OGR_G_Equal(hGeometry, hOtherGeometry));
+        RETURN_LONG(OGR_G_Equals(hGeometry, hOtherGeometry));
     }
 }
 
