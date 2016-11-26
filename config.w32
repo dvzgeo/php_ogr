@@ -1,0 +1,7 @@
+ARG_ENABLE("ogr", "OGR support", "no");
+if (PHP_OGR != "no") {
+    EXTENSION("ogr", "ogr.c", true);
+	ADD_FLAG("CFLAGS_OGR", "/I C:\\dev\\work\\release-1700-gdal-1-11-4-mapserver-6-4-3\\include");
+	ADD_FLAG("LDFLAGS_OGR", "/libpath:\"C:\\dev\\work\\release-1700-gdal-1-11-4-mapserver-6-4-3\\lib\"");
+	ADD_FLAG("LIBS_OGR", "gdal_i.lib");
+}
