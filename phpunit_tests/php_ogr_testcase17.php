@@ -1,5 +1,4 @@
 <?php
-require_once 'util.php';
 
 $testSuites_list[] = "OGRGeometryTest2";                             
 

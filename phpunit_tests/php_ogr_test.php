@@ -1,7 +1,5 @@
 <?php
-require_once 'phpunit-0.5/phpunit.php';
-require_once 'phpunit-0.5/phpunit/gui/setupdecorator.php';
-require_once 'phpunit-0.5/phpunit/gui/html.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 require_once 'php_ogr_testcase1.php';
 require_once 'php_ogr_testcase2.php';

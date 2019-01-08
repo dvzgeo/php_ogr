@@ -1,7 +1,5 @@
 <?php
 
-//require_once `phpunit-0.5/phpunit.php';
-require_once 'util.php';
 
 $testSuites_list[] = "OGRFeatureTest1";                             
 

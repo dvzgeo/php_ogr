@@ -8,6 +8,11 @@
       "php": "^5.4",
       "ext-ogr": "*",
       "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+      "files": [
+        "util.php"
+      ]
     }
 }
 
