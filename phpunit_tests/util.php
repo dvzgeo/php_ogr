@@ -77,7 +77,7 @@ function DumpPolygon( $fp, $hGeom )
     for( $iRing = 0; $iRing < $nRingCount; $iRing++ )
     {
         $hRing = OGR_G_GetGeometryRef($hGeom, $iRing);
-        $eErr = DumpLineString( $fp, $hRing, &$strRings );
+        $eErr = DumpLineString( $fp, $hRing );
         if( $eErr != OGRERR_NONE )
             return $eErr;
     }
@@ -154,7 +154,7 @@ function   DumpMultiPolygon($fp, $hGeom)
     {
         $hPolygon = OGR_G_GetGeometryRef($hGeom, $iLine);
 
-        $eErr = DumpPolygon($fp, $hPolygon, &$strPolygon );
+        $eErr = DumpPolygon($fp, $hPolygon );
         
         if( $eErr != OGRERR_NONE )
             return eErr;

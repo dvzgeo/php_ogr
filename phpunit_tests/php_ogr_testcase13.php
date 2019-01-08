@@ -281,7 +281,7 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
 
         CPLErrorReset();
 
-        OGR_G_GetEnvelope($this->hContainer, &$hEnvelope);
+        OGR_G_GetEnvelope($this->hContainer, $hEnvelope);
 
         $eErrMsg = CPLGetLastErrorMsg();
 
@@ -290,7 +290,7 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
         $this->assertEquals($expected, $eErr, $eErrMsg);
 
 
-        $actual = serialize(&$hEnvelope);
+        $actual = serialize($hEnvelope);
 
         $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:12.34;s:4:\"maxx\";".
             "d:123.45;s:4:\"miny\";d:45.67;s:4:\"maxy\";d:456.78;}";

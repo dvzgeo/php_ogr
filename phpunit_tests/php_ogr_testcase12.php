@@ -111,7 +111,7 @@ class OGRGeometryTest0 extends PHPUnit_TestCase {
 
         OGR_G_SetPoint($hGeometry, $iPoint, $dfXIn, $dfYIn, $dfZIn);
 
-        OGR_G_GetPoint($hGeometry, $iPoint, &$dfXOut, &$dfYOut, &$dfZOut);
+        OGR_G_GetPoint($hGeometry, $iPoint, $dfXOut, $dfYOut, $dfZOut);
 
         $this->AssertEquals($dfXIn, $dfXOut, "Problem with OGR_G_SetPoint() ".
                             "or OGR_G_GetPoint():  x coordinate.");

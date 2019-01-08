@@ -280,7 +280,7 @@ class OGRLayerTest2 extends PHPUnit_TestCase {
         $this->assertEquals($expected, $eErr, "Problem with ".
                             "OGR_L_GetExtent():  ".$eErrMsg);
 
-        $strEnvelope = serialize(&$hEnvelope);
+        $strEnvelope = serialize($hEnvelope);
 
         $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:-2340603.72;s:4:".
          "\"maxx\";d:3009430.5;s:4:\"miny\";d:-719746.05;s:4:".
