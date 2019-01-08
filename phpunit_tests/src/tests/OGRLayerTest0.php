@@ -1,23 +1,25 @@
 <?php
 
-class OGRLayerTest0 extends PHPUnit_Framework_TestCase {
-    var $strPathToData;
-    var $strDirName;
-    var $strPathToOutputData;
-    var $bUpdate;
-    var $hOGRSFDriver;
-    var $strCapability;
-    var $hLayer;
-    var $hSrcDataSource;
+class OGRLayerTest0 extends PHPUnit_Framework_TestCase
+{
+    public $strPathToData;
+    public $strDirName;
+    public $strPathToOutputData;
+    public $bUpdate;
+    public $hOGRSFDriver;
+    public $strCapability;
+    public $hLayer;
+    public $hSrcDataSource;
 
     // called before the test functions will be executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten
     // here
-    function setUp() {
+    public function setUp()
+    {
         $this->strDirName = "testcase/";
-	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
+        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
         $this->strPathToData = "./data/mif";
-        $this->bUpdate = FALSE;
+        $this->bUpdate = false;
         $this->strCapability[0] = OLCRandomRead;
         $this->strCapability[1] = OLCSequentialWrite;
         $this->strCapability[2] = OLCRandomWrite;
@@ -26,7 +28,7 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase {
         $this->strCapability[5] = OLCFastGetExtent;
 
         if (file_exists($this->strPathToOutputData)) {
-            system( "rm -R ".$this->strPathToOutputData);
+            system("rm -R " . $this->strPathToOutputData);
         }
         mkdir($this->strPathToOutputData, 0777);
 
@@ -34,17 +36,19 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase {
         OGRRegisterAll();
         $this->hOGRSFDriver = OGRGetDriver(5);
 
-        $this->hSrcDataSource =  OGR_Dr_Open($this->hOGRSFDriver,
-                                               $this->strPathToData,
-                                               $this->bUpdate);
+        $this->hSrcDataSource = OGR_Dr_Open(
+            $this->hOGRSFDriver,
+            $this->strPathToData,
+            $this->bUpdate
+        );
 
         $this->hLayer = OGR_DS_GetLayer($this->hSrcDataSource, 1);
-
     }
-    // called after the test functions are executed    
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
-    // here    
-    function tearDown() {
+    // called after the test functions are executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // here
+    public function tearDown()
+    {
         // delete your instance
         OGR_DS_Destroy($this->hSrcDataSource);
         $this->strDirName = "testcase/";
@@ -56,103 +60,123 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase {
         unset($this->hLayer);
         unset($this->hSrcDataSource);
     }
-/***********************************************************************
-*                         testOGR_L_GetLayerDefn0()                    
-*                      
-************************************************************************/
-    function testOGR_L_GetLayerDefn0() {
 
+    /***********************************************************************
+     *                         testOGR_L_GetLayerDefn0()
+     *
+     ************************************************************************/
+    public function testOGR_L_GetLayerDefn0()
+    {
         $hFeatureDefn = OGR_L_GetLayerDefn($this->hLayer);
 
-        $this->assertNotNull($hFeatureDefn, "Problem with ".
-                             "OGR_L_GetLayerDefn():  Layer definition ".
-                             "is not supposed to be NULL.\n");
-
+        $this->assertNotNull(
+            $hFeatureDefn,
+            "Problem with OGR_L_GetLayerDefn():  Layer definition is not supposed to be NULL.\n"
+        );
     }
-/***********************************************************************
-*                         testOGR_L_TestCapability0()                    
-*                         OLCRandomRead
-************************************************************************/
-    function testOGR_L_TestCapability0() {
 
-        $bCapability = OGR_L_TestCapability($this->hLayer, 
-                                            $this->strCapability[0]);
+    /***********************************************************************
+     *                         testOGR_L_TestCapability0()
+     *                         OLCRandomRead
+     ************************************************************************/
+    public function testOGR_L_TestCapability0()
+    {
+        $bCapability = OGR_L_TestCapability(
+            $this->hLayer,
+            $this->strCapability[0]
+        );
 
-        $this->assertTrue($bCapability, "Problem with ".
-                          "OGR_L_TestCapability(): ".$this->strCapability[0].
-                          " capability is supposed to be supported." );
-
+        $this->assertTrue(
+            $bCapability,
+            "Problem with OGR_L_TestCapability(): " . $this->strCapability[0] . " capability is supposed to be supported."
+        );
     }
-/***********************************************************************
-*                         testOGR_L_TestCapability1()                    
-*                         OLCSequentialWrite
-************************************************************************/
-    function testOGR_L_TestCapability1() {
 
-        $bCapability = OGR_L_TestCapability($this->hLayer, 
-                                            $this->strCapability[1]);
+    /***********************************************************************
+     *                         testOGR_L_TestCapability1()
+     *                         OLCSequentialWrite
+     ************************************************************************/
+    public function testOGR_L_TestCapability1()
+    {
+        $bCapability = OGR_L_TestCapability(
+            $this->hLayer,
+            $this->strCapability[1]
+        );
 
-        $this->assertFalse($bCapability, "Problem with ".
-                          "OGR_L_TestCapability(): ".$this->strCapability[1].
-                          " capability is not supposed to be supported ".
-                           "since bUpdate is FALSE." );
+        $this->assertFalse(
+            $bCapability,
+            "Problem with OGR_L_TestCapability(): " . $this->strCapability[1] . " capability is not supposed to be supported since bUpdate is FALSE."
+        );
     }
-/***********************************************************************
-*                         testOGR_L_TestCapability2()                    
-*                         OLCRandowWrite
-************************************************************************/
-    function testOGR_L_TestCapability2() {
 
-        $bCapability = OGR_L_TestCapability($this->hLayer, 
-                                            $this->strCapability[2]);
+    /***********************************************************************
+     *                         testOGR_L_TestCapability2()
+     *                         OLCRandowWrite
+     ************************************************************************/
+    public function testOGR_L_TestCapability2()
+    {
+        $bCapability = OGR_L_TestCapability(
+            $this->hLayer,
+            $this->strCapability[2]
+        );
 
-        $this->assertFalse($bCapability, "Problem with ".
-                          "OGR_L_TestCapability(): ".$this->strCapability[2].
-                          " capability is not supposed to be supported." );
+        $this->assertFalse(
+            $bCapability,
+            "Problem with OGR_L_TestCapability(): " . $this->strCapability[2] . " capability is not supposed to be supported."
+        );
     }
-/***********************************************************************
-*                         testOGR_L_TestCapability3()                    
-*                         OLCFastSpatialFilter
-************************************************************************/
-    function testOGR_L_TestCapability3() {
 
+    /***********************************************************************
+     *                         testOGR_L_TestCapability3()
+     *                         OLCFastSpatialFilter
+     ************************************************************************/
+    public function testOGR_L_TestCapability3()
+    {
         OGR_L_SetSpatialFilter($this->hLayer, null);
         OGR_L_SetAttributeFilter($this->hLayer, null);
 
-        $bCapability = OGR_L_TestCapability($this->hLayer, 
-                                            $this->strCapability[3]);
+        $bCapability = OGR_L_TestCapability(
+            $this->hLayer,
+            $this->strCapability[3]
+        );
 
-        $this->assertTrue($bCapability, "Problem with ".
-                          "OGR_L_TestCapability(): ".$this->strCapability[3].
-                          " capability is supposed to be supported." );
-
+        $this->assertTrue(
+            $bCapability,
+            "Problem with OGR_L_TestCapability(): " . $this->strCapability[3] . " capability is supposed to be supported."
+        );
     }
-/***********************************************************************
-*                         testOGR_L_TestCapability4()                    
-*                          OLCFastFeatureCount
-************************************************************************/
-    function testOGR_L_TestCapability4() {
 
-        $bCapability = OGR_L_TestCapability($this->hLayer, 
-                                            $this->strCapability[4]);
+    /***********************************************************************
+     *                         testOGR_L_TestCapability4()
+     *                          OLCFastFeatureCount
+     ************************************************************************/
+    public function testOGR_L_TestCapability4()
+    {
+        $bCapability = OGR_L_TestCapability(
+            $this->hLayer,
+            $this->strCapability[4]
+        );
 
-        $this->assertTrue($bCapability, "Problem with ".
-                          "OGR_L_TestCapability(): ".$this->strCapability[4].
-                          " capability is supposed to be supported." );
+        $this->assertTrue(
+            $bCapability,
+            "Problem with OGR_L_TestCapability(): " . $this->strCapability[4] . " capability is supposed to be supported."
+        );
     }
-/***********************************************************************
-*                         testOGR_L_TestCapability5()                    
-*                         OLCFastGetExtent
-************************************************************************/
-    function testOGR_L_TestCapability5() {
 
-        $bCapability = OGR_L_TestCapability($this->hLayer, 
-                                            $this->strCapability[5]);
+    /***********************************************************************
+     *                         testOGR_L_TestCapability5()
+     *                         OLCFastGetExtent
+     ************************************************************************/
+    public function testOGR_L_TestCapability5()
+    {
+        $bCapability = OGR_L_TestCapability(
+            $this->hLayer,
+            $this->strCapability[5]
+        );
 
-        $this->assertTrue($bCapability, "Problem with ".
-                          "OGR_L_TestCapability(): ".$this->strCapability[5].
-                          " capability is supposed to be supported." );
-
+        $this->assertTrue(
+            $bCapability,
+            "Problem with OGR_L_TestCapability(): " . $this->strCapability[5] . " capability is supposed to be supported."
+        );
     }
 }
-?> 

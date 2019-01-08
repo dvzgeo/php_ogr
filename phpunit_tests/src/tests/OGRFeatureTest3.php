@@ -1,29 +1,31 @@
 <?php
 
-class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
-    var $strPathToOutputData;
-    var $strTmpDumpFile;
-    var $strPathToStandardData;
-    var $strPathToData;
-    var $bUpdate;
-    var $hDestDS;
-    var $hDestLayer;
-    var $strDestDataSource;
-    var $strDirName;
-    var $hOGRSFDriver;
-    var $astrOptions;
- 
-    function setUp() {
+class OGRFeatureTest3 extends PHPUnit_Framework_TestCase
+{
+    public $strPathToOutputData;
+    public $strTmpDumpFile;
+    public $strPathToStandardData;
+    public $strPathToData;
+    public $bUpdate;
+    public $hDestDS;
+    public $hDestLayer;
+    public $strDestDataSource;
+    public $strDirName;
+    public $hOGRSFDriver;
+    public $astrOptions;
+
+    public function setUp()
+    {
         $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
-	$this->strTmpDumpFile = "DumpFile.tmp";
-	$this->bUpdate = FALSE;
+        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strTmpDumpFile = "DumpFile.tmp";
+        $this->bUpdate = false;
         $this->strDestDataSource = "OutputDS.tab";
 
         if (file_exists($this->strPathToOutputData)) {
-            system( "rm -R ".$this->strPathToOutputData);
+            system("rm -R " . $this->strPathToOutputData);
         }
 
         mkdir($this->strPathToOutputData, 0777);
@@ -31,25 +33,26 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
         $iDriver = 5;
         $this->hOGRSFDriver = OGRGetDriver($iDriver);
         $this->astrOptions = null;
-        $this->hDestDS = OGR_Dr_CreateDataSource($this->hOGRSFDriver, 
-                                               $this->strPathToOutputData.
-                                               $this->strDestDataSource,
-                                               $this->astrOptions );
+        $this->hDestDS = OGR_Dr_CreateDataSource(
+            $this->hOGRSFDriver,
+            $this->strPathToOutputData . $this->strDestDataSource,
+            $this->astrOptions
+        );
 
         if ($this->hDestDS == null) {
             printf("Unable to create destination data source\n");
-            return FALSE;
+            return false;
         }
         $iLayer = 0;
 
         $this->hDestLayer = OGR_DS_GetLayer($this->hDestDS, $iLayer);
-
     }
 
-    function tearDown() {
-/*        if (file_exists($this->strPathToOutputData)) {
-            system( "rm -R ".$this->strPathToOutputData);
-            }*/
+    public function tearDown()
+    {
+        /*        if (file_exists($this->strPathToOutputData)) {
+                    system( "rm -R ".$this->strPathToOutputData);
+                    }*/
         OGR_DS_Destroy($this->hDestDS);
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
@@ -63,19 +66,24 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
         unset($this->OGRSFDriver);
         unset($this->astrOptions);
     }
-/***********************************************************************
-*                            testOGR_F_SetGetFieldInteger()                    
-************************************************************************/
 
-    function testOGR_F_SetGetFieldInteger() {
+    /***********************************************************************
+     *                            testOGR_F_SetGetFieldInteger()
+     ************************************************************************/
+
+    public function testOGR_F_SetGetFieldInteger()
+    {
         $iValueIn = 4312;
         $hFieldDefn = OGR_Fld_Create("id", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
 
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFeatureDefn = OGR_L_GetLayerDefn($this->hDestLayer);
@@ -86,25 +94,32 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
 
         $iValueOut = OGR_F_GetFieldAsInteger($hF, $iFieldIndex);
         $expected = $iValueIn;
-        $this->AssertEquals($expected, $iValueOut, "Problem with ".
-                    "OGR_F_SetFieldInteger() or OGR_F_GetFieldAsInteger().");
+        $this->AssertEquals(
+            $expected,
+            $iValueOut,
+            "Problem with OGR_F_SetFieldInteger() or OGR_F_GetFieldAsInteger()."
+        );
 
         OGR_F_Destroy($hF);
-
     }
-/***********************************************************************
-*                            testOGR_F_SetGetFieldDouble()                    
-************************************************************************/
 
-    function testOGR_F_SetGetFieldDouble() {
+    /***********************************************************************
+     *                            testOGR_F_SetGetFieldDouble()
+     ************************************************************************/
+
+    public function testOGR_F_SetGetFieldDouble()
+    {
         $dfValueIn = 6533.58;
         $hFieldDefn = OGR_Fld_Create("area", OFTReal);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
 
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFeatureDefn = OGR_L_GetLayerDefn($this->hDestLayer);
@@ -115,25 +130,32 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
 
         $dfValueOut = OGR_F_GetFieldAsDouble($hF, $iFieldIndex);
         $expected = $dfValueIn;
-        $this->AssertEquals($expected, $dfValueOut, "Problem with ".
-                    "OGR_F_SetFieldDouble() or OGR_F_GetFieldAsDouble().");
+        $this->AssertEquals(
+            $expected,
+            $dfValueOut,
+            "Problem with OGR_F_SetFieldDouble() or OGR_F_GetFieldAsDouble()."
+        );
 
         OGR_F_Destroy($hF);
-
     }
-/***********************************************************************
-*                            testOGR_F_SetGetFieldString()                    
-************************************************************************/
 
-    function testOGR_F_SetGetFieldString() {
+    /***********************************************************************
+     *                            testOGR_F_SetGetFieldString()
+     ************************************************************************/
+
+    public function testOGR_F_SetGetFieldString()
+    {
         $strValueIn = "Liberty";
         $hFieldDefn = OGR_Fld_Create("name", OFTString);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
 
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFeatureDefn = OGR_L_GetLayerDefn($this->hDestLayer);
@@ -145,25 +167,32 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
         $strValueOut = OGR_F_GetFieldAsInteger($hF, $iFieldIndex);
         $expected = $strValueIn;
 
-        $this->AssertEquals($expected, $strValueOut, "Problem with ".
-                    "OGR_F_SetFieldString() or OGR_F_GetFieldAsString().");
+        $this->AssertEquals(
+            $expected,
+            $strValueOut,
+            "Problem with OGR_F_SetFieldString() or OGR_F_GetFieldAsString()."
+        );
 
         OGR_F_Destroy($hF);
-
     }
-/***********************************************************************
-*                            testOGR_F_SetGetFID()                    
-************************************************************************/
 
-    function testOGR_F_SetGetFID() {
+    /***********************************************************************
+     *                            testOGR_F_SetGetFID()
+     ************************************************************************/
+
+    public function testOGR_F_SetGetFID()
+    {
         $iValueIn = 4312;
         $hFieldDefn = OGR_Fld_Create("id", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
 
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFeatureDefn = OGR_L_GetLayerDefn($this->hDestLayer);
@@ -177,90 +206,120 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
         $eErr = OGR_F_SetFID($hF, $nFID);
         $nFID = OGR_F_GetFID($hF);
         $expected = 2;
-        $this->AssertEquals($expected, $nFID, "Problem with OGR_F_SetFID() ".
-                               "OGR_F_GetFID().");
+        $this->AssertEquals(
+            $expected,
+            $nFID,
+            "Problem with OGR_F_SetFID() OGR_F_GetFID()."
+        );
 
         OGR_F_Destroy($hF);
-
     }
 
-/***********************************************************************
-*                            testOGR_F_SetFrom()                              
-************************************************************************/
+    /***********************************************************************
+     *                            testOGR_F_SetFrom()
+     ************************************************************************/
 
-    function testOGR_F_SetFrom() {
+    public function testOGR_F_SetFrom()
+    {
         $strStandardFile = "testOGR_F_SetFrom";
         $hFieldDefn = OGR_Fld_Create("FNODE_", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
 
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("TNODE_", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("LPOLY_", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("RPOLY_", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("LENGTH", OFTReal);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("GRID_", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("GRID_ID", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("F_CODE", OFTInteger);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFieldDefn = OGR_Fld_Create("F_TYPE", OFTString);
-        $eErr = OGR_L_CreateField($this->hDestLayer,$hFieldDefn, 
-                                  0 /*bApproxOk*/);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
         if ($eErr != OGRERR_NONE) {
             printf("Error creating field.\n");
-            return FALSE;
+            return false;
         }
 
         $hFeatureDefn = OGR_L_GetLayerDefn($this->hDestLayer);
@@ -270,20 +329,22 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
         $hSrcDS = OGROpen($this->strPathToData, $this->bUpdate, $hDriver);
 
         $iLayer = 3;
-	$hSrcLayer = OGR_DS_GetLayer($hSrcDS, $iLayer);
+        $hSrcLayer = OGR_DS_GetLayer($hSrcDS, $iLayer);
         $nFID = 5;
         $hSrcF = OGR_L_GetFeature($hSrcLayer, $nFID);
 
-        $bForgiving = TRUE;
+        $bForgiving = true;
         $eErr = OGR_F_SetFrom($hDestF, $hSrcF, $bForgiving);
 
-        $fpOut = fopen($this->strPathToOutputData.
-                       $this->strTmpDumpFile, "w");
-	
-        if ($fpOut == FALSE) {
+        $fpOut = fopen(
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "w"
+        );
+
+        if ($fpOut == false) {
             printf("Dump file creation error\n");
-            return FALSE;
-	}
+            return false;
+        }
 
         OGR_F_DumpReadable($fpOut, $hDestF);
 
@@ -294,15 +355,14 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
 
         fclose($fpOut);
 
-        system("diff --brief ".$this->strPathToOutputData.
-                $this->strTmpDumpFile.
-                " ".$this->strPathToStandardData.$strStandardFile,
-                $iReval);
+        system(
+            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
+            $iReval
+        );
 
-        $this->assertFalse($iRetval, "Problem with OGR_F_SetFrom() ".
-                             "Files comparison did not matched.\n");
-
+        $this->assertFalse(
+            $iRetval,
+            "Problem with OGR_F_SetFrom() Files comparison did not matched.\n"
+        );
     }
-
 }
-?>

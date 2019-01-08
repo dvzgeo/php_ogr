@@ -1,30 +1,32 @@
 <?php
 
-class OGRGeometryTest1 extends PHPUnit_Framework_TestCase {
-    var $strPathToOutputData;
-    var $strTmpDumpFile;
-    var $strPathToStandardData;
-    var $hDestDS;
-    var $hDestLayer;
-    var $strDestDataSource;
-    var $strDirName;
-    var $hOGRSFDriver;
-    var $astrOptions;
-    var $hContainer;
-    var $hRing1;
-    var $hRing2;
+class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
+{
+    public $strPathToOutputData;
+    public $strTmpDumpFile;
+    public $strPathToStandardData;
+    public $hDestDS;
+    public $hDestLayer;
+    public $strDestDataSource;
+    public $strDirName;
+    public $hOGRSFDriver;
+    public $astrOptions;
+    public $hContainer;
+    public $hRing1;
+    public $hRing2;
 
-    function setUp() {
+    public function setUp()
+    {
 
         /*Prepare to write temporary data for comparison.*/
         $this->strDirName = "testcase/";
         $this->strPathToStandardData = "./data/testcase/";
-	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
-	$this->strTmpDumpFile = "DumpFile.tmp";
+        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strTmpDumpFile = "DumpFile.tmp";
         $this->strDestDataSource = "OutputDS.tab";
 
         if (file_exists($this->strPathToOutputData)) {
-            system( "rm -R ".$this->strPathToOutputData);
+            system("rm -R " . $this->strPathToOutputData);
         }
 
         mkdir($this->strPathToOutputData, 0777);
@@ -32,14 +34,15 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase {
         $iDriver = 5;
         $this->hOGRSFDriver = OGRGetDriver($iDriver);
         $this->astrOptions = null;
-        $this->hDestDS = OGR_Dr_CreateDataSource($this->hOGRSFDriver,
-                                               $this->strPathToOutputData.
-                                               $this->strDestDataSource,
-                                               $this->astrOptions );
+        $this->hDestDS = OGR_Dr_CreateDataSource(
+            $this->hOGRSFDriver,
+            $this->strPathToOutputData . $this->strDestDataSource,
+            $this->astrOptions
+        );
 
         if ($this->hDestDS == null) {
             printf("Unable to create destination data source\n");
-            return FALSE;
+            return false;
         }
         $iLayer = 0;
 
@@ -67,18 +70,18 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase {
         OGR_G_AddPoint($this->hRing2, 123.45, 355.25, 0.0);
         OGR_G_AddPoint($this->hRing2, 123.45, 456.78, 0.0);
         $eErr = OGR_G_AddGeometry($this->hContainer, $this->hRing2);
-
-
     }
-    function tearDown() {
+
+    public function tearDown()
+    {
         OGR_G_DestroyGeometry($this->hRing1);
         OGR_G_DestroyGeometry($this->hRing2);
         OGR_G_DestroyGeometry($this->hContainer);
         OGR_DS_Destroy($this->hDestDS);
 
-/*        if (file_exists($this->strPathToOutputData)) {
-            system( "rm -R ".$this->strPathToOutputData);
-            }*/
+        /*        if (file_exists($this->strPathToOutputData)) {
+                    system( "rm -R ".$this->strPathToOutputData);
+                    }*/
 
         unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
@@ -93,80 +96,99 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase {
         unset($this->hring2);
         unset($this->hContainer);
     }
-/***********************************************************************
-*                            testOGR_G_GetGeometryRef()
-************************************************************************/
 
-    function testOGR_G_GetGeometryRef() {
+    /***********************************************************************
+     *                            testOGR_G_GetGeometryRef()
+     ************************************************************************/
+
+    public function testOGR_G_GetGeometryRef()
+    {
         $strStandardFile = "testOGR_G_GetGeometryRef";
 
         $nRingCount = OGR_G_GetGeometryCount($this->hContainer);
         $expected = 2;
-        $this->AssertEquals($expected, $nRingCount, "Problem with ".
-                            "OGR_G_GetGeometryRef():  supposed to have two ".
-                            "rings.");
+        $this->AssertEquals(
+            $expected,
+            $nRingCount,
+            "Problem with OGR_G_GetGeometryRef():  supposed to have two rings."
+        );
 
         $iGeometry = 1;
         $hGeometry = OGR_G_GetGeometryRef($this->hContainer, $iGeometry);
-        $this->AssertNotNull($hGeometry, "Problem with ".
-                                          "OGR_G_GetGeometryRef(): ".
-                                         "handle is not supposed to be NULL.");
+        $this->AssertNotNull(
+            $hGeometry,
+            "Problem with OGR_G_GetGeometryRef(): handle is not supposed to be NULL."
+        );
         $expected = 5;
         $nPointCount = OGR_G_GetPointCount($hGeometry);
-        $this->AssertEquals($expected, $nPointCount, "Problem with ".
-                            "OGR_G_GetGeometryRef():  supposed to be a ring ".
-                            "five points.");
+        $this->AssertEquals(
+            $expected,
+            $nPointCount,
+            "Problem with OGR_G_GetGeometryRef():  supposed to be a ring five points."
+        );
 
-        $fpOut = fopen($this->strPathToOutputData.
-                       $this->strTmpDumpFile, "w");
+        $fpOut = fopen(
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "w"
+        );
 
-        if ($fpOut == FALSE) {
+        if ($fpOut == false) {
             printf("Dump file creation error\n");
-            return FALSE;
-	}
+            return false;
+        }
 
         OGR_G_DumpReadable($fpOut, $hGeometry);
 
         fclose($fpOut);
 
-        system("diff --brief ".$this->strPathToOutputData.
-                $this->strTmpDumpFile.
-                " ".$this->strPathToStandardData.$strStandardFile,
-                $iRetval);
+        system(
+            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
+            $iRetval
+        );
 
-        $this->assertFalse($iRetval, "Problem with OGR_G_GetGeometryRef() ".
-                             "Files comparison did not matched.\n");
+        $this->assertFalse(
+            $iRetval,
+            "Problem with OGR_G_GetGeometryRef() Files comparison did not matched.\n"
+        );
 
         $expected = 2;
         $nGeometryCount = OGR_G_GetGeometryCount($this->hContainer);
-        $this->AssertEquals($expected, $nGeometryCount, "Problem with ".
-                            "OGR_G_GetGeometryRef():  supposed to be a ".
-                            "polygon with two rings.");
+        $this->AssertEquals(
+            $expected,
+            $nGeometryCount,
+            "Problem with OGR_G_GetGeometryRef():  supposed to be a polygon with two rings."
+        );
 
         OGR_G_DestroyGeometry($hGeometry);
     }
-/***********************************************************************
-*                            testOGR_G_RemoveGeometry0()
-************************************************************************/
 
-    function testOGR_G_RemoveGeometry0() {
+    /***********************************************************************
+     *                            testOGR_G_RemoveGeometry0()
+     ************************************************************************/
+
+    public function testOGR_G_RemoveGeometry0()
+    {
         $strStandardFile = "testOGR_G_RemoveGeometry0";
-        $bDelete = TRUE;
+        $bDelete = true;
         $iGeometry = 1;
 
         $eErr = @OGR_G_RemoveGeometry($this->hContainer, $iGeometry, $bDelete);
         $expected = 4;
-        $this->AssertEquals($expected, $eErr, "Problem with ".
-                            "OGR_G_RemoveGeometry():  not supposed to be ".
-                            "supported on polygon yet.");
+        $this->AssertEquals(
+            $expected,
+            $eErr,
+            "Problem with OGR_G_RemoveGeometry():  not supposed to be supported on polygon yet."
+        );
     }
-/***********************************************************************
-*                            testOGR_G_RemoveGeometry1()
-************************************************************************/
 
-    function testOGR_G_RemoveGeometry1() {
+    /***********************************************************************
+     *                            testOGR_G_RemoveGeometry1()
+     ************************************************************************/
+
+    public function testOGR_G_RemoveGeometry1()
+    {
         $strStandardFile = "testOGR_G_RemoveGeometry1";
-        $bDelete = TRUE;
+        $bDelete = true;
 
         $eType = wkbPolygon;
         $hPolygon1 = OGR_G_CreateGeometry($eType);
@@ -186,97 +208,119 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase {
 
         $nRingCount = OGR_G_GetGeometryCount($hMultiPolygon);
         $expected = 1;
-        $this->AssertEquals($expected, $nRingCount, "Problem with ".
-                            "OGR_G_RemoveGeometry():  supposed to have ".
-                            "only one ring now.");
+        $this->AssertEquals(
+            $expected,
+            $nRingCount,
+            "Problem with OGR_G_RemoveGeometry():  supposed to have only one ring now."
+        );
 
-        $fpOut = fopen($this->strPathToOutputData.
-                       $this->strTmpDumpFile, "w");
+        $fpOut = fopen(
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "w"
+        );
 
-        if ($fpOut == FALSE) {
+        if ($fpOut == false) {
             printf("Dump file creation error\n");
-            return FALSE;
-	}
+            return false;
+        }
 
         OGR_G_DumpReadable($fpOut, $hMultiPolygon);
 
         fclose($fpOut);
 
-        system("diff --brief ".$this->strPathToOutputData.
-                $this->strTmpDumpFile.
-                " ".$this->strPathToStandardData.$strStandardFile,
-                $iRetval);
+        system(
+            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
+            $iRetval
+        );
 
-        $this->assertFalse($iRetval, "Problem with OGR_G_RemoveGeometry() ".
-                             "Files comparison did not matched.\n");
-
+        $this->assertFalse(
+            $iRetval, "Problem with OGR_G_RemoveGeometry() Files comparison did not matched.\n"
+        );
     }
-/***********************************************************************
-*                            testOGR_G_Equals()
-************************************************************************/
 
-    function testOGR_G_Equals() {
+    /***********************************************************************
+     *                            testOGR_G_Equals()
+     ************************************************************************/
+
+    public function testOGR_G_Equals()
+    {
         $bEqual = OGR_G_Equal($this->hRing1, $this->hRing2);
-        $this->AssertFalse($bEqual, "Problem with OGR_G_Equals: ".
-                            "these two rings should not be equal.");
+        $this->AssertFalse(
+            $bEqual,
+            "Problem with OGR_G_Equals: these two rings should not be equal."
+        );
     }
-/***********************************************************************
-*                            testOGR_G_Intersect()
-************************************************************************/
 
-    function testOGR_G_Intersect() {
+    /***********************************************************************
+     *                            testOGR_G_Intersect()
+     ************************************************************************/
+
+    public function testOGR_G_Intersect()
+    {
         $bIntersect = OGR_G_Intersect($this->hRing1, $this->hRing2);
-        $this->AssertTrue($bIntersect, "Problem with OGR_G_Intersect(): ".
-                          "these two rings should intersect.");
+        $this->AssertTrue(
+            $bIntersect,
+            "Problem with OGR_G_Intersect(): these two rings should intersect."
+        );
     }
-/***********************************************************************
-*                            testOGR_G_Empty()
-************************************************************************/
 
-    function testOGR_G_Empty() {
+    /***********************************************************************
+     *                            testOGR_G_Empty()
+     ************************************************************************/
+
+    public function testOGR_G_Empty()
+    {
         $strStandardFile = "testOGR_G_Empty";
 
         OGR_G_Empty($this->hRing2);
 
-       $fpOut = fopen($this->strPathToOutputData.
-                       $this->strTmpDumpFile, "w");
+        $fpOut = fopen(
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "w"
+        );
 
-        if ($fpOut == FALSE) {
+        if ($fpOut == false) {
             printf("Dump file creation error\n");
-            return FALSE;
-	}
+            return false;
+        }
 
         OGR_G_DumpReadable($fpOut, $this->hRing2);
 
         fclose($fpOut);
 
-        system("diff --brief ".$this->strPathToOutputData.
-                $this->strTmpDumpFile.
-                " ".$this->strPathToStandardData.$strStandardFile,
-                $iRetval);
+        system(
+            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
+            $iRetval
+        );
 
-        $this->assertFalse($iRetval, "Problem with OGR_G_RemoveGeometry() ".
-                             "Files comparison did not matched.\n");
-
+        $this->assertFalse(
+            $iRetval,
+            "Problem with OGR_G_RemoveGeometry() Files comparison did not matched.\n"
+        );
     }
-/***********************************************************************
-*                            testOGR_G_Clone()
-************************************************************************/
 
-    function testOGR_G_Clone() {
+    /***********************************************************************
+     *                            testOGR_G_Clone()
+     ************************************************************************/
+
+    public function testOGR_G_Clone()
+    {
         $hGeometry = OGR_G_Clone($this->hRing1);
         $bEqual = OGR_G_Equal($this->hRing1, $hGeometry);
-        $this->AssertTrue($bEqual, "Problem with OGR_G_Clone(): ".
-                          "these two rings should be the same.");
+        $this->AssertTrue(
+            $bEqual,
+            "Problem with OGR_G_Clone(): these two rings should be the same."
+        );
 
         OGR_G_DestroyGeometry($hGeometry);
     }
-/***********************************************************************
-*                            testOGR_G_GetEnvelope()
-************************************************************************/
 
-    function testOGR_G_GetEnvelope() {
+    /***********************************************************************
+     *                            testOGR_G_GetEnvelope()
+     ************************************************************************/
 
+    public function testOGR_G_GetEnvelope()
+    {
         CPLErrorReset();
 
         OGR_G_GetEnvelope($this->hContainer, $hEnvelope);
@@ -290,25 +334,28 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase {
 
         $actual = serialize($hEnvelope);
 
-        $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:12.34;s:4:\"maxx\";".
-            "d:123.45;s:4:\"miny\";d:45.67;s:4:\"maxy\";d:456.78;}";
-        $this->AssertEquals($expected, $actual, "Problem with ".
-                            "OGR_G_GetEnvelope().");
-
+        $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:12.34;s:4:\"maxx\";d:123.45;s:4:\"miny\";d:45.67;s:4:\"maxy\";d:456.78;}";
+        $this->AssertEquals(
+            $expected,
+            $actual,
+            "Problem with OGR_G_GetEnvelope()."
+        );
     }
-/***********************************************************************
-*                            testOGR_G_WkbSize()
-************************************************************************/
 
-    function testOGR_G_WkbSize() {
+    /***********************************************************************
+     *                            testOGR_G_WkbSize()
+     ************************************************************************/
+
+    public function testOGR_G_WkbSize()
+    {
         $nSize = OGR_G_WkbSize($this->hContainer);
 
         $expected = 177; /*nSize += (4 + 16 * 5) * 2 rings et nSize =9. */
 
-        $this->AssertEquals($expected, $nSize,
-                            "Problem with OGR_G_WkbSize().");
-
+        $this->AssertEquals(
+            $expected,
+            $nSize,
+            "Problem with OGR_G_WkbSize()."
+        );
     }
-
 }
-?>

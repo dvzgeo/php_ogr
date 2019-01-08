@@ -1,33 +1,35 @@
 <?php
 
-class OGRFeatureTest4 extends PHPUnit_Framework_TestCase {
-    var $strPathToOutputData;
-    var $strTmpDumpFile;
-    var $strPathToStandardData;
-    var $strPathToData;
-    var $bUpdate;
-    var $hDS;
-    var $hLayer;
-    var $strDestDataSource;
-    var $strDirName;
+class OGRFeatureTest4 extends PHPUnit_Framework_TestCase
+{
+    public $strPathToOutputData;
+    public $strTmpDumpFile;
+    public $strPathToStandardData;
+    public $strPathToData;
+    public $bUpdate;
+    public $hDS;
+    public $hLayer;
+    public $strDestDataSource;
+    public $strDirName;
 
-    function setUp() {
+    public function setUp()
+    {
         $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-	$this->strPathToOutputData = "../../ogrtests/".$this->strDirName;
-	$this->strTmpDumpFile = "DumpFile.tmp";
-	$this->bUpdate = FALSE;
+        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strTmpDumpFile = "DumpFile.tmp";
+        $this->bUpdate = false;
         $this->strDestDataSource = "OutputDS.tab";
 
         if (file_exists($this->strPathToOutputData)) {
-            system( "rm -R ".$this->strPathToOutputData);
+            system("rm -R " . $this->strPathToOutputData);
         }
         mkdir($this->strPathToOutputData, 0777);
-
     }
 
-    function tearDown() {
+    public function tearDown()
+    {
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
         unset($this->strPathToDumpData);
@@ -37,15 +39,17 @@ class OGRFeatureTest4 extends PHPUnit_Framework_TestCase {
         unset($this->hDS);
         unset($this->hLayer);
     }
-/***********************************************************************
-*                            testOGR_F_SetGetStyleString()                      
-************************************************************************/
 
-    function testOGR_F_SetGetStyleString() {
+    /***********************************************************************
+     *                            testOGR_F_SetGetStyleString()
+     ************************************************************************/
+
+    public function testOGR_F_SetGetStyleString()
+    {
         $hDriver = null;
         $hSrcDS = OGROpen($this->strPathToData, $this->bUpdate, $hDriver);
 
-	$hSrcLayer = OGR_DS_GetLayer($hSrcDS, 3);
+        $hSrcLayer = OGR_DS_GetLayer($hSrcDS, 3);
 
         $iFID = 2;
         $hSrcF = OGR_L_GetFeature($hSrcLayer, $iFID);
@@ -55,14 +59,15 @@ class OGRFeatureTest4 extends PHPUnit_Framework_TestCase {
         $iDriver = 5;
         $hDriver = OGRGetDriver($iDriver);
         $astrOptions = null;
-        $hDestDS = OGR_Dr_CreateDataSource($hDriver, 
-                                               $this->strPathToOutputData.
-                                               $this->strDestDataSource,
-                                               $astrOptions );
+        $hDestDS = OGR_Dr_CreateDataSource(
+            $hDriver,
+            $this->strPathToOutputData . $this->strDestDataSource,
+            $astrOptions
+        );
 
         if ($hDestDS == null) {
             printf("Unable to create destination data source\n");
-            return FALSE;
+            return false;
         }
         $iLayer = 0;
         $hLayerDest = OGR_DS_GetLayer($hDestDS, $iLayer);
@@ -78,8 +83,11 @@ class OGRFeatureTest4 extends PHPUnit_Framework_TestCase {
         $strStyleStringOut = OGR_F_GetStyleString($hDestF);
 
         $expected = $strStyleString;
-        $this->AssertEquals($expected, $strStyleStringOut, "Problem with ".
-                            "OGR_F_SetStyleString() or OGR_F_GetStyleString().");
+        $this->AssertEquals(
+            $expected,
+            $strStyleStringOut,
+            "Problem with OGR_F_SetStyleString() or OGR_F_GetStyleString()."
+        );
 
         OGR_F_Destroy($hSrcF);
         OGR_F_Destroy($hDestF);
@@ -87,4 +95,3 @@ class OGRFeatureTest4 extends PHPUnit_Framework_TestCase {
         OGR_DS_Destroy($hSrcDS);
     }
 }
-?>
