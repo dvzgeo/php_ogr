@@ -84,7 +84,7 @@ if ($result->wasSuccessful() == FALSE) {
 }
 
 $nFailures = $nFailures + $result->failureCount();
-$nErrors = $nError + $result->errorCount();
+$nErrors = $nErrors + $result->errorCount();
 
 printf("
 /***********************************************************************
@@ -108,7 +108,7 @@ if ($result->wasSuccessful() == FALSE) {
 }
 
 $nFailures = $nFailures + $result->failureCount();
-$nErrors = $nError + $result->errorCount();
+$nErrors = $nErrors + $result->errorCount();
 
 
 printf("
@@ -136,7 +136,7 @@ if ($result->wasSuccessful() == FALSE) {
 }
 
 $nFailures = $nFailures + $result->failureCount();
-$nErrors = $nError + $result->errorCount();
+$nErrors = $nErrors + $result->errorCount();
 
 printf("
 /***********************************************************************
@@ -158,7 +158,7 @@ if ($result->wasSuccessful() == FALSE) {
 }
 
 $nFailures = $nFailures + $result->failureCount();
-$nErrors = $nError + $result->errorCount();
+$nErrors = $nErrors + $result->errorCount();
 
 printf("
 /***********************************************************************
@@ -180,7 +180,7 @@ if ($result->wasSuccessful() == FALSE) {
 }
 
 $nFailures = $nFailures + $result->failureCount();
-$nErrors = $nError + $result->errorCount();
+$nErrors = $nErrors + $result->errorCount();
 
 printf("
 /***********************************************************************
@@ -202,7 +202,7 @@ if ($result->wasSuccessful() == FALSE) {
 }
 
 $nFailures = $nFailures + $result->failureCount();
-$nErrors = $nError + $result->errorCount();
+$nErrors = $nErrors + $result->errorCount();
 
 
 printf("
@@ -225,7 +225,7 @@ if ($result->wasSuccessful() == FALSE) {
 }
 
 $nFailures = $nFailures + $result->failureCount();
-$nErrors = $nError + $result->errorCount();
+$nErrors = $nErrors + $result->errorCount();
 
 printf("
 /***********************************************************************
