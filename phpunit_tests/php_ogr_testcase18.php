@@ -14,7 +14,6 @@ class OGRFeatureTest6 extends PHPUnit_Framework_TestCase {
     var $strDirName;
     var $hOGRSFDriver;
     var $astrOptions;
-    var $hDestLayer;
     
  
     function setUp() {
