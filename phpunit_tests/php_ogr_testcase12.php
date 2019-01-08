@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRGeometryTest0";                             
 
-class OGRGeometryTest0 extends PHPUnit_TestCase {
+class OGRGeometryTest0 extends PHPUnit_Framework_TestCase {
  
     function setUp() {
     }

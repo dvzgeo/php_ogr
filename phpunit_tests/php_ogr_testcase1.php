@@ -2,14 +2,14 @@
 
 $testSuites_list[] = "OGRSFDriverRegistrarTest0";                             
                              
-class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
+class OGRSFDriverRegistrarTest0 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $bUpdate;
     var $hOGRSFDriver;
     var $strFilename;
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strPathToData = "./data/mif";
@@ -17,7 +17,7 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
         $this->bUpdate = FALSE;
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance
@@ -60,14 +60,14 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_TestCase {
 }
 $testSuites_list[] = "OGRSFDriverRegistrarTest1";                             
 
-class OGRSFDriverRegistrarTest1 extends PHPUnit_TestCase {
+class OGRSFDriverRegistrarTest1 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $bUpdate;
     var $hOGRSFDriver;
     var $strFilename;
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strPathToData = "./dataBad/mif";
@@ -76,7 +76,7 @@ class OGRSFDriverRegistrarTest1 extends PHPUnit_TestCase {
         $this->hOGRSFDriver = null;
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance
@@ -127,14 +127,14 @@ class OGRSFDriverRegistrarTest1 extends PHPUnit_TestCase {
 }
 $testSuites_list[] = "OGRSFDriverRegistrarTest2";                             
 
-class OGRSFDriverRegistrarTest2 extends PHPUnit_TestCase {
+class OGRSFDriverRegistrarTest2 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $bUpdate;
     var $hOGRSFDriver;
     var $strFilename;
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strPathToData = "./data/mif";
@@ -143,7 +143,7 @@ class OGRSFDriverRegistrarTest2 extends PHPUnit_TestCase {
         $this->hOGRSFDriver = null;
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance

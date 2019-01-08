@@ -3,7 +3,7 @@
 
 $testSuites_list[] = "OGRLayerTest1";                             
 
-class OGRLayerTest1 extends PHPUnit_TestCase {
+class OGRLayerTest1 extends PHPUnit_Framework_TestCase {
     var $strDirName;
     var $strPathToOutputData;
     var $strTmpDumpFile;
@@ -15,8 +15,8 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
     var $hSrcDataSource;
     var $iSpatialFilter;
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strDirName = "testcase/";
@@ -47,7 +47,7 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
 
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance

@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRFeatureDefnTest1";                             
 
-class OGRFeatureDefnTest1 extends PHPUnit_TestCase {
+class OGRFeatureDefnTest1 extends PHPUnit_Framework_TestCase {
     var $hFieldDefn;
     var $hFeatureDefn;
  

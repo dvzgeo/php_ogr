@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRFeatureTest0";                             
 
-class OGRFeatureTest0 extends PHPUnit_TestCase {
+class OGRFeatureTest0 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $strPathToStandardData;
     var $strPathToOutputData;
@@ -12,8 +12,8 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
     var $strDestDataSource;
     var $strOutputLayer;
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strPathToData = "./data/mif";
@@ -34,7 +34,7 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
         OGRRegisterAll();
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance

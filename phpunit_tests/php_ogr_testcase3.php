@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRDataSourceTest0";                             
 
-class OGRDataSourceTest0 extends PHPUnit_TestCase {
+class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $strPathToOutputData;
     var $strPathToStandardData;
@@ -22,8 +22,8 @@ class OGRDataSourceTest0 extends PHPUnit_TestCase {
     var $astrOptions;
 
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strPathToData = "./data/mif";
@@ -54,7 +54,7 @@ class OGRDataSourceTest0 extends PHPUnit_TestCase {
 
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance

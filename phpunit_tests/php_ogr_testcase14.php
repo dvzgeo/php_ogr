@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRFieldDefnTest0";                             
 
-class OGRFieldDefnTest0 extends PHPUnit_TestCase {
+class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase {
 
     function setUp() {
 

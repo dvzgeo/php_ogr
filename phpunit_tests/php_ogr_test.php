@@ -31,6 +31,7 @@ $bSuccess = FALSE;
 $nTests = 0;
 $nFailures = 0;
 $nErrors = 0;
+$resultPrinter = new PHPUnit_TextUI_ResultPrinter();
 
 
 printf("
@@ -39,23 +40,22 @@ printf("
 *                          
 ************************************************************************/
 ");
-$suite1 = new PHPUnit_TestSuite("OGRSFDriverRegistrarTest0");
+$suite1 = new PHPUnit_Framework_TestSuite("OGRSFDriverRegistrarTest0");
 $suite1->addTestSuite("OGRSFDriverRegistrarTest1");
 $suite1->addTestSuite("OGRSFDriverRegistrarTest2");
 $suite1->addTestSuite("OGRSFDriverRegistrarTest3");
 $suite1->addTestSuite("OGRSFDriverTest0");
 
 printf("var_dump suite1\n");
-printf("test case count = %d\n",$suite1->countTestCases());
+printf("test case count = %d\n",$suite1->count());
 printf("after var_dump suite1\n");
 
 
+$result = $suite1->run();
 
-$result = PHPUnit::run($suite1);
+$resultPrinter->printResult($result);
 
-echo $result -> toString();
-
-$nTests = $result->runCount();
+$nTests = $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;
@@ -71,13 +71,13 @@ printf("
 ************************************************************************/
 ");
 
-$suite2 = new PHPUnit_TestSuite("OGRDataSourceTest0");
+$suite2 = new PHPUnit_Framework_TestSuite("OGRDataSourceTest0");
 
-$result = PHPUnit::run($suite2);
+$result = $suite2->run();
 
-echo $result -> toString();
+$resultPrinter->printResult($result);
 
-$nTests = $nTests + $result->runCount();
+$nTests = $nTests + $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;
@@ -93,15 +93,15 @@ printf("
 ************************************************************************/
 ");
 
-$suite3 = new PHPUnit_TestSuite("OGRLayerTest0");
+$suite3 = new PHPUnit_Framework_TestSuite("OGRLayerTest0");
 $suite3->addTestSuite("OGRLayerTest1");
 $suite3->addTestSuite("OGRLayerTest2");
 
-$result = PHPUnit::run($suite3);
+$result = $suite3->run();
 
-echo $result -> toString();
+$resultPrinter->printResult($result);
 
-$nTests = $nTests + $result->runCount();
+$nTests = $nTests + $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;
@@ -117,7 +117,7 @@ printf("
 *                          
 ************************************************************************/
 ");
-$suite4 = new PHPUnit_TestSuite("OGRFeatureTest0");
+$suite4 = new PHPUnit_Framework_TestSuite("OGRFeatureTest0");
 $suite4->addTestSuite("OGRFeatureTest1");
 $suite4->addTestSuite("OGRFeatureTest2");
 $suite4->addTestSuite("OGRFeatureTest3");
@@ -125,11 +125,11 @@ $suite4->addTestSuite("OGRFeatureTest4");
 /*Not used the following test suite with MapInfo File.  List not supported.*/
 //$suite4->addTestSuite("OGRFeatureTest5");
 
-$result = PHPUnit::run($suite4);
+$result = $suite4->run();
 
-echo $result -> toString();
+$resultPrinter->printResult($result);
 
-$nTests = $nTests + $result->runCount();
+$nTests = $nTests + $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;
@@ -144,14 +144,14 @@ printf("
 *                          
 ************************************************************************/
 ");
-$suite5 = new PHPUnit_TestSuite("OGRGeometryTest0");
+$suite5 = new PHPUnit_Framework_TestSuite("OGRGeometryTest0");
 $suite5->addTestSuite("OGRGeometryTest1");
 
-$result = PHPUnit::run($suite5);
+$result = $suite5->run();
 
-echo $result -> toString();
+$resultPrinter->printResult($result);
 
-$nTests = $nTests + $result->runCount();
+$nTests = $nTests + $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;
@@ -167,13 +167,13 @@ printf("
 ************************************************************************/
 ");
 
-$suite6 = new PHPUnit_TestSuite("OGRFieldDefnTest0");
+$suite6 = new PHPUnit_Framework_TestSuite("OGRFieldDefnTest0");
 
-$result = PHPUnit::run($suite6);
+$result = $suite6->run();
 
-echo $result -> toString();
+$resultPrinter->printResult($result);
 
-$nTests = $nTests + $result->runCount();
+$nTests = $nTests + $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;
@@ -188,14 +188,14 @@ printf("
 *                          
 ************************************************************************/
 ");
-$suite7 = new PHPUnit_TestSuite("OGRFeatureDefnTest0");
+$suite7 = new PHPUnit_Framework_TestSuite("OGRFeatureDefnTest0");
 $suite7->addTestSuite("OGRFeatureDefnTest1");
 
-$result = PHPUnit::run($suite7);
+$result = $suite7->run();
 
-echo $result -> toString();
+$resultPrinter->printResult($result);
 
-$nTests = $nTests + $result->runCount();
+$nTests = $nTests + $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;
@@ -212,13 +212,13 @@ printf("
 ************************************************************************/
 ");
 
-$suite8 = new PHPUnit_TestSuite("OGRGeometryTest2");
+$suite8 = new PHPUnit_Framework_TestSuite("OGRGeometryTest2");
 
-$result = PHPUnit::run($suite8);
+$result = $suite8->run();
 
-echo $result -> toString();
+$resultPrinter->printResult($result);
 
-$nTests = $nTests + $result->runCount();
+$nTests = $nTests + $result->count();
 
 if ($result->wasSuccessful() == FALSE) {
     $bSuccess = FALSE;

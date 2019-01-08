@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRFeatureTest3";                             
 
-class OGRFeatureTest3 extends PHPUnit_TestCase {
+class OGRFeatureTest3 extends PHPUnit_Framework_TestCase {
     var $strPathToOutputData;
     var $strTmpDumpFile;
     var $strPathToStandardData;

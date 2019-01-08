@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRSFDriverRegistrarTest3";   
                  
-class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
+class OGRSFDriverRegistrarTest3 extends PHPUnit_Framework_TestCase {
     var $strDirName;
     var $strPathToData;
     var $strPathToOutputData;
@@ -11,8 +11,8 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
     var $hOGRSFDriver;
     var $strCapability;
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strDirName = "testcase/";
@@ -31,7 +31,7 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
 
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance
@@ -198,7 +198,7 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
 }
 $testSuites_list[] = "OGRSFDriverTest0";                             
 
-class OGRSFDriverTest0 extends PHPUnit_TestCase {
+class OGRSFDriverTest0 extends PHPUnit_Framework_TestCase {
     var $strDirName;
     var $strPathToData;
     var $strPathToOutputData;
@@ -207,8 +207,8 @@ class OGRSFDriverTest0 extends PHPUnit_TestCase {
     var $hOGRSFDriver;
     var $strCapability;
 
-    // called before the test functions will be executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // called before the test functions will be executed
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here
     function setUp() {
         $this->strDirName = "testcase/";
@@ -227,7 +227,7 @@ class OGRSFDriverTest0 extends PHPUnit_TestCase {
 
     }
     // called after the test functions are executed    
-    // this function is defined in PHPUnit_TestCase and overwritten 
+    // this function is defined in PHPUnit_Framework_TestCase and overwritten 
     // here    
     function tearDown() {
         // delete your instance

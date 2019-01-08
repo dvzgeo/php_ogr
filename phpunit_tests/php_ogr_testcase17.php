@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRGeometryTest2";                             
 
-class OGRGeometryTest2 extends PHPUnit_TestCase {
+class OGRGeometryTest2 extends PHPUnit_Framework_TestCase {
     var $hContainer;
     var $hRing1;
     var $hRing2;

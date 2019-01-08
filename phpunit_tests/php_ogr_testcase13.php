@@ -2,7 +2,7 @@
 
 $testSuites_list[] = "OGRGeometryTest1";                             
 
-class OGRGeometryTest1 extends PHPUnit_TestCase {
+class OGRGeometryTest1 extends PHPUnit_Framework_TestCase {
     var $strPathToOutputData;
     var $strTmpDumpFile;
     var $strPathToStandardData;
