@@ -1,24 +1,5 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
-
-require_once 'php_ogr_testcase1.php';
-require_once 'php_ogr_testcase2.php';
-require_once 'php_ogr_testcase3.php';
-require_once 'php_ogr_testcase4.php';
-require_once 'php_ogr_testcase5.php';
-require_once 'php_ogr_testcase6.php';
-require_once 'php_ogr_testcase7.php';
-require_once 'php_ogr_testcase8.php';
-require_once 'php_ogr_testcase9.php';
-require_once 'php_ogr_testcase10.php';
-require_once 'php_ogr_testcase11.php';
-require_once 'php_ogr_testcase12.php';
-require_once 'php_ogr_testcase13.php';
-require_once 'php_ogr_testcase14.php';
-require_once 'php_ogr_testcase15.php';
-require_once 'php_ogr_testcase16.php';
-require_once 'php_ogr_testcase17.php';
-//require_once 'php_ogr_testcase18.php'; /*Not with MapInfo File.*/
+require_once __DIR__ . '/../vendor/autoload.php';
 
 printf("
 /***********************************************************************

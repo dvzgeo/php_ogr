@@ -1,7 +1,5 @@
 <?php
 
-$testSuites_list[] = "OGRDataSourceTest0";                             
-
 class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $strPathToOutputData;

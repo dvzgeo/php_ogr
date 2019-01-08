@@ -1,7 +1,5 @@
 <?php
 
-$testSuites_list[] = "OGRFeatureTest0";                             
-
 class OGRFeatureTest0 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $strPathToStandardData;

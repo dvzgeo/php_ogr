@@ -1,7 +1,5 @@
 <?php
 
-$testSuites_list[] = "OGRLayerTest0";                             
-
 class OGRLayerTest0 extends PHPUnit_Framework_TestCase {
     var $strPathToData;
     var $strDirName;
