@@ -171,13 +171,10 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval, "Problem with OGR_L_SetAttributeFilter(): Files comparison did not matched.\n"
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "Problem with OGR_L_SetAttributeFilter(): Files comparison did not matched.\n"
         );
     }
 }

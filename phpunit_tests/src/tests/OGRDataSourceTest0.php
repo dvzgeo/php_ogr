@@ -266,14 +266,9 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         OGR_DS_Destroy($hSrcDataSource);
 
-
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
     }
@@ -348,13 +343,9 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         OGR_DS_Destroy($hSrcDataSource);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
     }
@@ -428,13 +419,9 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         OGR_DS_Destroy($hSrcDataSource);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
     }
@@ -508,13 +495,9 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         OGR_DS_Destroy($hSrcDataSource);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
     }

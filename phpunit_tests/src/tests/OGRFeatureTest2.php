@@ -225,15 +225,12 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iReval
-        );
-
-        $this->assertFalse(
-            $iRetval, "Problem with OGR_F_SetFieldRaw() or OGR_F_GetRawFieldRef(): Files comparison did not matched.\n"
-        );
-
         OGR_DS_Destroy($hDestDS);
+
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "Problem with OGR_F_SetFieldRaw() or OGR_F_GetRawFieldRef(): Files comparison did not matched.\n"
+        );
     }
 }

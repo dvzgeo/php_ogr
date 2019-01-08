@@ -148,13 +148,9 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_L_GetNextFeature() Files comparison did not matched.\n"
         );
     }
@@ -258,13 +254,9 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $this->strPathToStandardData . $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_L_ResetReading() Files comparison did not matched.\n"
         );
     }
