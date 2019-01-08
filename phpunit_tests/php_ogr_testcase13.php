@@ -16,9 +16,6 @@ class OGRGeometryTest1 extends PHPUnit_TestCase {
     var $hRing1;
     var $hRing2;
  
-    function OGRGeometryTest1($name){
-        $this->PHPUnit_TestCase($name);	
-    }
     function setUp() {
 
         /*Prepare to write temporary data for comparison.*/

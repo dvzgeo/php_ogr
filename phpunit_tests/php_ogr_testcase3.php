@@ -22,10 +22,6 @@ class OGRDataSourceTest0 extends PHPUnit_TestCase {
     var $astrOptions;
 
 
-    // constructor of the test suite
-    function OGRDataSourceTest0($name){
-        $this->PHPUnit_TestCase($name);
-    }
     // called before the test functions will be executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here

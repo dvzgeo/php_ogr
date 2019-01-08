@@ -14,9 +14,6 @@ class OGRFeatureTest2 extends PHPUnit_TestCase {
     var $hOGRSFDriver;
     var $strOutputLayer;
 
-    function OGRFeatureTest2($name){
-        $this->PHPUnit_TestCase($name);	
-    }
     function setUp() {
 
         $this->strPathToData = "./data/mif";

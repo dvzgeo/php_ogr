@@ -11,10 +11,6 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_TestCase {
     var $hOGRSFDriver;
     var $strCapability;
 
-    // constructor of the test suite
-    function OGRSFDriverRegistrarTest3($name){
-        $this->PHPUnit_TestCase($name);
-    }
     // called before the test functions will be executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here
@@ -211,10 +207,6 @@ class OGRSFDriverTest0 extends PHPUnit_TestCase {
     var $hOGRSFDriver;
     var $strCapability;
 
-    // constructor of the test suite
-    function OGRSFDriverTest0($name){
-        $this->PHPUnit_TestCase($name);
-    }
     // called before the test functions will be executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here

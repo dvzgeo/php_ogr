@@ -6,9 +6,6 @@ class OGRFeatureDefnTest1 extends PHPUnit_TestCase {
     var $hFieldDefn;
     var $hFeatureDefn;
  
-    function OGRFeatureDefnTest1($name){
-        $this->PHPUnit_TestCase($name);	
-    }
     function setUp() {
         $strName = "Lake";
         $this->hFeatureDefn = OGR_FD_Create($strName);

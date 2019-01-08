@@ -16,10 +16,6 @@ class OGRFeatureTest1 extends PHPUnit_TestCase {
     var $eGeometryType;
     var $strDestDataSource;
  
-    function OGRFeatureTest1($name){
-        $this->PHPUnit_TestCase($name);	
-    }
-
     function setUp() {
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";

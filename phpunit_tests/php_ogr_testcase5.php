@@ -15,10 +15,6 @@ class OGRLayerTest1 extends PHPUnit_TestCase {
     var $hSrcDataSource;
     var $iSpatialFilter;
 
-    // constructor of the test suite
-    function OGRLayerTest1($name){
-        $this->PHPUnit_TestCase($name);
-    }
     // called before the test functions will be executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here

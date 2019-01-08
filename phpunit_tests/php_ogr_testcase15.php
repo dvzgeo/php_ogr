@@ -5,9 +5,6 @@ $testSuites_list[] = "OGRFeatureDefnTest0";
 class OGRFeatureDefnTest0 extends PHPUnit_TestCase {
     var $hContainer;
  
-    function OGRFeatureDefnTest0($name){
-        $this->PHPUnit_TestCase($name);	
-    }
     function setUp() {
 
 

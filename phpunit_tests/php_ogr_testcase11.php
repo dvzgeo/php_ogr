@@ -13,11 +13,6 @@ class OGRFeatureTest4 extends PHPUnit_TestCase {
     var $strDestDataSource;
     var $strDirName;
 
-    function OGRFeatureTest4($name){
-        $this->PHPUnit_TestCase($name);	
-        printf("OGRFeatureTest4 in case11\n");
-    }
-
     function setUp() {
         $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";

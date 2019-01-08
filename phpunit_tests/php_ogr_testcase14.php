@@ -4,9 +4,6 @@ $testSuites_list[] = "OGRFieldDefnTest0";
 
 class OGRFieldDefnTest0 extends PHPUnit_TestCase {
 
-    function OGRFieldDefnTest0($name){
-        $this->PHPUnit_TestCase($name);	
-    }
     function setUp() {
 
     }

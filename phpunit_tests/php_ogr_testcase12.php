@@ -4,10 +4,6 @@ $testSuites_list[] = "OGRGeometryTest0";
 
 class OGRGeometryTest0 extends PHPUnit_TestCase {
  
-    function OGRGeometryTest0($name){
-        $this->PHPUnit_TestCase($name);
-    }
-
     function setUp() {
     }
 

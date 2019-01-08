@@ -15,10 +15,6 @@ class OGRFeatureTest3 extends PHPUnit_TestCase {
     var $hOGRSFDriver;
     var $astrOptions;
  
-    function OGRFeatureTest3($name){
-        $this->PHPUnit_TestCase($name);
-    }
-
     function setUp() {
         $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";

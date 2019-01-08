@@ -12,10 +12,6 @@ class OGRLayerTest0 extends PHPUnit_TestCase {
     var $hLayer;
     var $hSrcDataSource;
 
-    // constructor of the test suite
-    function OGRLayerTest0($name){
-        $this->PHPUnit_TestCase($name);
-    }
     // called before the test functions will be executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here

@@ -17,10 +17,6 @@ class OGRFeatureTest6 extends PHPUnit_TestCase {
     var $hDestLayer;
     
  
-    function OGRFeatureTest6($name){
-        $this->PHPUnit_TestCase($name);	
-    }
-
     function setUp() {
         $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";

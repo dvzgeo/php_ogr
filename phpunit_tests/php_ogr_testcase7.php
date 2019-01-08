@@ -12,10 +12,6 @@ class OGRFeatureTest0 extends PHPUnit_TestCase {
     var $strDestDataSource;
     var $strOutputLayer;
 
-    // constructor of the test suite
-    function OGRFeatureTest0($name){
-        $this->PHPUnit_TestCase($name);
-    }
     // called before the test functions will be executed    
     // this function is defined in PHPUnit_TestCase and overwritten 
     // here

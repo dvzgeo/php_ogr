@@ -17,9 +17,6 @@ class OGRGeometryTest2 extends PHPUnit_TestCase {
     var $strOutputLayer;
     var $eGeometryType;
  
-    function OGRGeometryTest2($name){
-        $this->PHPUnit_TestCase($name);	
-    }
     function setUp() {
         /*Create a polygon.*/
         $eType = wkbPolygon;
