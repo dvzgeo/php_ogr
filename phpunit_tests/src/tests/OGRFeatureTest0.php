@@ -18,18 +18,12 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
     {
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/testcase/";
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->eGeometryType = wkbUnknown;
         $this->strDestDataSource = "DSOutput";
         $this->strOutputLayer = "OutputLayer";
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-
-        mkdir($this->strPathToOutputData, 0777);
 
         OGRRegisterAll();
     }
@@ -38,6 +32,7 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
     // here
     public function tearDown()
     {
+        delete_directory($this->strPathToOutputData);
         // delete your instance
         unset($this->strPathToData);
         unset($this->strPathToStandardData);

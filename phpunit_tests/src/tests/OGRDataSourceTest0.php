@@ -27,7 +27,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->strPathToData = "./data/mif";
-        $this->strPathToOutputData = "../../ogrtests/testcase/";
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strPathToStandardData = "./data/testcase/";
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
@@ -44,12 +44,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         $this->iDriver = 5;
         $this->astrOptions[0] = "FORMAT=MIF";
 
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-        mkdir($this->strPathToOutputData, 0777);
-
-
         OGRRegisterAll();
     }
     // called after the test functions are executed
@@ -57,6 +51,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
     // here
     public function tearDown()
     {
+        delete_directory($this->strPathToOutputData);
         // delete your instance
         unset($this->strPathToData);
         unset($this->strPathToOutputData);

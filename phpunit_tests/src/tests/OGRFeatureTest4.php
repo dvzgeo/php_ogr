@@ -10,26 +10,20 @@ class OGRFeatureTest4 extends PHPUnit_Framework_TestCase
     public $hDS;
     public $hLayer;
     public $strDestDataSource;
-    public $strDirName;
 
     public function setUp()
     {
-        $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->strDestDataSource = "OutputDS.tab";
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-        mkdir($this->strPathToOutputData, 0777);
     }
 
     public function tearDown()
     {
+        delete_directory($this->strPathToOutputData);
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
         unset($this->strPathToDumpData);

@@ -3,7 +3,6 @@
 class OGRLayerTest0 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
-    public $strDirName;
     public $strPathToOutputData;
     public $bUpdate;
     public $hOGRSFDriver;
@@ -16,8 +15,7 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase
     // here
     public function setUp()
     {
-        $this->strDirName = "testcase/";
-        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strPathToData = "./data/mif";
         $this->bUpdate = false;
         $this->strCapability[0] = OLCRandomRead;
@@ -26,12 +24,6 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase
         $this->strCapability[3] = OLCFastSpatialFilter;
         $this->strCapability[4] = OLCFastFeatureCount;
         $this->strCapability[5] = OLCFastGetExtent;
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-        mkdir($this->strPathToOutputData, 0777);
-
 
         OGRRegisterAll();
         $this->hOGRSFDriver = OGRGetDriver(5);
@@ -51,7 +43,7 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase
     {
         // delete your instance
         OGR_DS_Destroy($this->hSrcDataSource);
-        $this->strDirName = "testcase/";
+        delete_directory($this->strPathToOutputData);
         unset($this->strPathToOutputData);
         unset($this->strPathToData);
         unset($this->bUpdate);

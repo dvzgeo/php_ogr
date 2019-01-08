@@ -2,7 +2,6 @@
 
 class OGRLayerTest1 extends PHPUnit_Framework_TestCase
 {
-    public $strDirName;
     public $strPathToOutputData;
     public $strTmpDumpFile;
     public $strPathToData;
@@ -18,8 +17,7 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
     // here
     public function setUp()
     {
-        $this->strDirName = "testcase/";
-        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
@@ -28,11 +26,6 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
         $this->iSpatialFilter[1] = 4210400;  /*ymin*/
         $this->iSpatialFilter[2] = 3580000;  /*xmax*/
         $this->iSpatialFilter[3] = 4280000;  /*ymax*/
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-        mkdir($this->strPathToOutputData, 0777);
 
         OGRRegisterAll();
 
@@ -53,7 +46,9 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
     {
         // delete your instance
         OGR_DS_Destroy($this->hSrcDataSource);
-        unset($this->strDirname);
+
+        delete_directory($this->strPathToOutputData);
+
         unset($this->strPathToOutputData);
         unset($this->strTmpDumpFile);
         unset($this->strPathToData);

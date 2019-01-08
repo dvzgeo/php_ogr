@@ -8,7 +8,6 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
     public $hDestDS;
     public $hDestLayer;
     public $strDestDataSource;
-    public $strDirName;
     public $hOGRSFDriver;
     public $astrOptions;
     public $hContainer;
@@ -19,17 +18,10 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
     {
 
         /*Prepare to write temporary data for comparison.*/
-        $this->strDirName = "testcase/";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->strDestDataSource = "OutputDS.tab";
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-
-        mkdir($this->strPathToOutputData, 0777);
 
         $iDriver = 5;
         $this->hOGRSFDriver = OGRGetDriver($iDriver);
@@ -79,9 +71,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
         OGR_G_DestroyGeometry($this->hContainer);
         OGR_DS_Destroy($this->hDestDS);
 
-        /*        if (file_exists($this->strPathToOutputData)) {
-                    system( "rm -R ".$this->strPathToOutputData);
-                    }*/
+        delete_directory($this->strPathToOutputData);
 
         unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);

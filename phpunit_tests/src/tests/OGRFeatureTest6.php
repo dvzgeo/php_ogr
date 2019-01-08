@@ -10,26 +10,18 @@ class OGRFeatureTest6 extends PHPUnit_Framework_TestCase
     public $hDestDS;
     public $hDestLayer;
     public $strDestDataSource;
-    public $strDirName;
     public $hOGRSFDriver;
     public $astrOptions;
 
 
     public function setUp()
     {
-        $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->strDestDataSource = "OutputDS";
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-
-        mkdir($this->strPathToOutputData, 0777);
 
         $iDriver = 1;  /*Other then MapInfo File.*/
         $this->hOGRSFDriver = OGRGetDriver($iDriver);
@@ -51,9 +43,7 @@ class OGRFeatureTest6 extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
+        delete_directory($this->strPathToOutputData);
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
@@ -62,7 +52,6 @@ class OGRFeatureTest6 extends PHPUnit_Framework_TestCase
         unset($this->strDestDataSource);
         unset($this->hDestLayer);
         unset($this->hDestDS);
-        unset($this->strDirName);
         unset($this->OGRSFDriver);
         unset($this->astrOptions);
     }

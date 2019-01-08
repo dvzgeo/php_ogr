@@ -613,3 +613,63 @@ function utilWriteResult($hSrcDS, $hSrcLayer, $hDstDS)
     }
     return true;
 }
+
+/************************************************************************/
+/*                                create_temp_directory                 */
+/************************************************************************/
+/**
+ * Create a temporary directory
+ *
+ * @param string $prefix Optional directory name prefix
+ * @param string $parent Optional parent directory (default is system temp)
+ *
+ * @return string|boolean Path to directory (incl. trailing slash) or FALSE
+ */
+function create_temp_directory($prefix = '', $parent = null)
+{
+    if ($parent === null) {
+        $parent = sys_get_temp_dir();
+    }
+    if (!is_writable($parent)) {
+        return false;
+    }
+    // prevent infinite loops
+    for ($i = 0; $i < 10000; $i++) {
+        $candidate = sprintf('%s%s%s%d', $parent, DIRECTORY_SEPARATOR, $prefix, rand(100000, 999999));
+        if (mkdir($candidate)) {
+            return $candidate . DIRECTORY_SEPARATOR;
+        }
+    }
+    return false;
+}
+
+/************************************************************************/
+/*                                delete_directory                      */
+/************************************************************************/
+/**
+ * Recursively delete a directory
+ *
+ * @param string $path Path to directory to delete
+ *
+ * @return boolean Success?
+ */
+function delete_directory($path)
+{
+    if (!($path && is_dir($path))) {
+        return false;
+    }
+    foreach (scandir($path) as $file) {
+        if ($file === '.' || $file === '..') {
+            continue;
+        }
+        $filepath = $path . DIRECTORY_SEPARATOR . $file;
+        if (is_dir($filepath)) {
+            if (!delete_directory($filepath)) {
+                return false;
+            }
+        } elseif (!unlink($filepath)) {
+            return false;
+        }
+    }
+    return rmdir($path);
+}

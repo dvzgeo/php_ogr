@@ -17,7 +17,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
     {
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/testcase/";
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->hOGRSFDriver = null;
@@ -36,13 +36,8 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         OGR_DS_Destroy($this->hDS);
-        if (file_exists($this->strPathToOutputData . $this->strDestDataSource)) {
-            system("rm -R " . $this->strPathToOutputData . $this->strDestDataSource);
-        }
 
-        if (file_exists($this->strPathToOutputData . $this->strTmpDumpFile)) {
-            system("rm " . $this->strPathToOutputData . $this->strTmpDumpFile);
-        }
+        delete_directory($this->strPathToOutputData);
 
         unset($this->strPathToData);
         unset($this->strPathToStandardData);

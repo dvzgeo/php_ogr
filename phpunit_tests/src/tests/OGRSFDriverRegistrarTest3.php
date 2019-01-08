@@ -2,7 +2,6 @@
 
 class OGRSFDriverRegistrarTest3 extends PHPUnit_Framework_TestCase
 {
-    public $strDirName;
     public $strPathToData;
     public $strPathToOutputData;
     public $strDestDataSource;
@@ -15,27 +14,19 @@ class OGRSFDriverRegistrarTest3 extends PHPUnit_Framework_TestCase
     // here
     public function setUp()
     {
-        $this->strDirName = "testcase/";
         $this->strPathToData = "./data/mif";
-        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strDestDataSource = "OutputDS";
         $this->bUpdate = false;
         $this->strCapability = ODrCCreateDataSource;
-
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-
-        mkdir($this->strPathToOutputData, 0777);
     }
     // called after the test functions are executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
     // here
     public function tearDown()
     {
+        delete_directory($this->strPathToOutputData);
         // delete your instance
-        unset($this->strDirName);
         unset($this->strPathToData);
         unset($this->strPathToOutputData);
         unset($this->strDestDataSource);

@@ -3,7 +3,8 @@
 class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
 {
     public $strPathToDumpData;
-    public $strTmpOutputFile;
+    public $strTmpDumpFile;
+    public $strPathToOutputData;
     public $strPathToStandardData;
     public $strPathToData;
     public $bUpdate;
@@ -18,7 +19,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
     {
         $this->strPathToData = "./data/mif";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/testcase/";
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->hOGRSFDriver = null;
@@ -39,13 +40,8 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
     {
         OGR_DS_Destroy($this->hDS);
 
-        if (file_exists($this->strPathToOutputData . $this->strDestDataSource)) {
-            system("rm -R " . $this->strPathToOutputData . $this->strDestDataSource);
-        }
+        delete_directory($this->strPathToOutputData);
 
-        if (file_exists($this->strPathToOutputData . $this->strTmpDumpFile)) {
-            system("rm " . $this->strPathToOutputData . $this->strTmpDumpFile);
-        }
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);

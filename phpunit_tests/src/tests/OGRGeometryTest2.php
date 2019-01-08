@@ -6,7 +6,6 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
     public $hRing1;
     public $hRing2;
 
-    public $strDirName;
     public $strPathToOutputData;
     public $strTmpDumpFile;
     public $strPathToStandardData;
@@ -42,20 +41,14 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
         $eErr = OGR_G_AddGeometry($this->hContainer, $this->hRing2);
 
         /*Prepare to write temporary data for comparison.*/
-        $this->strDirName = "testcase2/";
         $this->strPathToData = "./data/mifwgs1984";
         $this->strPathToStandardData = "./data/testcase/";
-        $this->strPathToOutputData = "../../ogrtests/" . $this->strDirName;
+        $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->strDestDataSource = "OutputDS";
         $this->strOutputLayer = "OutputLayer";
         $this->eGeometryType = wkbPolygon;
-
-        if (file_exists($this->strPathToOutputData)) {
-            system("rm -R " . $this->strPathToOutputData);
-        }
-        mkdir($this->strPathToOutputData, 0777);
     }
 
     public function tearDown()
@@ -64,11 +57,12 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
         OGR_G_DestroyGeometry($this->hRing2);
         OGR_G_DestroyGeometry($this->hContainer);
 
+        delete_directory($this->strPathToOutputData);
+
         unset($this->hRing1);
         unset($this->hring2);
         unset($this->hContainer);
 
-        unset($this->strDirName);
         unset($this->strPathToData);
         unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
