@@ -1,0 +1,335 @@
+
+===================
+Layer 0: 'gis_osm_places_free_1'
+
+ Field 0: osm_id (String)
+ Field 1: code (Integer)
+ Field 2: fclass (String)
+ Field 3: population (Integer)
+ Field 4: name (String)
+
+Feature(s) count= 40
+
+OGRFeature(gis_osm_places_free_1):47
+  osm_id (String) = 64954593
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Aixirivall
+1.502 42.462 0.000
+
+OGRFeature(gis_osm_places_free_1):34
+  osm_id (String) = 64954525
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Aixovall
+1.489 42.477 0.000
+
+OGRFeature(gis_osm_places_free_1):25
+  osm_id (String) = 64954472
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Ansalonga
+1.522 42.569 0.000
+
+OGRFeature(gis_osm_places_free_1):41
+  osm_id (String) = 64954560
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Arans
+1.518 42.583 0.000
+
+OGRFeature(gis_osm_places_free_1):27
+  osm_id (String) = 64954483
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Arinsal
+1.484 42.572 0.000
+
+OGRFeature(gis_osm_places_free_1):3
+  osm_id (String) = 64954377
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Aubinyà
+1.492 42.454 0.000
+
+OGRFeature(gis_osm_places_free_1):8
+  osm_id (String) = 64954400
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Bixessarri
+1.457 42.484 0.000
+
+OGRFeature(gis_osm_places_free_1):48
+  osm_id (String) = 64954598
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Certers
+1.506 42.476 0.000
+
+OGRFeature(gis_osm_places_free_1):66
+  osm_id (String) = 2125730238
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Engolasters
+1.559 42.511 0.000
+
+OGRFeature(gis_osm_places_free_1):26
+  osm_id (String) = 64954477
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Engordany
+1.538 42.514 0.000
+
+OGRFeature(gis_osm_places_free_1):24
+  osm_id (String) = 64954467
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Erts
+1.497 42.561 0.000
+
+OGRFeature(gis_osm_places_free_1):31
+  osm_id (String) = 64954508
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Fontaneda
+1.464 42.454 0.000
+
+OGRFeature(gis_osm_places_free_1):51
+  osm_id (String) = 258361905
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Grau Roig
+1.702 42.537 0.000
+
+OGRFeature(gis_osm_places_free_1):4
+  osm_id (String) = 64954382
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Juberri
+1.492 42.439 0.000
+
+OGRFeature(gis_osm_places_free_1):35
+  osm_id (String) = 64954531
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Llorts
+1.526 42.596 0.000
+
+OGRFeature(gis_osm_places_free_1):40
+  osm_id (String) = 64954554
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Llumeneres
+1.512 42.472 0.000
+
+OGRFeature(gis_osm_places_free_1):49
+  osm_id (String) = 64954601
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Meritxell
+1.591 42.554 0.000
+
+OGRFeature(gis_osm_places_free_1):5
+  osm_id (String) = 64954385
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Nagol
+1.500 42.471 0.000
+
+OGRFeature(gis_osm_places_free_1):32
+  osm_id (String) = 64954515
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Pal
+1.476 42.546 0.000
+
+OGRFeature(gis_osm_places_free_1):17
+  osm_id (String) = 64954437
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 2996
+  name (String) = Pas de la Casa
+1.733 42.545 0.000
+
+OGRFeature(gis_osm_places_free_1):10
+  osm_id (String) = 64954409
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Prats
+1.594 42.561 0.000
+
+OGRFeature(gis_osm_places_free_1):21
+  osm_id (String) = 64954457
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Ransol
+1.637 42.582 0.000
+
+OGRFeature(gis_osm_places_free_1):14
+  osm_id (String) = 64954429
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Sant Pere
+1.653 42.579 0.000
+
+OGRFeature(gis_osm_places_free_1):44
+  osm_id (String) = 64954570
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Segudet
+1.538 42.557 0.000
+
+OGRFeature(gis_osm_places_free_1):37
+  osm_id (String) = 64954538
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Soldeu
+1.668 42.577 0.000
+
+OGRFeature(gis_osm_places_free_1):16
+  osm_id (String) = 64954435
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Sornás
+1.527 42.565 0.000
+
+OGRFeature(gis_osm_places_free_1):23
+  osm_id (String) = 64954464
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Vila
+1.567 42.532 0.000
+
+OGRFeature(gis_osm_places_free_1):33
+  osm_id (String) = 64954521
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = Xixerella
+1.488 42.553 0.000
+
+OGRFeature(gis_osm_places_free_1):20
+  osm_id (String) = 64954451
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = el Serrat
+1.539 42.620 0.000
+
+OGRFeature(gis_osm_places_free_1):9
+  osm_id (String) = 64954404
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = el Tarter
+1.650 42.580 0.000
+
+OGRFeature(gis_osm_places_free_1):39
+  osm_id (String) = 64954546
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = la Cortinada
+1.519 42.576 0.000
+
+OGRFeature(gis_osm_places_free_1):67
+  osm_id (String) = 2125770584
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = la Margineda
+1.491 42.487 0.000
+
+OGRFeature(gis_osm_places_free_1):98
+  osm_id (String) = 3940604188
+  code (Integer) = 1003
+  fclass (String) = village
+  population (Integer) = 0
+  name (String) = les Bordes d'Envalira
+1.685 42.560 0.000
+
+OGRFeature(gis_osm_places_free_1):0
+  osm_id (String) = 58957648
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 24678
+  name (String) = Andorra la Vella
+1.521 42.507 0.000
+
+OGRFeature(gis_osm_places_free_1):15
+  osm_id (String) = 64954433
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 0
+  name (String) = Canillo
+1.598 42.567 0.000
+
+OGRFeature(gis_osm_places_free_1):45
+  osm_id (String) = 64954584
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 0
+  name (String) = Encamp
+1.584 42.536 0.000
+
+OGRFeature(gis_osm_places_free_1):42
+  osm_id (String) = 64954563
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 0
+  name (String) = La Massana
+1.516 42.544 0.000
+
+OGRFeature(gis_osm_places_free_1):46
+  osm_id (String) = 64954589
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 0
+  name (String) = Les Escaldes
+1.540 42.509 0.000
+
+OGRFeature(gis_osm_places_free_1):1
+  osm_id (String) = 58963219
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 0
+  name (String) = Ordino
+1.533 42.556 0.000
+
+OGRFeature(gis_osm_places_free_1):28
+  osm_id (String) = 64954486
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 0
+  name (String) = Sant Julià de Lòria
+1.492 42.467 0.000
+
+
+
+----- EOF -----

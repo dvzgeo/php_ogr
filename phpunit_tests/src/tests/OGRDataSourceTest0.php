@@ -4,7 +4,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
     public $strPathToOutputData;
-    public $strPathToStandardData;
     public $strTmpDumpFile;
     public $bUpdate;
     public $bForce;
@@ -20,31 +19,32 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
     public $iDriver;
     public $astrOptions;
 
+    public static function setUpBeforeClass()
+    {
+        OGRRegisterAll();
+    }
 
     // called before the test functions will be executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
     // here
     public function setUp()
     {
-        $this->strPathToData = "./data/mif";
+        $this->strPathToData = test_data_path('andorra', 'shp');
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
-        $this->strPathToStandardData = "./data/testcase/";
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->bForce = true;
         $this->strCapability = ODsCCreateLayer;
-        $this->strLayerName = "LayerPoint";
+        $this->strLayerName = "gis_osm_places_free_1";
         $this->hSRS = null;
         $this->eGeometryType = wkbPoint;
         $this->strDialect = ""; /*"Generic SQL"*/
-        $this->strFormat = "MapInfo File";
+        $this->strFormat = "ESRI Shapefile";
         $this->strDestDataSource = "OutputDS";
-        $this->nLayerCount = 10;
+        $this->nLayerCount = 18;
         $this->hOGRSFDriver = null;
-        $this->iDriver = 5;
-        $this->astrOptions[0] = "FORMAT=MIF";
-
-        OGRRegisterAll();
+        $this->iDriver = "ESRI Shapefile";
+        $this->astrOptions[] = array();
     }
     // called after the test functions are executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
@@ -55,7 +55,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         // delete your instance
         unset($this->strPathToData);
         unset($this->strPathToOutputData);
-        unset($this->strPathToStandardData);
         unset($this->strTmpDumpFile);
         unset($this->bUpdate);
         unset($this->bForce);
@@ -78,11 +77,11 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_TestCapability0()
     {
-        $this->hOGRSFDriver = OGRGetDriver($this->iDriver);
+        $this->hOGRSFDriver = OGRGetDriverByName($this->iDriver);
         $hSrcDataSource = OGR_Dr_Open(
             $this->hOGRSFDriver,
             $this->strPathToData,
-            $this->bUpdate
+            true
         );
 
         $iCapability = OGR_DS_TestCapability(
@@ -191,7 +190,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_DS_ExecuteSQL0()
     {
-        $strStandardFile = "testOGR_DS_ExecuteSQL0.std";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
 
         $hSrcDataSource = OGROpen(
@@ -205,7 +204,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         $hSpatialFilter = null;
 
-        $strSQLCommand = "SELECT * FROM fedlimit";
+        $strSQLCommand = "SELECT * FROM gis_osm_places_free_1";
 
         CPLErrorReset();
 
@@ -267,7 +266,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         OGR_DS_Destroy($hSrcDataSource);
 
         $this->assertFileEquals(
-            $this->strPathToStandardData . $strStandardFile,
+            $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
@@ -281,7 +280,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL1()
     {
-        $strStandardFile = "testOGR_DS_ExecuteSQL1.std";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
@@ -295,7 +294,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         $hSpatialFilter = null;
 
-        $strSQLCommand = "SELECT PARK_ID, REG_CODE FROM park";
+        $strSQLCommand = "SELECT fclass,name FROM gis_osm_places_free_1";
 
         CPLErrorReset();
 
@@ -344,7 +343,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         OGR_DS_Destroy($hSrcDataSource);
 
         $this->assertFileEquals(
-            $this->strPathToStandardData . $strStandardFile,
+            $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
@@ -358,7 +357,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL2()
     {
-        $strStandardFile = "testOGR_DS_ExecuteSQL2.std";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
@@ -371,7 +370,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         $hSpatialFilter = null;
 
-        $strSQLCommand = "SELECT * from drainage WHERE DRAINAGE_ < 10 ORDER BY DRAINAGE_ DESC";
+        $strSQLCommand = "SELECT * FROM gis_osm_places_free_1 WHERE code < 1004 ORDER BY code DESC, name ASC";
 
         CPLErrorReset();
 
@@ -420,7 +419,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         OGR_DS_Destroy($hSrcDataSource);
 
         $this->assertFileEquals(
-            $this->strPathToStandardData . $strStandardFile,
+            $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
@@ -434,7 +433,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL3()
     {
-        $strStandardFile = "testOGR_DS_ExecuteSQL3.std";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
@@ -447,7 +446,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
         $hSpatialFilter = null;
 
-        $strSQLCommand = "SELECT COUNT(DISTINCT POP_RANGE) FROM popplace";
+        $strSQLCommand = "SELECT COUNT(DISTINCT fclass) FROM gis_osm_places_free_1";
 
         CPLErrorReset();
 
@@ -496,60 +495,10 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         OGR_DS_Destroy($hSrcDataSource);
 
         $this->assertFileEquals(
-            $this->strPathToStandardData . $strStandardFile,
+            $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_DS_ExecuteSQL(): Files comparison did not matched, after execution of:  " . $strSQLCommand . "."
         );
-    }
-
-    /***********************************************************************
-     *                       testOGR_DS_ExecuteSQL4()
-     *Getting a layer by a SQL request.  TO COME BACK TO.  FIND A WAY TO
-     *     VERIFY DATA.
-     ************************************************************************/
-
-    public function testOGR_DS_ExecuteSQL4()
-    {
-        $hSrcDataSource = OGROpen(
-            $this->strPathToData,
-            $this->bUpdate,
-            $this->hOGRSFDriver
-        );
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
-
-        $hSpatialFilter = null;
-
-        $strSQLCommand = "CREATE INDEX ON popplace USING REG_CODE";
-
-        CPLErrorReset();
-
-        $hLayer = @OGR_DS_ExecuteSQL(
-            $hSrcDataSource,
-            $strSQLCommand,
-            $hSpatialFilter,
-            $this->strDialect
-        );
-
-        $eErrType = CPLGetLastErrorType();
-
-        $eErrMsg = CPLGetLastErrorMsg();
-
-        $expected = OGRERR_FAILURE;
-        $this->assertEquals(
-            $expected,
-            $eErrType,
-            "Problem with OGR_DS_ExecuteSQL():  Bad error code or " . $eErrMsg
-        );
-
-        if (hLayer) {
-            return false;
-        }
-
-        OGR_DS_ReleaseResultSet($hSrcDataSource, $hLayer);
-
-        OGR_DS_Destroy($hSrcDataSource);
     }
 
     /***********************************************************************
@@ -558,8 +507,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_CreateLayer0()
     {
-        $this->hOGRSFDriver = OGRGetDriver($this->iDriver);
-
+        $this->hOGRSFDriver = OGRGetDriverByName($this->iDriver);
         $hDataSource = OGR_Dr_CreateDataSource(
             $this->hOGRSFDriver,
             $this->strPathToOutputData . $this->strDestDataSource,

@@ -1,0 +1,602 @@
+
+===================
+Layer 0: 'gis_osm_places_free_1'
+
+ Field 0: fclass (String)
+ Field 1: name (String)
+
+Feature(s) count= 118
+
+OGRFeature(gis_osm_places_free_1):0
+  fclass (String) = town
+  name (String) = Andorra la Vella
+1.521 42.507 0.000
+
+OGRFeature(gis_osm_places_free_1):1
+  fclass (String) = town
+  name (String) = Ordino
+1.533 42.556 0.000
+
+OGRFeature(gis_osm_places_free_1):2
+  fclass (String) = hamlet
+  name (String) = Aixàs
+1.464 42.483 0.000
+
+OGRFeature(gis_osm_places_free_1):3
+  fclass (String) = village
+  name (String) = Aubinyà
+1.492 42.454 0.000
+
+OGRFeature(gis_osm_places_free_1):4
+  fclass (String) = village
+  name (String) = Juberri
+1.492 42.439 0.000
+
+OGRFeature(gis_osm_places_free_1):5
+  fclass (String) = village
+  name (String) = Nagol
+1.500 42.471 0.000
+
+OGRFeature(gis_osm_places_free_1):6
+  fclass (String) = hamlet
+  name (String) = Anyós
+1.525 42.534 0.000
+
+OGRFeature(gis_osm_places_free_1):7
+  fclass (String) = hamlet
+  name (String) = Els Vilars
+1.541 42.517 0.000
+
+OGRFeature(gis_osm_places_free_1):8
+  fclass (String) = village
+  name (String) = Bixessarri
+1.457 42.484 0.000
+
+OGRFeature(gis_osm_places_free_1):9
+  fclass (String) = village
+  name (String) = el Tarter
+1.650 42.580 0.000
+
+OGRFeature(gis_osm_places_free_1):10
+  fclass (String) = village
+  name (String) = Prats
+1.594 42.561 0.000
+
+OGRFeature(gis_osm_places_free_1):11
+  fclass (String) = hamlet
+  name (String) = Sispony
+1.516 42.534 0.000
+
+OGRFeature(gis_osm_places_free_1):12
+  fclass (String) = hamlet
+  name (String) = els Plans
+1.633 42.582 0.000
+
+OGRFeature(gis_osm_places_free_1):13
+  fclass (String) = hamlet
+  name (String) = l’Aldosa de Canillo
+1.628 42.580 0.000
+
+OGRFeature(gis_osm_places_free_1):14
+  fclass (String) = village
+  name (String) = Sant Pere
+1.653 42.579 0.000
+
+OGRFeature(gis_osm_places_free_1):15
+  fclass (String) = town
+  name (String) = Canillo
+1.598 42.567 0.000
+
+OGRFeature(gis_osm_places_free_1):16
+  fclass (String) = village
+  name (String) = Sornás
+1.527 42.565 0.000
+
+OGRFeature(gis_osm_places_free_1):17
+  fclass (String) = village
+  name (String) = Pas de la Casa
+1.733 42.545 0.000
+
+OGRFeature(gis_osm_places_free_1):18
+  fclass (String) = hamlet
+  name (String) = Sant Joan de Caselles
+1.616 42.571 0.000
+
+OGRFeature(gis_osm_places_free_1):19
+  fclass (String) = hamlet
+  name (String) = l'Aldosa de la Massana
+1.523 42.544 0.000
+
+OGRFeature(gis_osm_places_free_1):20
+  fclass (String) = village
+  name (String) = el Serrat
+1.539 42.620 0.000
+
+OGRFeature(gis_osm_places_free_1):21
+  fclass (String) = village
+  name (String) = Ransol
+1.637 42.582 0.000
+
+OGRFeature(gis_osm_places_free_1):22
+  fclass (String) = hamlet
+  name (String) = el Pui
+1.516 42.548 0.000
+
+OGRFeature(gis_osm_places_free_1):23
+  fclass (String) = village
+  name (String) = Vila
+1.567 42.532 0.000
+
+OGRFeature(gis_osm_places_free_1):24
+  fclass (String) = village
+  name (String) = Erts
+1.497 42.561 0.000
+
+OGRFeature(gis_osm_places_free_1):25
+  fclass (String) = village
+  name (String) = Ansalonga
+1.522 42.569 0.000
+
+OGRFeature(gis_osm_places_free_1):26
+  fclass (String) = village
+  name (String) = Engordany
+1.538 42.514 0.000
+
+OGRFeature(gis_osm_places_free_1):27
+  fclass (String) = village
+  name (String) = Arinsal
+1.484 42.572 0.000
+
+OGRFeature(gis_osm_places_free_1):28
+  fclass (String) = town
+  name (String) = Sant Julià de Lòria
+1.492 42.467 0.000
+
+OGRFeature(gis_osm_places_free_1):29
+  fclass (String) = hamlet
+  name (String) = les Bons
+1.584 42.539 0.000
+
+OGRFeature(gis_osm_places_free_1):30
+  fclass (String) = hamlet
+  name (String) = Puiol del Piu
+1.492 42.566 0.000
+
+OGRFeature(gis_osm_places_free_1):31
+  fclass (String) = village
+  name (String) = Fontaneda
+1.464 42.454 0.000
+
+OGRFeature(gis_osm_places_free_1):32
+  fclass (String) = village
+  name (String) = Pal
+1.476 42.546 0.000
+
+OGRFeature(gis_osm_places_free_1):33
+  fclass (String) = village
+  name (String) = Xixerella
+1.488 42.553 0.000
+
+OGRFeature(gis_osm_places_free_1):34
+  fclass (String) = village
+  name (String) = Aixovall
+1.489 42.477 0.000
+
+OGRFeature(gis_osm_places_free_1):35
+  fclass (String) = village
+  name (String) = Llorts
+1.526 42.596 0.000
+
+OGRFeature(gis_osm_places_free_1):36
+  fclass (String) = hamlet
+  name (String) = Mas d’Alins
+1.449 42.441 0.000
+
+OGRFeature(gis_osm_places_free_1):37
+  fclass (String) = village
+  name (String) = Soldeu
+1.668 42.577 0.000
+
+OGRFeature(gis_osm_places_free_1):38
+  fclass (String) = hamlet
+  name (String) = Mas de Ribafeta
+1.493 42.571 0.000
+
+OGRFeature(gis_osm_places_free_1):39
+  fclass (String) = village
+  name (String) = la Cortinada
+1.519 42.576 0.000
+
+OGRFeature(gis_osm_places_free_1):40
+  fclass (String) = village
+  name (String) = Llumeneres
+1.512 42.472 0.000
+
+OGRFeature(gis_osm_places_free_1):41
+  fclass (String) = village
+  name (String) = Arans
+1.518 42.583 0.000
+
+OGRFeature(gis_osm_places_free_1):42
+  fclass (String) = town
+  name (String) = La Massana
+1.516 42.544 0.000
+
+OGRFeature(gis_osm_places_free_1):43
+  fclass (String) = hamlet
+  name (String) = Escàs
+1.509 42.547 0.000
+
+OGRFeature(gis_osm_places_free_1):44
+  fclass (String) = village
+  name (String) = Segudet
+1.538 42.557 0.000
+
+OGRFeature(gis_osm_places_free_1):45
+  fclass (String) = town
+  name (String) = Encamp
+1.584 42.536 0.000
+
+OGRFeature(gis_osm_places_free_1):46
+  fclass (String) = town
+  name (String) = Les Escaldes
+1.540 42.509 0.000
+
+OGRFeature(gis_osm_places_free_1):47
+  fclass (String) = village
+  name (String) = Aixirivall
+1.502 42.462 0.000
+
+OGRFeature(gis_osm_places_free_1):48
+  fclass (String) = village
+  name (String) = Certers
+1.506 42.476 0.000
+
+OGRFeature(gis_osm_places_free_1):49
+  fclass (String) = village
+  name (String) = Meritxell
+1.591 42.554 0.000
+
+OGRFeature(gis_osm_places_free_1):50
+  fclass (String) = hamlet
+  name (String) = Super Pal
+1.473 42.543 0.000
+
+OGRFeature(gis_osm_places_free_1):51
+  fclass (String) = village
+  name (String) = Grau Roig
+1.702 42.537 0.000
+
+OGRFeature(gis_osm_places_free_1):52
+  fclass (String) = hamlet
+  name (String) = el Vilar
+1.519 42.575 0.000
+
+OGRFeature(gis_osm_places_free_1):53
+  fclass (String) = hamlet
+  name (String) = el Forn
+1.603 42.562 0.000
+
+OGRFeature(gis_osm_places_free_1):54
+  fclass (String) = hamlet
+  name (String) = el Cortalet
+1.526 42.539 0.000
+
+OGRFeature(gis_osm_places_free_1):55
+  fclass (String) = hamlet
+  name (String) = el Bosquet
+1.529 42.539 0.000
+
+OGRFeature(gis_osm_places_free_1):56
+  fclass (String) = hamlet
+  name (String) = Mas d'en Soler
+1.518 42.578 0.000
+
+OGRFeature(gis_osm_places_free_1):57
+  fclass (String) = locality
+  name (String) = Plaça del Poble
+1.523 42.544 0.000
+
+OGRFeature(gis_osm_places_free_1):58
+  fclass (String) = hamlet
+  name (String) = les Salines
+1.537 42.610 0.000
+
+OGRFeature(gis_osm_places_free_1):59
+  fclass (String) = locality
+  name (String) = Coma Extremera
+1.634 42.465 0.000
+
+OGRFeature(gis_osm_places_free_1):60
+  fclass (String) = locality
+  name (String) = el Rebollar
+1.462 42.435 0.000
+
+OGRFeature(gis_osm_places_free_1):61
+  fclass (String) = locality
+  name (String) = La Vaca Morta
+1.696 42.480 0.000
+
+OGRFeature(gis_osm_places_free_1):62
+  fclass (String) = locality
+  name (String) = l'Obaga
+1.493 42.432 0.000
+
+OGRFeature(gis_osm_places_free_1):63
+  fclass (String) = locality
+  name (String) = Calm Borrut
+1.557 42.454 0.000
+
+OGRFeature(gis_osm_places_free_1):64
+  fclass (String) = locality
+  name (String) = Roc d'Aïll
+1.443 42.460 0.000
+
+OGRFeature(gis_osm_places_free_1):65
+  fclass (String) = locality
+  name (String) = Torrent de la Font del' Altar
+1.419 42.535 0.000
+
+OGRFeature(gis_osm_places_free_1):66
+  fclass (String) = village
+  name (String) = Engolasters
+1.559 42.511 0.000
+
+OGRFeature(gis_osm_places_free_1):67
+  fclass (String) = village
+  name (String) = la Margineda
+1.491 42.487 0.000
+
+OGRFeature(gis_osm_places_free_1):68
+  fclass (String) = locality
+  name (String) = Crête d'Arial
+1.540 42.653 0.000
+
+OGRFeature(gis_osm_places_free_1):69
+  fclass (String) = locality
+  name (String) = Crête de Fontargente
+1.717 42.615 0.000
+
+OGRFeature(gis_osm_places_free_1):70
+  fclass (String) = locality
+  name (String) = la Tosa de les Mussoles
+1.683 42.622 0.000
+
+OGRFeature(gis_osm_places_free_1):71
+  fclass (String) = locality
+  name (String) = Agulles d'Engolasters
+1.573 42.516 0.000
+
+OGRFeature(gis_osm_places_free_1):72
+  fclass (String) = locality
+  name (String) = Coma Estremera
+1.692 42.514 0.000
+
+OGRFeature(gis_osm_places_free_1):73
+  fclass (String) = locality
+  name (String) = Els Collels
+1.698 42.515 0.000
+
+OGRFeature(gis_osm_places_free_1):74
+  fclass (String) = locality
+  name (String) = Bosc dels Collels
+1.700 42.524 0.000
+
+OGRFeature(gis_osm_places_free_1):75
+  fclass (String) = locality
+  name (String) = Bosc del Peu dels Pessons
+1.694 42.527 0.000
+
+OGRFeature(gis_osm_places_free_1):76
+  fclass (String) = locality
+  name (String) = Cretes de Gargantillar
+1.655 42.506 0.000
+
+OGRFeature(gis_osm_places_free_1):77
+  fclass (String) = locality
+  name (String) = Pleta de les Bacives
+1.650 42.497 0.000
+
+OGRFeature(gis_osm_places_free_1):78
+  fclass (String) = locality
+  name (String) = Coll de Colts
+1.775 42.581 0.000
+
+OGRFeature(gis_osm_places_free_1):79
+  fclass (String) = locality
+  name (String) = Picnic del Travenc
+1.697 42.601 0.000
+
+OGRFeature(gis_osm_places_free_1):80
+  fclass (String) = locality
+  name (String) = Port Dret
+1.700 42.574 0.000
+
+OGRFeature(gis_osm_places_free_1):81
+  fclass (String) = locality
+  name (String) = Pont de la Baladosa
+1.688 42.602 0.000
+
+OGRFeature(gis_osm_places_free_1):82
+  fclass (String) = locality
+  name (String) = Clot Sord
+1.656 42.600 0.000
+
+OGRFeature(gis_osm_places_free_1):83
+  fclass (String) = locality
+  name (String) = La Planada
+1.598 42.608 0.000
+
+OGRFeature(gis_osm_places_free_1):84
+  fclass (String) = locality
+  name (String) = Planells de Caraup
+1.650 42.611 0.000
+
+OGRFeature(gis_osm_places_free_1):85
+  fclass (String) = locality
+  name (String) = Circ de Pessons
+1.666 42.510 0.000
+
+OGRFeature(gis_osm_places_free_1):86
+  fclass (String) = locality
+  name (String) = Pla de l'Estany
+1.461 42.592 0.000
+
+OGRFeature(gis_osm_places_free_1):87
+  fclass (String) = locality
+  name (String) = Jardí de Riba
+1.643 42.568 0.000
+
+OGRFeature(gis_osm_places_free_1):88
+  fclass (String) = locality
+  name (String) = Obac d'Incles
+1.684 42.596 0.000
+
+OGRFeature(gis_osm_places_free_1):89
+  fclass (String) = locality
+  name (String) = Obaga de Juclar
+1.700 42.612 0.000
+
+OGRFeature(gis_osm_places_free_1):90
+  fclass (String) = locality
+  name (String) = Pleta de la Cabana Sorda
+1.681 42.607 0.000
+
+OGRFeature(gis_osm_places_free_1):91
+  fclass (String) = locality
+  name (String) = Solana de Juclar
+1.700 42.606 0.000
+
+OGRFeature(gis_osm_places_free_1):92
+  fclass (String) = locality
+  name (String) = Tosa d'Incles
+1.691 42.586 0.000
+
+OGRFeature(gis_osm_places_free_1):93
+  fclass (String) = locality
+  name (String) = Tosa de Juclar
+1.715 42.599 0.000
+
+OGRFeature(gis_osm_places_free_1):94
+  fclass (String) = locality
+  name (String) = Obac d'Envalira
+1.676 42.562 0.000
+
+OGRFeature(gis_osm_places_free_1):95
+  fclass (String) = locality
+  name (String) = Obac de Canillo
+1.631 42.573 0.000
+
+OGRFeature(gis_osm_places_free_1):96
+  fclass (String) = locality
+  name (String) = Obac de Soldeu
+1.665 42.571 0.000
+
+OGRFeature(gis_osm_places_free_1):97
+  fclass (String) = locality
+  name (String) = Obac del Tarter
+1.647 42.572 0.000
+
+OGRFeature(gis_osm_places_free_1):98
+  fclass (String) = village
+  name (String) = les Bordes d'Envalira
+1.685 42.560 0.000
+
+OGRFeature(gis_osm_places_free_1):99
+  fclass (String) = locality
+  name (String) = Carena de Pessons
+1.659 42.515 0.000
+
+OGRFeature(gis_osm_places_free_1):100
+  fclass (String) = locality
+  name (String) = Cap dels Agols
+1.623 42.500 0.000
+
+OGRFeature(gis_osm_places_free_1):101
+  fclass (String) = locality
+  name (String) = Canal de la Bova
+1.588 42.495 0.000
+
+OGRFeature(gis_osm_places_free_1):102
+  fclass (String) = locality
+  name (String) = Canal del Pletiu
+1.583 42.498 0.000
+
+OGRFeature(gis_osm_places_free_1):103
+  fclass (String) = locality
+  name (String) = Camp Borrut
+1.560 42.449 0.000
+
+OGRFeature(gis_osm_places_free_1):104
+  fclass (String) = locality
+  name (String) = Pleta dels Borrencs
+1.679 42.591 0.000
+
+OGRFeature(gis_osm_places_free_1):105
+  fclass (String) = locality
+  name (String) = Pleta de les Planes
+1.507 42.640 0.000
+
+OGRFeature(gis_osm_places_free_1):106
+  fclass (String) = locality
+  name (String) = Pla de les Pedres
+1.680 42.553 0.000
+
+OGRFeature(gis_osm_places_free_1):107
+  fclass (String) = locality
+  name (String) = els Espiolets
+1.665 42.563 0.000
+
+OGRFeature(gis_osm_places_free_1):108
+  fclass (String) = locality
+  name (String) = Aixás
+1.467 42.486 0.000
+
+OGRFeature(gis_osm_places_free_1):109
+  fclass (String) = locality
+  name (String) = Coma d'Arc
+1.482 42.632 0.000
+
+OGRFeature(gis_osm_places_free_1):110
+  fclass (String) = locality
+  name (String) = Planells de Rialb
+1.557 42.646 0.000
+
+OGRFeature(gis_osm_places_free_1):111
+  fclass (String) = locality
+  name (String) = Prat dels Orris
+1.633 42.537 0.000
+
+OGRFeature(gis_osm_places_free_1):112
+  fclass (String) = locality
+  name (String) = pleta de Duedra
+1.566 42.621 0.000
+
+OGRFeature(gis_osm_places_free_1):113
+  fclass (String) = locality
+  name (String) = Planell dels Beços
+1.561 42.621 0.000
+
+OGRFeature(gis_osm_places_free_1):114
+  fclass (String) = locality
+  name (String) = estret de l'Estanyò
+1.571 42.614 0.000
+
+OGRFeature(gis_osm_places_free_1):115
+  fclass (String) = locality
+  name (String) = saleres de l'Estanyò
+1.573 42.613 0.000
+
+OGRFeature(gis_osm_places_free_1):116
+  fclass (String) = locality
+  name (String) = pleta de la Rabassa
+1.560 42.632 0.000
+
+OGRFeature(gis_osm_places_free_1):117
+  fclass (String) = locality
+  name (String) = pas del Monjo
+1.561 42.639 0.000
+
+
+
+----- EOF -----
