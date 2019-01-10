@@ -707,7 +707,7 @@ PHP_MINIT_FUNCTION(ogr)
 
     le_FeatureDefnRef = zend_register_list_destructors_ex
                               (ogr_free_FeatureDefnRef,
-                               NULL, "OGRFeatureDefn",
+                               NULL, "OGRFeatureDefnRef",
                                module_number);
 
     le_Feature = zend_register_list_destructors_ex(ogr_free_Feature,
@@ -2224,8 +2224,8 @@ PHP_FUNCTION(ogr_fld_destroy)
         return;
 
     if (hfield) {
-        ZEND_FETCH_RESOURCE(hFieldDefn, OGRFieldDefnH, &hfield, hfield_id,
-                            "OGRFieldDefn", le_FieldDefn);
+        ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfield, hfield_id,
+                            "OGRFieldDefn", le_FieldDefn, le_FieldDefnRef);
     }
 
     if(hFieldDefn)
