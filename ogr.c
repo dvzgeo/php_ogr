@@ -2251,7 +2251,7 @@ PHP_FUNCTION(ogr_fld_setname)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn)
@@ -2275,7 +2275,7 @@ PHP_FUNCTION(ogr_fld_getnameref)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2301,7 +2301,7 @@ PHP_FUNCTION(ogr_fld_gettype)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2327,7 +2327,7 @@ PHP_FUNCTION(ogr_fld_settype)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2351,7 +2351,7 @@ PHP_FUNCTION(ogr_fld_getjustify)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2377,7 +2377,7 @@ PHP_FUNCTION(ogr_fld_setjustify)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2401,7 +2401,7 @@ PHP_FUNCTION(ogr_fld_getwidth)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2428,7 +2428,7 @@ PHP_FUNCTION(ogr_fld_setwidth)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2452,7 +2452,7 @@ PHP_FUNCTION(ogr_fld_getprecision)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2477,7 +2477,7 @@ PHP_FUNCTION(ogr_fld_setprecision)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh,
-                             hfieldh_id, "OGFieldDefn", le_FieldDefn,
+                             hfieldh_id, "OGRFieldDefn", le_FieldDefn,
                              le_FieldDefnRef);
     }
     if (hFieldDefn){
@@ -2510,7 +2510,7 @@ PHP_FUNCTION(ogr_fld_set)
 
     if (hfieldh) {
         ZEND_FETCH_RESOURCE2(hFieldDefn, OGRFieldDefnH, &hfieldh, hfieldh_id,
-                             "OGFieldDefn", le_FieldDefn, le_FieldDefnRef);
+                             "OGRFieldDefn", le_FieldDefn, le_FieldDefnRef);
     }
     if (hFieldDefn){
         OGR_Fld_Set(hFieldDefn, strnamein, itypein, nwidthin, nprecisionin,
@@ -2597,7 +2597,7 @@ PHP_FUNCTION(ogr_fd_getname)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2623,7 +2623,7 @@ PHP_FUNCTION(ogr_fd_getfieldcount)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2650,7 +2650,7 @@ PHP_FUNCTION(ogr_fd_getfielddefn)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2679,7 +2679,7 @@ PHP_FUNCTION(ogr_fd_getfieldindex)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2707,7 +2707,7 @@ PHP_FUNCTION(ogr_fd_addfielddefn)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hnewdefn) {
@@ -2735,7 +2735,7 @@ PHP_FUNCTION(ogr_fd_getgeomtype)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
 
@@ -2764,7 +2764,7 @@ PHP_FUNCTION(ogr_fd_setgeomtype)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2795,7 +2795,7 @@ PHP_FUNCTION(ogr_fd_reference)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2819,7 +2819,7 @@ PHP_FUNCTION(ogr_fd_dereference)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2843,7 +2843,7 @@ PHP_FUNCTION(ogr_fd_getreferencecount)
 
     if (hdefin) {
         ZEND_FETCH_RESOURCE2(hFeatureDefn, OGRFeatureDefnH, &hdefin,
-                             hdefin_id, "OGRFeature", le_FeatureDefn,
+                             hdefin_id, "OGRFeatureDefn", le_FeatureDefn,
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn){
@@ -2954,7 +2954,7 @@ PHP_FUNCTION(ogr_f_setgeometrydirectly)
     }
     if (hgeomin) {
         ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeomin, hgeomin_id,
-                             "OGRFeature", le_Geometry, le_GeometryRef);
+                             "OGRGeometry", le_Geometry, le_GeometryRef);
     }
 
     if (hGeometry && hFeat)
@@ -2998,7 +2998,7 @@ PHP_FUNCTION(ogr_f_setgeometry)
     }
     if (hgeomin) {
         ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeomin, hgeomin_id,
-                             "OGRFeature", le_Geometry, le_GeometryRef);
+                             "OGRGeometry", le_Geometry, le_GeometryRef);
     }
 
     if (hGeometry && hFeat)
