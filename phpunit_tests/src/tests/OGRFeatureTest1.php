@@ -5,7 +5,6 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
     public $strPathToDumpData;
     public $strTmpDumpFile;
     public $strPathToOutputData;
-    public $strPathToStandardData;
     public $strPathToData;
     public $bUpdate;
     public $hDS;
@@ -15,10 +14,15 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
     public $eGeometryType;
     public $strDestDataSource;
 
+    public static function setUpBeforeClass()
+    {
+        OGRRegisterAll();
+    }
+
+
     public function setUp()
     {
-        $this->strPathToData = "./data/mif";
-        $this->strPathToStandardData = "./data/testcase/";
+        $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
@@ -32,8 +36,16 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-        $iLayer = 3;
-        $this->hLayer = OGR_DS_GetLayer($this->hDS, $iLayer);
+        $this->assertNotNull(
+            $this->hDS,
+            "Could not open datastore in " . $this->strPathToData
+        );
+        $iLayer = "gis_osm_places_free_1";
+        $this->hLayer = OGR_DS_GetLayerByName($this->hDS, $iLayer);
+        $this->assertNotNull(
+            $this->hLayer,
+            "Could not retrieve layer " . $iLayer
+        );
     }
 
     public function tearDown()
@@ -43,7 +55,6 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
         delete_directory($this->strPathToOutputData);
 
         unset($this->strPathToData);
-        unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
         unset($this->strTmpDumpFile);
         unset($this->bUpdate);
@@ -60,13 +71,15 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_F_SetGetGeometry()
     {
-        $strStandardFile = "testOGR_F_SetGetGeometry";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
         $iSrcFID = 2;
         $hSrcF = OGR_L_GetFeature($this->hLayer, $iSrcFID);
         $hSrcGeom = OGR_F_GetGeometryRef($hSrcF);
 
-        $hDriver = OGRGetDriver(5);
+        $hDriver = OGRGetDriverByName("ESRI Shapefile");
+
+        $this->assertNotNull($hDriver, "Could not get driver");
 
         $hSpatialRef = null;
 
@@ -74,6 +87,11 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
             $hDriver,
             $this->strPathToOutputData . $this->strDestDataSource,
             null /*Options*/
+        );
+
+        $this->assertNotNull(
+            $hDestDS,
+            "Could not create datasource in " . $this->strPathToOutputData . $this->strDestDataSource
         );
 
         $hDestLayer = OGR_DS_CreateLayer(
@@ -95,10 +113,8 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
 
         $fpOut = fopen($this->strPathToOutputData . $this->strTmpDumpFile, "w");
 
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
+
         OGR_F_DumpReadable($fpOut, $hDestFeature);
 
         OGR_F_Destroy($hDestFeature);
@@ -106,14 +122,10 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iReval
-        );
-
-        $this->assertFalse(
-            $iRetval,
-            "Problem with OGR_F_SetGeometry() or OGR_F_GetGeometryRef(): Files comparison did not matched.\n"
+        $this->assertFileEquals(
+            $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "Problem with OGR_F_SetGeometry() or OGR_F_GetGeometryRef(): Files comparison did not matched."
         );
 
         OGR_DS_Destroy($hDestDS);
@@ -125,7 +137,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_F_Clone()
     {
-        $strStandardFile = "testOGR_F_Clone";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
         $iFID1 = 2;
         $hF1 = OGR_L_GetFeature($this->hLayer, $iFID1);
 
@@ -136,10 +148,8 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
             "w"
         );
 
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
+
         OGR_F_DumpReadable($fpOut, $hF2);
 
         OGR_F_Destroy($hF1);
@@ -150,7 +160,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
         $this->assertFileEquals(
             $this->strPathToStandardData . $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
-            "Problem with OGR_F_Clone() : Files comparison did not matched.\n"
+            "Problem with OGR_F_Clone() : Files comparison did not matched."
         );
     }
 
@@ -201,7 +211,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
         $hF = OGR_L_GetFeature($this->hLayer, $iFID);
 
         $nFieldCount = OGR_F_GetFieldCount($hF);
-        $expected = 9;
+        $expected = 5;
         $this->AssertEquals(
             $expected,
             $nFieldCount,
@@ -216,7 +226,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_F_GetFieldDefnRef()
     {
-        $strStandardFile = "testOGR_F_GetFieldDefnRef";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
         $iFID = 2;
         $hF = OGR_L_GetFeature($this->hLayer, $iFID);
         $iField = 2;
@@ -227,24 +237,18 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
             "w"
         );
 
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
+
         OGRFieldDefnDump($fpOut, $hFieldDefn);
 
         OGR_F_Destroy($hF);
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iReval
-        );
-
-        $this->assertFalse(
-            $iRetval,
-            "Problem with OGR_F_GetFieldDefnRef() : Files comparison did not matched.\n"
+        $this->assertFileEquals(
+            $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "Problem with OGR_F_GetFieldDefnRef() : Files comparison did not matched."
         );
     }
 
@@ -256,9 +260,9 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
     {
         $iFID = 5;
         $hF = OGR_L_GetFeature($this->hLayer, $iFID);
-        $strFieldName = "GRID_ID";
+        $strFieldName = "population";
         $iField = OGR_F_GetFieldIndex($hF, $strFieldName);
-        $expected = 6;
+        $expected = 3;
         $this->AssertEquals(
             $expected,
             $iField,
@@ -274,7 +278,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
     {
         $iFID = 5;
         $hF = OGR_L_GetFeature($this->hLayer, $iFID);
-        $strFieldName = "GRID";
+        $strFieldName = "foobar";
         $iField = OGR_F_GetFieldIndex($hF, $strFieldName);
         $expected = -1;
         $this->AssertEquals(
