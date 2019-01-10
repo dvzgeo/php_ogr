@@ -1702,7 +1702,7 @@ PHP_FUNCTION(ogr_g_transformto)
 
 /* }}} */
 
-/* {{{ proto int ogr_g_intersect(resource hgeom, resource hothergeom )
+/* {{{ proto bool ogr_g_intersect(resource hgeom, resource hothergeom )
 */
 PHP_FUNCTION(ogr_g_intersect)
 {
@@ -1728,13 +1728,13 @@ PHP_FUNCTION(ogr_g_intersect)
                              le_GeometryRef);
     }
     if (hOtherGeometry && hGeometry){
-        RETURN_LONG(OGR_G_Intersects(hGeometry, hOtherGeometry));
+        RETURN_BOOL(OGR_G_Intersects(hGeometry, hOtherGeometry));
     }
 }
 
 /* }}} */
 
-/* {{{ proto int ogr_g_equal(resource hgeom, resource hothergeom )
+/* {{{ proto bool ogr_g_equal(resource hgeom, resource hothergeom )
 */
 PHP_FUNCTION(ogr_g_equal)
 {
@@ -1759,7 +1759,7 @@ PHP_FUNCTION(ogr_g_equal)
                              le_GeometryRef);
     }
     if (hOtherGeometry && hGeometry){
-        RETURN_LONG(OGR_G_Equals(hGeometry, hOtherGeometry));
+        RETURN_BOOL(OGR_G_Equals(hGeometry, hOtherGeometry));
     }
 }
 
@@ -3069,7 +3069,7 @@ PHP_FUNCTION(ogr_f_clone)
 
 /* }}} */
 
-/* {{{ proto int ogr_f_equal(resource hfeature, resource hotherfeature)
+/* {{{ proto bool ogr_f_equal(resource hfeature, resource hotherfeature)
     */
 PHP_FUNCTION(ogr_f_equal)
 {
@@ -3093,7 +3093,7 @@ PHP_FUNCTION(ogr_f_equal)
     }
 
     if (hOtherFeat && hFeat){
-        RETURN_LONG(OGR_F_Equal(hFeat, hOtherFeat));
+        RETURN_BOOL(OGR_F_Equal(hFeat, hOtherFeat));
     }
 }
 
