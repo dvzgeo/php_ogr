@@ -3,7 +3,6 @@
 class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
-    public $strPathToStandardData;
     public $strPathToOutputData;
     public $strTmpDumpFile;
     public $bUpdate;
@@ -11,21 +10,24 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
     public $strDestDataSource;
     public $strOutputLayer;
 
+    public static function setUpBeforeClass()
+    {
+        OGRRegisterAll();
+    }
+
+
     // called before the test functions will be executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
     // here
     public function setUp()
     {
-        $this->strPathToData = "./data/mif";
-        $this->strPathToStandardData = "./data/testcase/";
+        $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
         $this->eGeometryType = wkbUnknown;
         $this->strDestDataSource = "DSOutput";
         $this->strOutputLayer = "OutputLayer";
-
-        OGRRegisterAll();
     }
     // called after the test functions are executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
@@ -35,7 +37,6 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
         delete_directory($this->strPathToOutputData);
         // delete your instance
         unset($this->strPathToData);
-        unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
         unset($this->strTmpDumpFile);
         unset($this->bUpdate);
@@ -50,9 +51,7 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_F_CreateDestroy0()
     {
-        $strStandardFile = "testOGR_F_CreateDestroy0.std";
-
-        $hDriver = OGRGetDriver(5);
+        $hDriver = OGRGetDriverByName('ESRI Shapefile');
 
         $hSpatialRef = null;
 
@@ -110,18 +109,21 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_F_GetDefnRef0()
     {
-        OGRRegisterAll();
-
         $nFeatureId = 10;
 
-        $strStandardFile = "testOGR_F_GetDefnRef0.std";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
-        $hDriver = OGRGetDriver(5);
+        $hDriver = OGRGetDriverByName('ESRI Shapefile');
 
         $hExistingDataSource = OGR_Dr_Open(
             $hDriver,
             $this->strPathToData,
             $this->bUpdate
+        );
+
+        $this->assertNotNull(
+            $hExistingDataSource,
+            "Problem opening existing data from " . $this->strPathToData
         );
 
         $fpOut = fopen(
@@ -134,7 +136,7 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
             return false;
         }
 
-        $hLayer = OGR_DS_GetLayer($hExistingDataSource, 5);
+        $hLayer = OGR_DS_GetLayerByName($hExistingDataSource, "gis_osm_places_free_1");
 
         $hFeatureDefn = OGR_L_GetLayerDefn($hLayer);
 
@@ -157,13 +159,9 @@ class OGRFeatureTest0 extends PHPUnit_Framework_TestCase
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_L_GetLayerDefn(), or OGR_F_GetDefnRef(): files comparison did not match.\n"
         );
     }
