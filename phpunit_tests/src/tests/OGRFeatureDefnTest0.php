@@ -22,7 +22,8 @@ class OGRFeatureDefnTest0 extends PHPUnit_Framework_TestCase
         $strNameIn = "Lake";
         $hFeatureDefn = OGR_FD_Create($strNameIn);
         $this->AssertNotNull(
-            $hFeatureDefn, "Problem with OGR_FD_Create(): handle should not be NULL."
+            $hFeatureDefn,
+            "Problem with OGR_FD_Create(): handle should not be NULL."
         );
 
         OGR_FD_Destroy($hFeatureDefn);
@@ -32,7 +33,9 @@ class OGRFeatureDefnTest0 extends PHPUnit_Framework_TestCase
         $actual = get_resource_type($hFeatureDefn);
 
         $this->assertEquals(
-            $expected, $actual, "Problem with OGR_FD_Destroy():  Feature definition resource is supposed to be freed after OGR_FD_Destroy().\n"
+            $expected,
+            $actual,
+            "Problem with OGR_FD_Destroy():  Feature definition resource is supposed to be freed after OGR_FD_Destroy().\n"
         );
     }
 
@@ -49,7 +52,9 @@ class OGRFeatureDefnTest0 extends PHPUnit_Framework_TestCase
         $expected = $strNameIn;
 
         $this->AssertEquals(
-            $expected, $strNameOut, "Problem with OGR_FD_GetName()."
+            $expected,
+            $strNameOut,
+            "Problem with OGR_FD_GetName()."
         );
 
         OGR_FD_Destroy($hFeatureDefn);
@@ -82,10 +87,12 @@ class OGRFeatureDefnTest0 extends PHPUnit_Framework_TestCase
 
         $expected = $strFieldName;
         $this->AssertEquals(
-            $expected, $strFieldName, "Problem with OGR_FD_AddFieldDefn() or OGR_FD_GetFieldDefn()."
+            $expected,
+            $strFieldName,
+            "Problem with OGR_FD_AddFieldDefn() or OGR_FD_GetFieldDefn()."
         );
 
-//        OGR_Fld_Destroy($hFieldDefn);
+        OGR_Fld_Destroy($hFieldDefn);
 
         OGR_FD_Destroy($hFeatureDefn);
     }
