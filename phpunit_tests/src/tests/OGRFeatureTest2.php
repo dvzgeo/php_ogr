@@ -4,7 +4,6 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
 {
     public $strPathToOutputData;
     public $strTmpDumpFile;
-    public $strPathToStandardData;
     public $strPathToData;
     public $bUpdate;
     public $hDS;
@@ -13,10 +12,15 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
     public $hOGRSFDriver;
     public $strOutputLayer;
 
+    public static function setUpBeforeClass()
+    {
+        OGRRegisterAll();
+    }
+
+
     public function setUp()
     {
-        $this->strPathToData = "./data/mif";
-        $this->strPathToStandardData = "./data/testcase/";
+        $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
@@ -28,9 +32,16 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-
-        $iLayer = 3;
-        $this->hLayer = OGR_DS_GetLayer($this->hDS, $iLayer);
+        $this->assertNotNull(
+            $this->hDS,
+            "Could not open datastore in " . $this->strPathToData
+        );
+        $iLayer = "gis_osm_places_free_1";
+        $this->hLayer = OGR_DS_GetLayerByName($this->hDS, $iLayer);
+        $this->assertNotNull(
+            $this->hLayer,
+            "Could not retrieve layer " . $iLayer
+        );
     }
 
     public function tearDown()
@@ -40,8 +51,6 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
         delete_directory($this->strPathToOutputData);
 
         unset($this->strPathToData);
-        unset($this->strPathToStandardData);
-        unset($this->strPathToDumpData);
         unset($this->strTmpDumpFile);
         unset($this->bUpdate);
         unset($this->strDestDataSource);
@@ -92,10 +101,10 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
 
     public function testOGR_F_GetUnsetField1()
     {
-        $strStandardFile = "testOGR_F_UnsetField1";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
-        $iDriver = 5;
-        $hDriver = OGRGetDriver($iDriver);
+        $iDriver = "ESRI Shapefile";
+        $hDriver = OGRGetDriverByName($iDriver);
 
         $astrOptions = null;
         $hDestDS = OGR_Dr_CreateDataSource(
@@ -104,10 +113,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             $astrOptions
         );
 
-        if ($hDestDS == null) {
-            printf("Unable to create destination data source\n");
-            return false;
-        }
+        $this->assertNotNull($hDestDS, "Unable to create destination data source");
 
         $hDestLayer = OGR_DS_CreateLayer(
             $hDestDS,
@@ -130,11 +136,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "w"
         );
-
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
         OGR_F_DumpReadable($fpOut, $hF);
 
         OGR_F_UnsetField($hF, $iField);
@@ -146,14 +148,10 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iReval
-        );
-
-        $this->assertFalse(
-            $iRetval,
-            "Problem with OGR_F_UnsetField() Files comparison did not matched.\n"
+        $this->assertFileEquals(
+            $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "Problem with OGR_F_UnsetField() Files comparison did not matched."
         );
 
         OGR_DS_Destroy($hDestDS);
@@ -165,18 +163,10 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
 
     public function testOGR_F_GetSetFieldRaw()
     {
-        $strStandardFile = "testOGR_F_GetSetFieldRaw";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
-        $iFID = 2;
-        $hSrcF = OGR_L_GetFeature($this->hLayer, $iFID);
-        $iField = 2;
-        $hField = OGR_F_GetRawFieldRef($hSrcF, $iField);
-        $this->AssertNotNull(
-            $hField,
-            "Problem with OGR_F_GetRawFieldRef(): handle should not be NULL."
-        );
-        $iDriver = 5;
-        $hDriver = OGRGetDriver($iDriver);
+        $iDriver = 'ESRI Shapefile';
+        $hDriver = OGRGetDriverByName($iDriver);
 
         $astrOptions = null;
         $hDestDS = OGR_Dr_CreateDataSource(
@@ -185,10 +175,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             $astrOptions
         );
 
-        if ($hDestDS == null) {
-            printf("Unable to create destination data source\n");
-            return false;
-        }
+        $this->assertNotNull($hDestDS, "Unable to create destination data source");
 
         $hDestLayer = OGR_DS_CreateLayer(
             $hDestDS,
@@ -198,15 +185,20 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             null /*Options*/
         );
 
-        $iLayer = 0;
-        $hDestLayer = OGR_DS_GetLayer($hDestDS, $iLayer);
-
         $hFieldDefn = OGR_Fld_Create("LPOLY_", OFTInteger);
         $eErr = OGR_L_CreateField($hDestLayer, $hFieldDefn, 0 /*bApproxOK*/);
 
         $hFeatureDefn = OGR_L_GetLayerDefn($hDestLayer);
-        $hDestF = OGR_F_Create($hFeatureDefn);
+        $hSrcF = OGR_F_Create($hFeatureDefn);
         $iField = 0;
+        OGR_F_SetFieldInteger($hSrcF, $iField, 42);
+        $hField = OGR_F_GetRawFieldRef($hSrcF, $iField);
+        $this->AssertNotNull(
+            $hField,
+            "Problem with OGR_F_GetRawFieldRef(): handle should not be NULL."
+        );
+
+        $hDestF = OGR_F_Create($hFeatureDefn);
         OGR_F_SetFieldRaw($hDestF, $iField, $hField);
 
         $fpOut = fopen(
@@ -214,10 +206,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             "w"
         );
 
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
         OGR_F_DumpReadable($fpOut, $hDestF);
 
         OGR_F_Destroy($hSrcF);
@@ -226,9 +215,8 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
         fclose($fpOut);
 
         OGR_DS_Destroy($hDestDS);
-
         $this->assertFileEquals(
-            $this->strPathToStandardData . $strStandardFile,
+            $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_F_SetFieldRaw() or OGR_F_GetRawFieldRef(): Files comparison did not matched.\n"
         );

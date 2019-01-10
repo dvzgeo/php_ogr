@@ -1,0 +1,6 @@
+OGRFeature(OutputLayer):-1
+  id (Integer) = 25
+
+OGRFeature(OutputLayer):-1
+  id (Integer) = (null)
+
