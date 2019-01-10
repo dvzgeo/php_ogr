@@ -673,3 +673,25 @@ function delete_directory($path)
     }
     return rmdir($path);
 }
+
+/************************************************************************/
+/*                                test_data_path                        */
+/************************************************************************/
+/**
+ * Get path to test data
+ *
+ * @param mixed $what Array of path components, or individual path
+ *                    components as individual arguments
+ *
+ * @return string
+ */
+function test_data_path($what = null)
+{
+    $components = array(__DIR__, '..', 'data');
+    if (is_array($what)) {
+        $components = array_merge($components, $what);
+    } elseif (func_num_args() > 0) {
+        $components = array_merge($components, func_get_args());
+    }
+    return implode(DIRECTORY_SEPARATOR, $components);
+}
