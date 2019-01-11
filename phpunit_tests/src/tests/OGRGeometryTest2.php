@@ -8,41 +8,48 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
 
     public $strPathToOutputData;
     public $strTmpDumpFile;
-    public $strPathToStandardData;
     public $strPathToData;
     public $bUpdate;
     public $strDestDataSource;
     public $strOutputLayer;
     public $eGeometryType;
 
+    public static function setUpBeforeClass()
+    {
+        OGRRegisterAll();
+    }
+
     public function setUp()
     {
         /*Create a polygon.*/
         $eType = wkbPolygon;
         $this->hContainer = OGR_G_CreateGeometry($eType);
-
+        $this->assertNotNull($this->hContainer, "Could not create geometry");
 
         $eType = wkbLinearRing;
         $this->hRing1 = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($this->hRing1, "Could not create linear ring");
         OGR_G_AddPoint($this->hRing1, 123.45, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing1, 12.34, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing1, 12.34, 45.67, 0.0);
         OGR_G_AddPoint($this->hRing1, 123.45, 45.67, 0.0);
         OGR_G_AddPoint($this->hRing1, 123.45, 456.78, 0.0);
         $eErr = OGR_G_AddGeometry($this->hContainer, $this->hRing1);
+        $this->assertEquals(OGRERR_NONE, $eErr, "Could not add exterior ring to geometry");
 
         $eType = wkbLinearRing;
         $this->hRing2 = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($this->hRing2, "Could not create linear ring");
         OGR_G_AddPoint($this->hRing2, 123.45, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing2, 100.0, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing2, 100.0, 355.25, 0.0);
         OGR_G_AddPoint($this->hRing2, 123.45, 355.25, 0.0);
         OGR_G_AddPoint($this->hRing2, 123.45, 456.78, 0.0);
         $eErr = OGR_G_AddGeometry($this->hContainer, $this->hRing2);
+        $this->assertEquals(OGRERR_NONE, $eErr, "Could not add exterior ring to geometry");
 
         /*Prepare to write temporary data for comparison.*/
-        $this->strPathToData = "./data/mifwgs1984";
-        $this->strPathToStandardData = "./data/testcase/";
+        $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
         $this->bUpdate = false;
@@ -64,7 +71,6 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
         unset($this->hContainer);
 
         unset($this->strPathToData);
-        unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
         unset($this->strTmpDumpFile);
         unset($this->bUpdate);
@@ -74,17 +80,39 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
     }
 
     /***********************************************************************
-     *                            testOGR_G_GetAssignSpatialRef()
+     *                            testOGR_G_GetSpatialRef()
      ************************************************************************/
 
-    public function testOGR_G_GetAssignSpatialRef()
+    public function testOGR_G_GetSpatialRef()
     {
-        $strStandardFile = "testOGR_G_GetAssignSpatialRef.std";
-
         $hSrcDriver = null;
         $hSrcDS = OGROpen($this->strPathToData, $this->bUpdate, $hSrcDriver);
+        $this->assertNotNull($hSrcDS, "Could not open source dataset");
 
         $hSrcLayer = OGR_DS_GetLayer($hSrcDS, 0);
+        $this->assertNotNull($hSrcLayer, "Could not retrieve source layer");
+
+        $hSrcSRS = OGR_L_GetSpatialRef($hSrcLayer);
+        $this->AssertNotNull(
+            $hSrcSRS,
+            "Problem with OGR_L_GetSpatialRef(): handle is not supposed to be NULL."
+        );
+    }
+
+    /***********************************************************************
+     *                            testOGR_G_AssignSpatialReference()
+     ************************************************************************/
+
+    public function testOGR_G_AssignSpatialReference()
+    {
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".prj");
+
+        $hSrcDS = OGROpen($this->strPathToData, $this->bUpdate, $hSrcDriver);
+        $this->assertNotNull($hSrcDS, "Could not open source dataset");
+
+        $hSrcLayer = OGR_DS_GetLayer($hSrcDS, 0);
+        $this->assertNotNull($hSrcLayer, "Could not retrieve source layer");
+
 
         $hSrcSRS = OGR_L_GetSpatialRef($hSrcLayer);
         $this->AssertNotNull(
@@ -93,26 +121,26 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
         );
 
         $iGeometry = 1;
-        $hDestGeometry = OGR_G_GetGeometryRef($this->hContainer, $iGeometry);
-        OGR_G_AssignSpatialReference($hDestGeometry, $hSrcSRS);
+        OGR_G_AssignSpatialReference($this->hContainer, $hSrcSRS);
 
-        $hDestSRS = OGR_G_GetSpatialReference($hDestGeometry);
+        $hDestSRS = OGR_G_GetSpatialReference($this->hContainer);
         $this->AssertNotNull(
             $hDestSRS,
-            "Problem with OGR_G_AssignSpatialReference orOGR_G_GetSpatialReference(): handle is not supposed to be NULL."
+            "Problem with OGR_G_AssignSpatialReference or OGR_G_GetSpatialReference(): handle is not supposed to be NULL."
         );
 
         /*Write spatial reference to a layer of a data source
           will permit to see the result.  There is no way now
           to see the spatial reference of a single geometry. */
 
-        $hDestDriver = OGRGetDriver(5);
+        $hDestDriver = OGRGetDriverByName("ESRI Shapefile");
+        $this->assertNotNull($hDestDriver, "Could not open destination driver");
         $hDestDS = OGR_Dr_CreateDataSource(
             $hDestDriver,
             $this->strPathToOutputData . $this->strDestDataSource,
             null /*Options*/
         );
-
+        $this->assertNotNull($hDestDS, "Could not create target datasource");
 
         $hDestLayer = OGR_DS_CreateLayer(
             $hDestDS,
@@ -121,40 +149,34 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
             $this->eGeometryType,
             null /*Options*/
         );
+        $this->assertNotNull($hDestLayer, "Could not create target layer");
 
         $hFDefn = OGR_L_GetLayerDefn($hSrcLayer);
+        $this->assertNotNull($hFDefn, "Could not get target layer definition");
 
         $iField = 0;
-        if (OGR_L_CreateField(
-                $hDestLayer,
-                OGR_FD_GetFieldDefn($hFDefn, $iField),
-                0 /*bApproOK*/
-            ) != OGRERR_NONE) {
-            return (false);
-        }
+        $eErr = OGR_L_CreateField(
+            $hDestLayer,
+            OGR_FD_GetFieldDefn($hFDefn, $iField),
+            0 /*bApproOK*/
+        );
+        $this->assertEquals(OGRERR_NONE, $eErr, "Could not create new field");
 
         $hDestFeature = OGR_F_Create($hFDefn);
 
-        $eErr = @OGR_F_SetGeometry($hDestFeature, $hDestGeometry);
+        $eErr = @OGR_F_SetGeometry($hDestFeature, $this->hContainer);
+        $this->assertEquals(OGRERR_NONE, $eErr, "Could not set geometry on feature");
 
         $eErr = OGR_L_CreateFeature($hDestLayer, $hDestFeature);
+        $this->assertEquals(OGRERR_NONE, $eErr, "Could not add feature to layer");
 
         OGR_DS_Destroy($hSrcDS);
 
         OGR_DS_Destroy($hDestDS);
 
-        system(
-            "/usr1/local/bin/ogrinfo -al " . $this->strPathToOutputData . $this->strDestDataSource . " &>" . $this->strPathToOutputData . $this->strTmpDumpFile
-        );
-
-        system(
-            "diff --brief --ignore-matching-lines=\"INFO:\" " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $strStandardFile,
+            $this->strPathToOutputData . $this->strDestDataSource . DIRECTORY_SEPARATOR . $this->strOutputLayer . '.prj',
             "Problem with OGR_G_AssignSpatialReference() or OGR_G_GetSpatialRef(): Files comparison did not matched.\n"
         );
     }
