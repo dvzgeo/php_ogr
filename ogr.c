@@ -308,9 +308,9 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_f_getfieldasinteger, NULL)
     PHP_FE(ogr_f_getfieldasdouble,  NULL)
     PHP_FE(ogr_f_getfieldasstring,  NULL)
-    PHP_FE(ogr_f_getfieldasintegerlist, NULL)
-    PHP_FE(ogr_f_getfieldasdoublelist,  NULL)
-    PHP_FE(ogr_f_getfieldasstringlist,  NULL)
+    PHP_FE(ogr_f_getfieldasintegerlist, three_args_third_arg_force_ref)
+    PHP_FE(ogr_f_getfieldasdoublelist,  three_args_third_arg_force_ref)
+    PHP_FE(ogr_f_getfieldasstringlist, NULL)
     PHP_FE(ogr_f_getfieldasdatetime, NULL)
     PHP_FE(ogr_f_setfieldinteger,   NULL)
     PHP_FE(ogr_f_setfielddouble,    NULL)
@@ -3387,7 +3387,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
     int numelements = 0;
-    long *panList = NULL;
+    int *panList = NULL;
     int ncount = 0;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield,
@@ -3399,7 +3399,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
-        panList = (long*)OGR_F_GetFieldAsIntegerList(hFeat, ifield, &ncount);
+        panList = (int*)OGR_F_GetFieldAsIntegerList(hFeat, ifield, &ncount);
 
     if ((!panList) || (ncount <= 0)){
         php_report_ogr_error(E_WARNING);
@@ -3411,7 +3411,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
 		RETURN_FALSE;
 	}
 
-	while (numelements <= ncount) {
+	while (numelements < ncount) {
         add_next_index_long(return_value, panList[numelements]);
         numelements++;
 	}
@@ -3458,7 +3458,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 		RETURN_FALSE;
 	}
 
-	while (numelements <= ncount) {
+	while (numelements < ncount) {
         add_next_index_double(return_value, padfList[numelements]);
         numelements++;
 	}
@@ -3512,7 +3512,7 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
 		RETURN_FALSE;
 	}
 
-	while (numelements <= ncount) {
+	while (numelements < ncount) {
         add_next_index_string(return_value, (char *)
                               CSLGetField(papszStrList, numelements), 1);
         numelements++;
