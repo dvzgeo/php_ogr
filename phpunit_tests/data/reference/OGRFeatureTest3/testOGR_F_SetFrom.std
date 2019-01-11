@@ -1,0 +1,9 @@
+OGRFeature(OutputDS):-1
+  osm_id (String) = 135585747
+  code (Integer) = 6107
+  fclass (Integer) = 0
+  name (Integer) = 0
+LINESTRING:
+1.502 42.442
+1.502 42.441
+
