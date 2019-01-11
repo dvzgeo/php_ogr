@@ -1621,7 +1621,7 @@ PHP_FUNCTION(ogr_g_getspatialreference)
         RETURN_NULL();
 
     ZEND_REGISTER_RESOURCE(return_value, hSpatialReference,
-                           le_SpatialReference);
+                           le_SpatialReferenceRef);
 
 }
 
