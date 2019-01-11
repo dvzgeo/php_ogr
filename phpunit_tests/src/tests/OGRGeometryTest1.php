@@ -4,7 +4,6 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 {
     public $strPathToOutputData;
     public $strTmpDumpFile;
-    public $strPathToStandardData;
     public $hDestDS;
     public $hDestLayer;
     public $strDestDataSource;
@@ -14,54 +13,63 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
     public $hRing1;
     public $hRing2;
 
+    public static function setUpBeforeClass()
+    {
+        OGRRegisterAll();
+    }
+
     public function setUp()
     {
 
         /*Prepare to write temporary data for comparison.*/
-        $this->strPathToStandardData = "./data/testcase/";
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
-        $this->strDestDataSource = "OutputDS.tab";
+        $this->strDestDataSource = "OutputDS.gml";
 
-        $iDriver = 5;
-        $this->hOGRSFDriver = OGRGetDriver($iDriver);
-        $this->astrOptions = null;
+        $iDriver = "GML";
+        $this->hOGRSFDriver = OGRGetDriverByName($iDriver);
+        $this->astrOptions = array("XSISCHEMA=OFF");
         $this->hDestDS = OGR_Dr_CreateDataSource(
             $this->hOGRSFDriver,
             $this->strPathToOutputData . $this->strDestDataSource,
             $this->astrOptions
         );
-
-        if ($this->hDestDS == null) {
-            printf("Unable to create destination data source\n");
-            return false;
-        }
-        $iLayer = 0;
-
-        $this->hDestLayer = OGR_DS_GetLayer($this->hDestDS, $iLayer);
+        $this->assertNotNull($this->hDestDS, "Unable to create destination data source");
+        $this->hDestLayer = OGR_DS_CreateLayer(
+            $this->hDestDS,
+            $this->strDestDataSource,
+            null,
+            wkbPolygon,
+            array("XSISCHEMA=OFF")
+        );
+        $this->assertNotNull($this->hDestLayer, "Unable to create layer");
 
         /*Create a polygon.*/
         $eType = wkbPolygon;
         $this->hContainer = OGR_G_CreateGeometry($eType);
-
+        $this->assertNotNull($this->hContainer, "Unable to create polygon");
 
         $eType = wkbLinearRing;
         $this->hRing1 = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($this->hRing1, "Could not create outer linear ring");
         OGR_G_AddPoint($this->hRing1, 123.45, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing1, 12.34, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing1, 12.34, 45.67, 0.0);
         OGR_G_AddPoint($this->hRing1, 123.45, 45.67, 0.0);
         OGR_G_AddPoint($this->hRing1, 123.45, 456.78, 0.0);
         $eErr = OGR_G_AddGeometry($this->hContainer, $this->hRing1);
+        $this->assertEquals($eErr, OGRERR_NONE, "Could not add outer ring to polygon");
 
         $eType = wkbLinearRing;
         $this->hRing2 = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($this->hRing2, "Could not create inner linear ring");
         OGR_G_AddPoint($this->hRing2, 123.45, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing2, 100.0, 456.78, 0.0);
         OGR_G_AddPoint($this->hRing2, 100.0, 355.25, 0.0);
         OGR_G_AddPoint($this->hRing2, 123.45, 355.25, 0.0);
         OGR_G_AddPoint($this->hRing2, 123.45, 456.78, 0.0);
         $eErr = OGR_G_AddGeometry($this->hContainer, $this->hRing2);
+        $this->assertEquals($eErr, OGRERR_NONE, "Could not add inner ring to polygon");
     }
 
     public function tearDown()
@@ -73,7 +81,6 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
         delete_directory($this->strPathToOutputData);
 
-        unset($this->strPathToStandardData);
         unset($this->strPathToOutputData);
         unset($this->strTmpDumpFile);
         unset($this->strDestDataSource);
@@ -93,7 +100,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_GetGeometryRef()
     {
-        $strStandardFile = "testOGR_G_GetGeometryRef";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
         $nRingCount = OGR_G_GetGeometryCount($this->hContainer);
         $expected = 2;
@@ -122,22 +129,15 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
             "w"
         );
 
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
 
         OGR_G_DumpReadable($fpOut, $hGeometry);
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
+        $this->assertFileEquals(
+            $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_G_GetGeometryRef() Files comparison did not matched.\n"
         );
 
@@ -158,12 +158,11 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_RemoveGeometry0()
     {
-        $strStandardFile = "testOGR_G_RemoveGeometry0";
         $bDelete = true;
         $iGeometry = 1;
 
         $eErr = @OGR_G_RemoveGeometry($this->hContainer, $iGeometry, $bDelete);
-        $expected = 4;
+        $expected = OGRERR_UNSUPPORTED_OPERATION;
         $this->AssertEquals(
             $expected,
             $eErr,
@@ -177,24 +176,48 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_RemoveGeometry1()
     {
-        $strStandardFile = "testOGR_G_RemoveGeometry1";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
         $bDelete = true;
 
         $eType = wkbPolygon;
         $hPolygon1 = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($hPolygon1, 'Could not create polygon');
         $eErr = OGR_G_AddGeometry($hPolygon1, $this->hRing1);
+        $this->assertEquals(OGRERR_NONE, $eErr, 'Could not add exterior ring to polygon');
 
         $hPolygon2 = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($hPolygon2, 'Could not create polygon');
         $eErr = OGR_G_AddGeometry($hPolygon2, $this->hRing2);
+        $this->assertEquals(OGRERR_NONE, $eErr, 'Could not add exterior ring to polygon');
 
         $eType = wkbMultiPolygon;
         $hMultiPolygon = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($hMultiPolygon, 'Could not create polygon');
         $eErr = OGR_G_AddGeometry($hMultiPolygon, $hPolygon1);
+        $this->assertEquals(OGRERR_NONE, $eErr, 'Could not add polygon to multipolygon');
+        $expected = 1;
+        $nRingCount = OGR_G_GetGeometryCount($hMultiPolygon);
+        $this->AssertEquals(
+            $expected,
+            $nRingCount,
+            "Problem with OGR_G_RemoveGeometry():  supposed to have one ring now."
+        );
         $eErr = OGR_G_AddGeometry($hMultiPolygon, $hPolygon2);
+        $this->assertEquals(OGRERR_NONE, $eErr, 'Could not add polygon to multipolygon');
+        $nRingCount = OGR_G_GetGeometryCount($hMultiPolygon);
+        $expected = 2;
+        $this->AssertEquals(
+            $expected,
+            $nRingCount,
+            "Problem with OGR_G_RemoveGeometry():  supposed to have two rings now."
+        );
+
+        $nRingCount = OGR_G_GetGeometryCount($hMultiPolygon);
 
         $iGeometry = 1;
 
         $eErr = @OGR_G_RemoveGeometry($hMultiPolygon, $iGeometry, $bDelete);
+        $this->assertEquals(OGRERR_NONE, $eErr, 'Could not add polygon from multipolygon');
 
         $nRingCount = OGR_G_GetGeometryCount($hMultiPolygon);
         $expected = 1;
@@ -209,19 +232,16 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
             "w"
         );
 
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
 
         OGR_G_DumpReadable($fpOut, $hMultiPolygon);
 
         fclose($fpOut);
 
         $this->assertFileEquals(
-            $this->strPathToStandardData . $strStandardFile,
+            $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
-            "Problem with OGR_G_RemoveGeometry() Files comparison did not matched.\n"
+            "Problem with OGR_G_RemoveGeometry() Files comparison did not matched."
         );
     }
 
@@ -242,12 +262,17 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
      *                            testOGR_G_Intersect()
      ************************************************************************/
 
-    public function testOGR_G_Intersect()
+    public function testOGR_G_Intersect0()
     {
-        $bIntersect = OGR_G_Intersect($this->hRing1, $this->hRing2);
+        $eType = wkbPolygon;
+        $hPolygon = OGR_G_CreateGeometry($eType);
+        $this->assertNotNull($hPolygon, "Could not create polygon");
+        $eErr = OGR_G_AddGeometry($hPolygon, $this->hRing2);
+        $this->assertEquals($eErr, OGRERR_NONE, "Could not add exterior ring to polygon");
+        $bIntersect = OGR_G_Intersect($this->hContainer, $hPolygon);
         $this->AssertTrue(
             $bIntersect,
-            "Problem with OGR_G_Intersect(): these two rings should intersect."
+            "Problem with OGR_G_Intersect(): these two polygons should intersect."
         );
     }
 
@@ -257,7 +282,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_Empty()
     {
-        $strStandardFile = "testOGR_G_Empty";
+        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
 
         OGR_G_Empty($this->hRing2);
 
@@ -266,23 +291,16 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
             "w"
         );
 
-        if ($fpOut == false) {
-            printf("Dump file creation error\n");
-            return false;
-        }
+        $this->assertNotFalse($fpOut, "Dump file creation error");
 
         OGR_G_DumpReadable($fpOut, $this->hRing2);
 
         fclose($fpOut);
 
-        system(
-            "diff --brief " . $this->strPathToOutputData . $this->strTmpDumpFile . " " . $this->strPathToStandardData . $strStandardFile,
-            $iRetval
-        );
-
-        $this->assertFalse(
-            $iRetval,
-            "Problem with OGR_G_RemoveGeometry() Files comparison did not matched.\n"
+        $this->assertFileEquals(
+            $strStandardFile,
+            $this->strPathToOutputData . $this->strTmpDumpFile,
+            "Problem with OGR_G_Empty() Files comparison did not matched.\n"
         );
     }
 
@@ -319,12 +337,12 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $eErr, $eErrMsg);
 
 
-        $actual = serialize($hEnvelope);
-
-        $expected = "O:8:\"stdClass\":4:{s:4:\"minx\";d:12.34;s:4:\"maxx\";d:123.45;s:4:\"miny\";d:45.67;s:4:\"maxy\";d:456.78;}";
+        $expected = unserialize(
+            'O:8:"stdClass":4:{s:4:"minx";d:12.34;s:4:"maxx";d:123.45;s:4:"miny";d:45.67;s:4:"maxy";d:456.78;}'
+        );
         $this->AssertEquals(
             $expected,
-            $actual,
+            $hEnvelope,
             "Problem with OGR_G_GetEnvelope()."
         );
     }
@@ -337,7 +355,22 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
     {
         $nSize = OGR_G_WkbSize($this->hContainer);
 
-        $expected = 177; /*nSize += (4 + 16 * 5) * 2 rings et nSize =9. */
+        $expected = 1 /* byte order (byte) */
+            + 4 /* type (4-byte uint) */
+            + 4 /* nRings (4-byte uint) */
+            + ( /* first linear ring */
+                4 /* nPoints (4-byte uint) */
+                + (
+                    24 /* 3 8-byte doubles (x, y, z) */
+                    * 5 /* points */
+                )
+            ) + ( /* second linear ring */
+                4 /* nPoints (4-byte uint) */
+                + (
+                    24 /* 3 8-byte doubles (x, y, z) */
+                    * 5 /* points */
+                )
+            );
 
         $this->AssertEquals(
             $expected,
