@@ -19,7 +19,8 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $strFieldName = "name";
         $hFieldDefn = OGR_Fld_Create($strFieldName, OFTString);
         $this->AssertNotNull(
-            $hFieldDefn, "Problem with OGR_Fld_Create(): handle is not supposed to be NULL."
+            $hFieldDefn,
+            "Problem with OGR_Fld_Create(): handle is not supposed to be NULL."
         );
 
         OGR_Fld_Destroy($hFieldDefn);
@@ -29,7 +30,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $actual = get_resource_type($hFieldDefn);
 
         $this->assertEquals(
-            $expected, $actual, "Problem with OGR_Fld_Destroy():  Field definition resource is supposed to be freed after OGR_Fld_Destroy().\n"
+            $expected,
+            $actual,
+            "Problem with OGR_Fld_Destroy():  Field definition resource is supposed to be freed after OGR_Fld_Destroy().\n"
         );
     }
 
@@ -46,7 +49,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $expected = $strFieldName;
 
         $this->AssertEquals(
-            $expected, $strFieldNameOut, "Problem with OGR_Fld_GetNameRef()."
+            $expected,
+            $strFieldNameOut,
+            "Problem with OGR_Fld_GetNameRef()."
         );
 
         $strFieldNameIn = "area";
@@ -56,7 +61,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
 
         $expected = $strFieldNameIn;
         $this->AssertEquals(
-            $expected, $strFieldNameOut, "Problem with OGR_Fld_SetName() or OGR_Fld_GetNameRef()."
+            $expected,
+            $strFieldNameOut,
+            "Problem with OGR_Fld_SetName() or OGR_Fld_GetNameRef()."
         );
 
         OGR_Fld_Destroy($hFieldDefn);
@@ -74,7 +81,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $eFieldTypeOut = OGR_Fld_GetType($hFieldDefn);
         $expected = OFTString;
         $this->AssertEquals(
-            $expected, $eFieldTypeOut, "Problem with OGR_Fld_GetType()"
+            $expected,
+            $eFieldTypeOut,
+            "Problem with OGR_Fld_GetType()"
         );
 
         $eFieldTypeIn = OFTReal;
@@ -83,7 +92,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $eFieldTypeOut = OGR_Fld_GetType($hFieldDefn);
         $expected = $eFieldTypeIn;
         $this->AssertEquals(
-            $expected, $eFieldTypeOut, "Problem with OGR_Fld_SetType() or OGR_Fld_GetType()."
+            $expected,
+            $eFieldTypeOut,
+            "Problem with OGR_Fld_SetType() or OGR_Fld_GetType()."
         );
 
         OGR_Fld_Destroy($hFieldDefn);
@@ -101,7 +112,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $eJustifyOut = OGR_Fld_GetJustify($hFieldDefn);
         $expected = OJUndefined;
         $this->AssertEquals(
-            $expected, $eJustifyOut, "Problem with OGR_Fld_GetJustify()."
+            $expected,
+            $eJustifyOut,
+            "Problem with OGR_Fld_GetJustify()."
         );
 
         $eJustifyIn = OJRight;
@@ -110,7 +123,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $eJustifyOut = OGR_Fld_GetJustify($hFieldDefn);
         $expected = $eJustifyIn;
         $this->AssertEquals(
-            $expected, $eJustifyOut, "Problem with OGR_Fld_SetJustify() or OGR_Fld_GetJustify()."
+            $expected,
+            $eJustifyOut,
+            "Problem with OGR_Fld_SetJustify() or OGR_Fld_GetJustify()."
         );
 
         OGR_Fld_Destroy($hFieldDefn);
@@ -128,7 +143,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $nWidthOut = OGR_Fld_GetWidth($hFieldDefn);
         $expected = 0;
         $this->AssertEquals(
-            $expected, $nWidthOut, "Problem with OGR_Fld_GetWidth()."
+            $expected,
+            $nWidthOut,
+            "Problem with OGR_Fld_GetWidth()."
         );
 
         $nWidthIn = 10;
@@ -137,7 +154,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $nWidthOut = OGR_Fld_GetWidth($hFieldDefn);
         $expected = $nWidthIn;
         $this->AssertEquals(
-            $expected, $nWidthOut, "Problem with OGR_Fld_SetWidth() or OGR_Fld_GetWidth()."
+            $expected,
+            $nWidthOut,
+            "Problem with OGR_Fld_SetWidth() or OGR_Fld_GetWidth()."
         );
 
         OGR_Fld_Destroy($hFieldDefn);
@@ -155,7 +174,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $nPrecisionOut = OGR_Fld_GetPrecision($hFieldDefn);
         $expected = 0;
         $this->AssertEquals(
-            $expected, $nPrecisionOut, "Problem with OGR_Fld_GetPrecision()."
+            $expected,
+            $nPrecisionOut,
+            "Problem with OGR_Fld_GetPrecision()."
         );
 
         $nPrecisionIn = 1;
@@ -164,7 +185,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $nPrecisionOut = OGR_Fld_GetPrecision($hFieldDefn);
         $expected = $nPrecisionIn;
         $this->AssertEquals(
-            $expected, $nPrecisionOut, "Problem with OGR_Fld_SetPrecision() or OGR_Fld_GetPrecision()."
+            $expected,
+            $nPrecisionOut,
+            "Problem with OGR_Fld_SetPrecision() or OGR_Fld_GetPrecision()."
         );
 
         OGR_Fld_Destroy($hFieldDefn);
@@ -198,32 +221,42 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
         $strFieldNameOut = OGR_Fld_GetNameRef($hFieldDefn);
         $expected = $strFieldNameIn;
         $this->AssertEquals(
-            $expected, $strFieldNameOut, "Problem with OGR_Fld_Set() on Name."
+            $expected,
+            $strFieldNameOut,
+            "Problem with OGR_Fld_Set() on Name."
         );
 
         $eFieldTypeOut = OGR_Fld_GetType($hFieldDefn);
         $expected = $eFieldTypeIn;
         $this->AssertEquals(
-            $expected, $eFieldTypeOut, "Problem with OGR_Fld_Set() on Type."
+            $expected,
+            $eFieldTypeOut,
+            "Problem with OGR_Fld_Set() on Type."
         );
 
         $nWidthOut = OGR_Fld_GetWidth($hFieldDefn);
         $expected = $nWidthIn;
         $this->AssertEquals(
-            $expected, $nWidthOut, "Problem with OGR_Fld_Set() on Width."
+            $expected,
+            $nWidthOut,
+            "Problem with OGR_Fld_Set() on Width."
         );
 
         $nPrecisionOut = OGR_Fld_GetPrecision($hFieldDefn);
         $expected = 2;
         $this->AssertEquals(
-            $expected, $nPrecisionOut, "Problem with OGR_Fld_Set() on Precision."
+            $expected,
+            $nPrecisionOut,
+            "Problem with OGR_Fld_Set() on Precision."
         );
 
 
         $eJustifyOut = OGR_Fld_GetJustify($hFieldDefn);
         $expected = $eJustifyIn;
         $this->AssertEquals(
-            $expected, $eJustifyOut, "Problem with OGR_Fld_Set() on Justification."
+            $expected,
+            $eJustifyOut,
+            "Problem with OGR_Fld_Set() on Justification."
         );
 
 
@@ -240,7 +273,9 @@ class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
 
         $expected = "Real";
         $this->AssertEquals(
-            $expected, $strFieldTypeName, "Problem with OGR_GetFieldTypeName()."
+            $expected,
+            $strFieldTypeName,
+            "Problem with OGR_GetFieldTypeName()."
         );
     }
 }
