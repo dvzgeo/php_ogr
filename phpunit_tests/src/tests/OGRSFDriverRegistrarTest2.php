@@ -1,19 +1,20 @@
 <?php
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class OGRSFDriverRegistrarTest2 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
     public $bUpdate;
     public $hOGRSFDriver;
-    public $strFilename;
 
     // called before the test functions will be executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
     // here
     public function setUp()
     {
-        $this->strPathToData = "./data/mif";
-        $this->strFilename = "road.tab";
+        $this->strPathToData = test_data_path("andorra", "shp");
         $this->bUpdate = false;
         $this->hOGRSFDriver = null;
     }
@@ -42,11 +43,13 @@ class OGRSFDriverRegistrarTest2 extends PHPUnit_Framework_TestCase
         );
 
         $this->assertNull(
-            $hDS, "Problem with OGROpen():  handle is supposed to be NULL when no driver is registered."
+            $hDS,
+            "Problem with OGROpen():  handle is supposed to be NULL when no driver is registered."
         );
 
         $this->assertNull(
-            $this->hOGRSFDriver, "Problem with OGROpen():  hOGRSFDriver is supposed to be NULL when no driver is registered."
+            $this->hOGRSFDriver,
+            "Problem with OGROpen():  hOGRSFDriver is supposed to be NULL when no driver is registered."
         );
     }
 
@@ -66,11 +69,13 @@ class OGRSFDriverRegistrarTest2 extends PHPUnit_Framework_TestCase
 
 
         $this->assertNotNull(
-            $hDS, "Problem with OGROpen():  handle is not supposed to be NULL when all drivers are registered."
+            $hDS,
+            "Problem with OGROpen():  handle is not supposed to be NULL when all drivers are registered."
         );
 
         $this->assertNotNull(
-            $this->hOGRSFDriver, "Problem with OGROpen():  hOGRSFDriver is not supposed to be NULL when all drivers are registered."
+            $this->hOGRSFDriver,
+            "Problem with OGROpen():  hOGRSFDriver is not supposed to be NULL when all drivers are registered."
         );
 
         OGR_DS_Destroy($hDS);

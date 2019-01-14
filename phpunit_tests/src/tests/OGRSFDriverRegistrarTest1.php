@@ -1,19 +1,20 @@
 <?php
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class OGRSFDriverRegistrarTest1 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
     public $bUpdate;
     public $hOGRSFDriver;
-    public $strFilename;
 
     // called before the test functions will be executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
     // here
     public function setUp()
     {
-        $this->strPathToData = "./dataBad/mif";
-        $this->strFilename = "road.tab";
+        $this->strPathToData = create_temp_directory(__CLASS__);
         $this->bUpdate = false;
         $this->hOGRSFDriver = null;
     }
@@ -24,7 +25,6 @@ class OGRSFDriverRegistrarTest1 extends PHPUnit_Framework_TestCase
     {
         // delete your instance
         unset($this->strPathToData);
-        unset($this->strFilename);
         unset($this->bUpdate);
         unset($this->hOGRSFDriver);
     }

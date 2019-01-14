@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class OGRSFDriverRegistrarTest0 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
@@ -12,8 +15,7 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_Framework_TestCase
     // here
     public function setUp()
     {
-        $this->strPathToData = "./data/mif";
-        $this->strFilename = "road.tab";
+        $this->strPathToData = test_data_path("andorra", "shp");
         $this->bUpdate = false;
     }
     // called after the test functions are executed
@@ -23,52 +25,18 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_Framework_TestCase
     {
         // delete your instance
         unset($this->strPathToData);
-        unset($this->strFilename);
         unset($this->bUpdate);
     }
 
     /***********************************************************************
-     *                       testOGROpen0()
+     *                       testOGRRegisterAll0()
      *
      ************************************************************************/
-    public function testOGROpen0()
+    public function testOGRRegisterAll0()
     {
-        $hDS = @OGROpen(
-            $this->strPathToData,
-            $this->bUpdate,
-            $this->hOGRSFDriver
-        );
-
-        $this->assertNull(
-            $hDS,
-            "Problem with OGROpen():  handle is supposed to be NULL when no driver is registered."
-        );
-    }
-
-    /***********************************************************************
-     *                       testOGROpen1()
-     *
-     ************************************************************************/
-    public function testOGROpen1()
-    {
+        $this->assertEquals(0, OGRGetDriverCount(), "Driver count should be 0 before registration");
         OGRRegisterAll();
-
-        $hDS = OGROpen(
-            $this->strPathToData,
-            $this->bUpdate,
-            $this->hOGRSFDriver
-        );
-
-        $this->assertNotNull(
-            $hDS,
-            "Problem with OGROpen():  handle is not supposed to be NULL when all drivers are registered."
-        );
-
-        $this->assertNotNull(
-            $this->hOGRSFDriver,
-            "Problem with OGROpen():  hOGRSFDriver is not supposed to be NULL when all drivers are registered."
-        );
-        OGR_DS_Destroy($hDS);
+        $this->assertGreaterThan(0, OGRGetDriverCount(), "Driver count should be >0 after driver registration");
     }
 }
 
