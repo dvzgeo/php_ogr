@@ -12,6 +12,9 @@ A full copy of the ODbL is available in the file LICENSE.
 The contents of the subfolder shp were downloaded from Geofabrik:
 http://download.geofabrik.de/europe/andorra-latest-free.shp.zip on
 2019-01-10 - see the README file in that folder for more details.
+One additional index file (gis_osm_places_free_1.qix) was created to
+enable the fast spatial filter for testing using the ogrinfo:
+  ogrinfo shp -sql "CREATE SPATIAL INDEX ON gis_osm_places_free_1"  
 
 The contents of the subfolder mif were created from the subfolder shp
 using ogr2ogr:

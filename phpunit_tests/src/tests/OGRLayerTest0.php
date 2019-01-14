@@ -3,20 +3,24 @@
 class OGRLayerTest0 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
-    public $strPathToOutputData;
     public $bUpdate;
     public $hOGRSFDriver;
     public $strCapability;
     public $hLayer;
     public $hSrcDataSource;
 
+    public static function setUpBeforeClass()
+    {
+        OGRRegisterAll();
+    }
+
+
     // called before the test functions will be executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
     // here
     public function setUp()
     {
-        $this->strPathToOutputData = create_temp_directory(__CLASS__);
-        $this->strPathToData = "./data/mif";
+        $this->strPathToData = test_data_path("andorra", "shp");
         $this->bUpdate = false;
         $this->strCapability[0] = OLCRandomRead;
         $this->strCapability[1] = OLCSequentialWrite;
@@ -26,15 +30,27 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase
         $this->strCapability[5] = OLCFastGetExtent;
 
         OGRRegisterAll();
-        $this->hOGRSFDriver = OGRGetDriver(5);
+        $this->hOGRSFDriver = OGRGetDriverByName("ESRI Shapefile");
+        $this->assertNotNull(
+            $this->hOGRSFDriver,
+            "Could not get ESRI Shapefile driver"
+        );
 
         $this->hSrcDataSource = OGR_Dr_Open(
             $this->hOGRSFDriver,
             $this->strPathToData,
             $this->bUpdate
         );
+        $this->assertNotNull(
+            $this->hSrcDataSource,
+            "Could not open test data in " . $this->strPathToData
+        );
 
-        $this->hLayer = OGR_DS_GetLayer($this->hSrcDataSource, 1);
+        $this->hLayer = OGR_DS_GetLayerByName($this->hSrcDataSource, "gis_osm_places_free_1");
+        $this->assertNotNull(
+            $this->hLayer,
+            "Could not open layer gis_osm_places_free_1"
+        );
     }
     // called after the test functions are executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
