@@ -4989,16 +4989,23 @@ PHP_FUNCTION(ogropen)
     char *strName = NULL;
     int argc = ZEND_NUM_ARGS();
     int strName_len;
-    int refhSFDriver_id = -1;
     zend_bool bUpdate;
     zval *refhSFDriver = NULL;
     OGRSFDriverH hDriver=NULL;
     OGRDataSourceH hFile = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sb|r!", &strName,
-                              &strName_len, &bUpdate, &refhSFDriver)
-                              == FAILURE)
-        return;
+    /* workaround for problems with optional parameters by reference */
+    if (argc > 2) {
+        if (zend_parse_parameters(argc TSRMLS_CC, "sb|z", &strName,
+                                  &strName_len, &bUpdate, &refhSFDriver)
+                                  == FAILURE)
+            return;
+    } else {
+        if (zend_parse_parameters(argc TSRMLS_CC, "sb", &strName,
+                                  &strName_len, &bUpdate)
+                                  == FAILURE)
+            return;
+    }
 
     if (OGRGetDriverCount() == 0)
     {
@@ -5019,12 +5026,13 @@ PHP_FUNCTION(ogropen)
     ZEND_REGISTER_RESOURCE(return_value, hFile, le_Datasource);
 
     /* refhSFDriver is optional and passed by reference */
-    if (refhSFDriver) {
-        zval_dtor(refhSFDriver);
+    if (argc > 2) {
+        if (refhSFDriver) {
+            /* first free any existing value */
+            zval_dtor(refhSFDriver);
+        }
         if (hDriver) {
             ZEND_REGISTER_RESOURCE(refhSFDriver, hDriver, le_SFDriver);
-        } else {
-            ZVAL_NULL(refhSFDriver);
         }
     }
 
