@@ -609,9 +609,10 @@ ogr_free_FieldRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 static void
 ogr_free_FeatureDefn(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
+/* TODO segfaults
     OGRFeatureDefnH hFeatureDefn = (OGRFeatureDefnH)rsrc->ptr;
     OGR_FD_Destroy( hFeatureDefn );
-
+*/
 }
 
 /* }}} */
