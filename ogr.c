@@ -506,7 +506,8 @@ static void
 ogr_free_SpatialReference(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 {
     OGRSpatialReferenceH hSRS = (OGRSpatialReferenceH)rsrc->ptr;
-    OSRDestroySpatialReference( hSRS );
+    /* Release rather than Destroy in case OGR still references the object */
+    OSRRelease( hSRS );
 }
 
 /* }}} */
