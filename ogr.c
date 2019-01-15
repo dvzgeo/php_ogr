@@ -5553,7 +5553,7 @@ PHP_FUNCTION(osr_exporttoprettywkt)
 {
 	int argc = ZEND_NUM_ARGS();
 	int hsrs_id = -1;
-	int simplify = -1;
+	zend_bool simplify = 0;
 	char *refres = NULL;
 	const char *res = NULL;
 	zval *hsrs = NULL;
@@ -5568,7 +5568,7 @@ PHP_FUNCTION(osr_exporttoprettywkt)
 							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
 	}
 	if (hSpatialReference){
-	    eErr = OSRExportToPrettyWkt(hSpatialReference, &refres, simplify);
+	    eErr = OSRExportToPrettyWkt(hSpatialReference, &refres, (int) simplify);
 	}
 
     if (refres) {
