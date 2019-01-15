@@ -5357,7 +5357,7 @@ PHP_FUNCTION(osr_stripctparms)
 PHP_FUNCTION(osr_importfromepsg)
 {
     int argc = ZEND_NUM_ARGS();
-    int nCode = -1;
+    long nCode = -1;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -5380,7 +5380,7 @@ PHP_FUNCTION(osr_importfromepsg)
 PHP_FUNCTION(osr_importfromepsga)
 {
     int argc = ZEND_NUM_ARGS();
-    int nCode = -1;
+    long nCode = -1;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -5669,7 +5669,7 @@ PHP_FUNCTION(osr_getattrvalue)
     char *refNodeName = NULL;
     const char *res = NULL;
     int refNodeName_len;
-    int iAttr = 0;
+    long iAttr = 0;
 	OGRSpatialReferenceH hSpatialReference = NULL;
 
 	if (zend_parse_parameters(argc TSRMLS_CC, "r!s|l", &hsrs, &refNodeName,
@@ -6321,7 +6321,7 @@ PHP_FUNCTION(osr_getaxis)
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
     int refTargetKey_len;
-    int iAxis = 0;
+    long iAxis = 0;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
