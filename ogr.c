@@ -6192,7 +6192,7 @@ PHP_FUNCTION(osr_getprojparm)
     double res;
     OGRErr eErr = OGRERR_NONE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r!sd", &hsrs, &refName,
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!s|d", &hsrs, &refName,
     		                  &refName_len, &defaultValue) == FAILURE)
         return;
 
@@ -6202,7 +6202,11 @@ PHP_FUNCTION(osr_getprojparm)
 	}
 	if (hSpatialReference) {
 		res = OSRGetProjParm(hSpatialReference, refName, defaultValue, &eErr);
-		if (eErr == OGRERR_NONE) RETURN_DOUBLE(res);
+		if (eErr == OGRERR_NONE) {
+			RETURN_DOUBLE(res);
+		} else if (argc > 2) {
+			RETURN_DOUBLE(defaultValue);
+		}
 	}
 }
 
@@ -6222,7 +6226,7 @@ PHP_FUNCTION(osr_getnormprojparm)
     double res;
     OGRErr eErr = OGRERR_NONE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r!sd", &hsrs, &refName,
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!s|d", &hsrs, &refName,
     		                  &refName_len, &defaultValue) == FAILURE)
         return;
 
@@ -6232,7 +6236,11 @@ PHP_FUNCTION(osr_getnormprojparm)
 	}
 	if (hSpatialReference) {
 		res = OSRGetNormProjParm(hSpatialReference, refName, defaultValue, &eErr);
-		if (eErr == OGRERR_NONE) RETURN_DOUBLE(res);
+		if (eErr == OGRERR_NONE) {
+			RETURN_DOUBLE(res);
+		} else if (argc > 2) {
+			RETURN_DOUBLE(defaultValue);
+		}
 	}
 }
 
