@@ -6264,7 +6264,7 @@ PHP_FUNCTION(osr_getutmzone)
 							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
 	}
     if (hSpatialReference) {
-    	utmZone = OSRGetInvFlattening(hSpatialReference, &north);
+    	utmZone = OSRGetUTMZone(hSpatialReference, &north);
     	if (utmZone && !north) {
     		/* SWIG bindings return negative in southern
     		 * hemisphere instead of using flag so lets do the same
