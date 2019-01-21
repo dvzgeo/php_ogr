@@ -1067,13 +1067,12 @@ PHP_FUNCTION(ogr_g_createfromwkb)
     int strbydata_len;
     zval *hsrs = NULL;
     zval *refhnewgeom = NULL;
-    long nbytes;
     OGRGeometryH hNewGeom = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sr!zl", &strbydata,
-                              &strbydata_len,  &hsrs, &refhnewgeom, &nbytes)
+    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z", &strbydata,
+                              &strbydata_len,  &hsrs, &refhnewgeom)
                               == FAILURE)
         return;
 
@@ -1083,7 +1082,7 @@ PHP_FUNCTION(ogr_g_createfromwkb)
                              le_SpatialReference, le_SpatialReferenceRef);
     }
     eErr = OGR_G_CreateFromWkb(strbydata, hSpatialReference, &hNewGeom,
-                               nbytes);
+                               strbydata_len);
 
     if (eErr != OGRERR_NONE){
         php_report_ogr_error(E_WARNING);
