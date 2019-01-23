@@ -1453,6 +1453,8 @@ PHP_FUNCTION(ogr_g_exporttowkt)
     convert_to_null(strtext);
     ZVAL_STRING(strtext, strwkt, 1);
 
+    CPLFree(strwkt);
+
     RETURN_LONG(eErr);
 
 }
