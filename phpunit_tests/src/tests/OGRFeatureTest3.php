@@ -160,6 +160,107 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase
     }
 
     /***********************************************************************
+     *                            testOGR_F_SetGetFieldDateTime0()
+     ************************************************************************/
+
+    public function testOGR_F_SetGetFieldDateTimeß()
+    {
+        $yearIn = 2017;
+        $monthIn = 2;
+        $dayIn = 14;
+        $hourIn = 17;
+        $minuteIn = 35;
+        $secondIn = 12;
+        $tzIn = 1;
+        $hFieldDefn = OGR_Fld_Create("date", OFTDateTime);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
+
+        $this->assertEquals(OGRERR_NONE, $eErr, "Error creating field.");
+
+        $hFeatureDefn = OGR_L_GetLayerDefn($this->hDestLayer);
+        $hF = OGR_F_Create($hFeatureDefn);
+
+        $iFieldIndex = 0;
+        OGR_F_SetFieldDateTime(
+            $hF,
+            $iFieldIndex,
+            $yearIn,
+            $monthIn,
+            $dayIn,
+            $hourIn,
+            $minuteIn,
+            $secondIn,
+            $tzIn
+        );
+
+        $dateValueOut = OGR_F_GetFieldAsDateTime($hF, $iFieldIndex);
+        $expected = array(
+            "year" => $yearIn,
+            "month" => $monthIn,
+            "day" => $dayIn,
+            "hour" => $hourIn,
+            "minute" => $minuteIn,
+            "second" => $secondIn,
+            "tzflag" => $tzIn
+        );
+
+        $this->assertEquals(
+            $expected,
+            $dateValueOut,
+            "Problem with OGR_F_SetFieldDateTime() or OGR_F_GetFieldAsDateTime()."
+        );
+
+        OGR_F_Destroy($hF);
+    }
+
+    /***********************************************************************
+     *                            testOGR_F_SetGetFieldDateTime0()
+     ************************************************************************/
+
+    public function testOGR_F_SetGetFieldDateTime1()
+    {
+        $yearIn = 2017;
+        $hFieldDefn = OGR_Fld_Create("date", OFTDateTime);
+        $eErr = OGR_L_CreateField(
+            $this->hDestLayer,
+            $hFieldDefn,
+            0 /*bApproxOk*/
+        );
+
+        $this->assertEquals(OGRERR_NONE, $eErr, "Error creating field.");
+
+        $hFeatureDefn = OGR_L_GetLayerDefn($this->hDestLayer);
+        $hF = OGR_F_Create($hFeatureDefn);
+
+        $iFieldIndex = 0;
+        OGR_F_SetFieldDateTime($hF, $iFieldIndex, $yearIn);
+
+        $dateValueOut = OGR_F_GetFieldAsDateTime($hF, $iFieldIndex);
+        // everything should have the default values
+        $expected = array(
+            "year" => $yearIn,
+            "month" => 1,
+            "day" => 1,
+            "hour" => 0,
+            "minute" => 0,
+            "second" => 0,
+            "tzflag" => 0
+        );
+
+        $this->assertEquals(
+            $expected,
+            $dateValueOut,
+            "Problem with OGR_F_SetFieldDateTime() or OGR_F_GetFieldAsDateTime()."
+        );
+
+        OGR_F_Destroy($hF);
+    }
+
+    /***********************************************************************
      *                            testOGR_F_SetGetFID()
      ************************************************************************/
 
