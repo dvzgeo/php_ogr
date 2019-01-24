@@ -16,7 +16,7 @@ OGRFeature(gis_osm_places_free_1):0
   fclass (String) = town
   population (Integer) = 24678
   name (String) = Andorra la Vella
-1.521 42.507 0.000
+  POINT (1.5212467 42.5069391)
 
 OGRFeature(gis_osm_places_free_1):1
   osm_id (String) = 58963219
@@ -24,7 +24,7 @@ OGRFeature(gis_osm_places_free_1):1
   fclass (String) = town
   population (Integer) = 0
   name (String) = Ordino
-1.533 42.556 0.000
+  POINT (1.5334945 42.55615)
 
 OGRFeature(gis_osm_places_free_1):2
   osm_id (String) = 64954372
@@ -32,7 +32,7 @@ OGRFeature(gis_osm_places_free_1):2
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Aixàs
-1.464 42.483 0.000
+  POINT (1.4641485 42.4826042)
 
 OGRFeature(gis_osm_places_free_1):3
   osm_id (String) = 64954377
@@ -40,7 +40,7 @@ OGRFeature(gis_osm_places_free_1):3
   fclass (String) = village
   population (Integer) = 0
   name (String) = Aubinyà
-1.492 42.454 0.000
+  POINT (1.4923232 42.4536226)
 
 OGRFeature(gis_osm_places_free_1):4
   osm_id (String) = 64954382
@@ -48,7 +48,7 @@ OGRFeature(gis_osm_places_free_1):4
   fclass (String) = village
   population (Integer) = 0
   name (String) = Juberri
-1.492 42.439 0.000
+  POINT (1.4917822 42.4391742)
 
 OGRFeature(gis_osm_places_free_1):5
   osm_id (String) = 64954385
@@ -56,7 +56,7 @@ OGRFeature(gis_osm_places_free_1):5
   fclass (String) = village
   population (Integer) = 0
   name (String) = Nagol
-1.500 42.471 0.000
+  POINT (1.499592 42.4705142)
 
 OGRFeature(gis_osm_places_free_1):6
   osm_id (String) = 64954389
@@ -64,7 +64,7 @@ OGRFeature(gis_osm_places_free_1):6
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Anyós
-1.525 42.534 0.000
+  POINT (1.5254826 42.534361)
 
 OGRFeature(gis_osm_places_free_1):7
   osm_id (String) = 64954396
@@ -72,7 +72,7 @@ OGRFeature(gis_osm_places_free_1):7
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Els Vilars
-1.541 42.517 0.000
+  POINT (1.5413834 42.5168287)
 
 OGRFeature(gis_osm_places_free_1):8
   osm_id (String) = 64954400
@@ -80,7 +80,7 @@ OGRFeature(gis_osm_places_free_1):8
   fclass (String) = village
   population (Integer) = 0
   name (String) = Bixessarri
-1.457 42.484 0.000
+  POINT (1.4566808 42.4836288)
 
 OGRFeature(gis_osm_places_free_1):9
   osm_id (String) = 64954404
@@ -88,7 +88,7 @@ OGRFeature(gis_osm_places_free_1):9
   fclass (String) = village
   population (Integer) = 0
   name (String) = el Tarter
-1.650 42.580 0.000
+  POINT (1.6496963 42.5803334)
 
 OGRFeature(gis_osm_places_free_1):10
   osm_id (String) = 64954409
@@ -96,7 +96,7 @@ OGRFeature(gis_osm_places_free_1):10
   fclass (String) = village
   population (Integer) = 0
   name (String) = Prats
-1.594 42.561 0.000
+  POINT (1.5936564 42.5605597)
 
 OGRFeature(gis_osm_places_free_1):11
   osm_id (String) = 64954415
@@ -104,7 +104,7 @@ OGRFeature(gis_osm_places_free_1):11
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Sispony
-1.516 42.534 0.000
+  POINT (1.515627 42.5338717)
 
 OGRFeature(gis_osm_places_free_1):12
   osm_id (String) = 64954417
@@ -112,7 +112,7 @@ OGRFeature(gis_osm_places_free_1):12
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = els Plans
-1.633 42.582 0.000
+  POINT (1.6329828 42.5821459)
 
 OGRFeature(gis_osm_places_free_1):13
   osm_id (String) = 64954422
@@ -120,7 +120,7 @@ OGRFeature(gis_osm_places_free_1):13
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = l’Aldosa de Canillo
-1.628 42.580 0.000
+  POINT (1.6278149 42.5795551)
 
 OGRFeature(gis_osm_places_free_1):14
   osm_id (String) = 64954429
@@ -128,7 +128,7 @@ OGRFeature(gis_osm_places_free_1):14
   fclass (String) = village
   population (Integer) = 0
   name (String) = Sant Pere
-1.653 42.579 0.000
+  POINT (1.6531626 42.5785035)
 
 OGRFeature(gis_osm_places_free_1):15
   osm_id (String) = 64954433
@@ -136,7 +136,7 @@ OGRFeature(gis_osm_places_free_1):15
   fclass (String) = town
   population (Integer) = 0
   name (String) = Canillo
-1.598 42.567 0.000
+  POINT (1.5977647 42.5668305)
 
 OGRFeature(gis_osm_places_free_1):16
   osm_id (String) = 64954435
@@ -144,7 +144,7 @@ OGRFeature(gis_osm_places_free_1):16
   fclass (String) = village
   population (Integer) = 0
   name (String) = Sornás
-1.527 42.565 0.000
+  POINT (1.5274027 42.5649323)
 
 OGRFeature(gis_osm_places_free_1):17
   osm_id (String) = 64954437
@@ -152,7 +152,7 @@ OGRFeature(gis_osm_places_free_1):17
   fclass (String) = village
   population (Integer) = 2996
   name (String) = Pas de la Casa
-1.733 42.545 0.000
+  POINT (1.733494 42.5447098)
 
 OGRFeature(gis_osm_places_free_1):18
   osm_id (String) = 64954441
@@ -160,7 +160,7 @@ OGRFeature(gis_osm_places_free_1):18
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Sant Joan de Caselles
-1.616 42.571 0.000
+  POINT (1.6163247 42.5710971)
 
 OGRFeature(gis_osm_places_free_1):19
   osm_id (String) = 64954447
@@ -168,7 +168,7 @@ OGRFeature(gis_osm_places_free_1):19
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = l'Aldosa de la Massana
-1.523 42.544 0.000
+  POINT (1.5230016 42.5439332)
 
 OGRFeature(gis_osm_places_free_1):20
   osm_id (String) = 64954451
@@ -176,7 +176,7 @@ OGRFeature(gis_osm_places_free_1):20
   fclass (String) = village
   population (Integer) = 0
   name (String) = el Serrat
-1.539 42.620 0.000
+  POINT (1.5388976 42.6195784)
 
 OGRFeature(gis_osm_places_free_1):21
   osm_id (String) = 64954457
@@ -184,7 +184,7 @@ OGRFeature(gis_osm_places_free_1):21
   fclass (String) = village
   population (Integer) = 0
   name (String) = Ransol
-1.637 42.582 0.000
+  POINT (1.6374847 42.5816768)
 
 OGRFeature(gis_osm_places_free_1):22
   osm_id (String) = 64954460
@@ -192,7 +192,7 @@ OGRFeature(gis_osm_places_free_1):22
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = el Pui
-1.516 42.548 0.000
+  POINT (1.515555 42.5476987)
 
 OGRFeature(gis_osm_places_free_1):23
   osm_id (String) = 64954464
@@ -200,7 +200,7 @@ OGRFeature(gis_osm_places_free_1):23
   fclass (String) = village
   population (Integer) = 0
   name (String) = Vila
-1.567 42.532 0.000
+  POINT (1.5666248 42.5318538)
 
 OGRFeature(gis_osm_places_free_1):24
   osm_id (String) = 64954467
@@ -208,7 +208,7 @@ OGRFeature(gis_osm_places_free_1):24
   fclass (String) = village
   population (Integer) = 0
   name (String) = Erts
-1.497 42.561 0.000
+  POINT (1.4965904 42.5614863)
 
 OGRFeature(gis_osm_places_free_1):25
   osm_id (String) = 64954472
@@ -216,7 +216,7 @@ OGRFeature(gis_osm_places_free_1):25
   fclass (String) = village
   population (Integer) = 0
   name (String) = Ansalonga
-1.522 42.569 0.000
+  POINT (1.5221532 42.5690218)
 
 OGRFeature(gis_osm_places_free_1):26
   osm_id (String) = 64954477
@@ -224,7 +224,7 @@ OGRFeature(gis_osm_places_free_1):26
   fclass (String) = village
   population (Integer) = 0
   name (String) = Engordany
-1.538 42.514 0.000
+  POINT (1.5382077 42.5135389)
 
 OGRFeature(gis_osm_places_free_1):27
   osm_id (String) = 64954483
@@ -232,7 +232,7 @@ OGRFeature(gis_osm_places_free_1):27
   fclass (String) = village
   population (Integer) = 0
   name (String) = Arinsal
-1.484 42.572 0.000
+  POINT (1.4844029 42.5720821)
 
 OGRFeature(gis_osm_places_free_1):28
   osm_id (String) = 64954486
@@ -240,7 +240,7 @@ OGRFeature(gis_osm_places_free_1):28
   fclass (String) = town
   population (Integer) = 0
   name (String) = Sant Julià de Lòria
-1.492 42.467 0.000
+  POINT (1.4920555 42.4666593)
 
 OGRFeature(gis_osm_places_free_1):29
   osm_id (String) = 64954492
@@ -248,7 +248,7 @@ OGRFeature(gis_osm_places_free_1):29
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = les Bons
-1.584 42.539 0.000
+  POINT (1.5844704 42.5385245)
 
 OGRFeature(gis_osm_places_free_1):30
   osm_id (String) = 64954503
@@ -256,7 +256,7 @@ OGRFeature(gis_osm_places_free_1):30
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Puiol del Piu
-1.492 42.566 0.000
+  POINT (1.4919908 42.5655548)
 
 OGRFeature(gis_osm_places_free_1):31
   osm_id (String) = 64954508
@@ -264,7 +264,7 @@ OGRFeature(gis_osm_places_free_1):31
   fclass (String) = village
   population (Integer) = 0
   name (String) = Fontaneda
-1.464 42.454 0.000
+  POINT (1.4640242 42.4543091)
 
 OGRFeature(gis_osm_places_free_1):32
   osm_id (String) = 64954515
@@ -272,7 +272,7 @@ OGRFeature(gis_osm_places_free_1):32
   fclass (String) = village
   population (Integer) = 0
   name (String) = Pal
-1.476 42.546 0.000
+  POINT (1.4759787 42.5457992)
 
 OGRFeature(gis_osm_places_free_1):33
   osm_id (String) = 64954521
@@ -280,7 +280,7 @@ OGRFeature(gis_osm_places_free_1):33
   fclass (String) = village
   population (Integer) = 0
   name (String) = Xixerella
-1.488 42.553 0.000
+  POINT (1.4878668 42.5531204)
 
 OGRFeature(gis_osm_places_free_1):34
   osm_id (String) = 64954525
@@ -288,7 +288,7 @@ OGRFeature(gis_osm_places_free_1):34
   fclass (String) = village
   population (Integer) = 0
   name (String) = Aixovall
-1.489 42.477 0.000
+  POINT (1.4887515 42.4769809)
 
 OGRFeature(gis_osm_places_free_1):35
   osm_id (String) = 64954531
@@ -296,7 +296,7 @@ OGRFeature(gis_osm_places_free_1):35
   fclass (String) = village
   population (Integer) = 0
   name (String) = Llorts
-1.526 42.596 0.000
+  POINT (1.5261846 42.5962642)
 
 OGRFeature(gis_osm_places_free_1):36
   osm_id (String) = 64954534
@@ -304,7 +304,7 @@ OGRFeature(gis_osm_places_free_1):36
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Mas d’Alins
-1.449 42.441 0.000
+  POINT (1.4494549 42.4413704)
 
 OGRFeature(gis_osm_places_free_1):37
   osm_id (String) = 64954538
@@ -312,7 +312,7 @@ OGRFeature(gis_osm_places_free_1):37
   fclass (String) = village
   population (Integer) = 0
   name (String) = Soldeu
-1.668 42.577 0.000
+  POINT (1.6682694 42.5768944)
 
 OGRFeature(gis_osm_places_free_1):38
   osm_id (String) = 64954542
@@ -320,7 +320,7 @@ OGRFeature(gis_osm_places_free_1):38
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Mas de Ribafeta
-1.493 42.571 0.000
+  POINT (1.493038 42.570774)
 
 OGRFeature(gis_osm_places_free_1):39
   osm_id (String) = 64954546
@@ -328,7 +328,7 @@ OGRFeature(gis_osm_places_free_1):39
   fclass (String) = village
   population (Integer) = 0
   name (String) = la Cortinada
-1.519 42.576 0.000
+  POINT (1.5193446 42.5755678)
 
 OGRFeature(gis_osm_places_free_1):40
   osm_id (String) = 64954554
@@ -336,7 +336,7 @@ OGRFeature(gis_osm_places_free_1):40
   fclass (String) = village
   population (Integer) = 0
   name (String) = Llumeneres
-1.512 42.472 0.000
+  POINT (1.5116811 42.4721545)
 
 OGRFeature(gis_osm_places_free_1):41
   osm_id (String) = 64954560
@@ -344,7 +344,7 @@ OGRFeature(gis_osm_places_free_1):41
   fclass (String) = village
   population (Integer) = 0
   name (String) = Arans
-1.518 42.583 0.000
+  POINT (1.5180695 42.5825312)
 
 OGRFeature(gis_osm_places_free_1):42
   osm_id (String) = 64954563
@@ -352,7 +352,7 @@ OGRFeature(gis_osm_places_free_1):42
   fclass (String) = town
   population (Integer) = 0
   name (String) = La Massana
-1.516 42.544 0.000
+  POINT (1.5163754 42.5442014)
 
 OGRFeature(gis_osm_places_free_1):43
   osm_id (String) = 64954565
@@ -360,7 +360,7 @@ OGRFeature(gis_osm_places_free_1):43
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Escàs
-1.509 42.547 0.000
+  POINT (1.5089987 42.5468617)
 
 OGRFeature(gis_osm_places_free_1):44
   osm_id (String) = 64954570
@@ -368,7 +368,7 @@ OGRFeature(gis_osm_places_free_1):44
   fclass (String) = village
   population (Integer) = 0
   name (String) = Segudet
-1.538 42.557 0.000
+  POINT (1.5380568 42.5570637)
 
 OGRFeature(gis_osm_places_free_1):45
   osm_id (String) = 64954584
@@ -376,7 +376,7 @@ OGRFeature(gis_osm_places_free_1):45
   fclass (String) = town
   population (Integer) = 0
   name (String) = Encamp
-1.584 42.536 0.000
+  POINT (1.5836753 42.5359781)
 
 OGRFeature(gis_osm_places_free_1):46
   osm_id (String) = 64954589
@@ -384,7 +384,7 @@ OGRFeature(gis_osm_places_free_1):46
   fclass (String) = town
   population (Integer) = 0
   name (String) = Les Escaldes
-1.540 42.509 0.000
+  POINT (1.5404067 42.5090019)
 
 OGRFeature(gis_osm_places_free_1):47
   osm_id (String) = 64954593
@@ -392,7 +392,7 @@ OGRFeature(gis_osm_places_free_1):47
   fclass (String) = village
   population (Integer) = 0
   name (String) = Aixirivall
-1.502 42.462 0.000
+  POINT (1.5016173 42.4620002)
 
 OGRFeature(gis_osm_places_free_1):48
   osm_id (String) = 64954598
@@ -400,7 +400,7 @@ OGRFeature(gis_osm_places_free_1):48
   fclass (String) = village
   population (Integer) = 0
   name (String) = Certers
-1.506 42.476 0.000
+  POINT (1.5061537 42.4760797)
 
 OGRFeature(gis_osm_places_free_1):49
   osm_id (String) = 64954601
@@ -408,7 +408,7 @@ OGRFeature(gis_osm_places_free_1):49
   fclass (String) = village
   population (Integer) = 0
   name (String) = Meritxell
-1.591 42.554 0.000
+  POINT (1.5906405 42.5536332)
 
 OGRFeature(gis_osm_places_free_1):50
   osm_id (String) = 258355185
@@ -416,7 +416,7 @@ OGRFeature(gis_osm_places_free_1):50
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Super Pal
-1.473 42.543 0.000
+  POINT (1.4734913 42.5429513)
 
 OGRFeature(gis_osm_places_free_1):51
   osm_id (String) = 258361905
@@ -424,7 +424,7 @@ OGRFeature(gis_osm_places_free_1):51
   fclass (String) = village
   population (Integer) = 0
   name (String) = Grau Roig
-1.702 42.537 0.000
+  POINT (1.7017913 42.5368991)
 
 OGRFeature(gis_osm_places_free_1):52
   osm_id (String) = 262466673
@@ -432,7 +432,7 @@ OGRFeature(gis_osm_places_free_1):52
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = el Vilar
-1.519 42.575 0.000
+  POINT (1.5193017 42.5745545)
 
 OGRFeature(gis_osm_places_free_1):53
   osm_id (String) = 262473680
@@ -440,7 +440,7 @@ OGRFeature(gis_osm_places_free_1):53
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = el Forn
-1.603 42.562 0.000
+  POINT (1.6028493 42.5621207)
 
 OGRFeature(gis_osm_places_free_1):54
   osm_id (String) = 264496511
@@ -448,7 +448,7 @@ OGRFeature(gis_osm_places_free_1):54
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = el Cortalet
-1.526 42.539 0.000
+  POINT (1.526383 42.5389647)
 
 OGRFeature(gis_osm_places_free_1):55
   osm_id (String) = 264496540
@@ -456,7 +456,7 @@ OGRFeature(gis_osm_places_free_1):55
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = el Bosquet
-1.529 42.539 0.000
+  POINT (1.5285288 42.5388825)
 
 OGRFeature(gis_osm_places_free_1):56
   osm_id (String) = 266324553
@@ -464,7 +464,7 @@ OGRFeature(gis_osm_places_free_1):56
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Mas d'en Soler
-1.518 42.578 0.000
+  POINT (1.5180111 42.5776121)
 
 OGRFeature(gis_osm_places_free_1):57
   osm_id (String) = 277000148
@@ -472,7 +472,7 @@ OGRFeature(gis_osm_places_free_1):57
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Plaça del Poble
-1.523 42.544 0.000
+  POINT (1.5227184 42.5435728)
 
 OGRFeature(gis_osm_places_free_1):58
   osm_id (String) = 316985105
@@ -480,7 +480,7 @@ OGRFeature(gis_osm_places_free_1):58
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = les Salines
-1.537 42.610 0.000
+  POINT (1.5366914 42.610325)
 
 OGRFeature(gis_osm_places_free_1):59
   osm_id (String) = 1241614160
@@ -488,7 +488,7 @@ OGRFeature(gis_osm_places_free_1):59
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Coma Extremera
-1.634 42.465 0.000
+  POINT (1.6342784 42.4647209)
 
 OGRFeature(gis_osm_places_free_1):60
   osm_id (String) = 1241614282
@@ -496,7 +496,7 @@ OGRFeature(gis_osm_places_free_1):60
   fclass (String) = locality
   population (Integer) = 0
   name (String) = el Rebollar
-1.462 42.435 0.000
+  POINT (1.462446 42.4346869)
 
 OGRFeature(gis_osm_places_free_1):61
   osm_id (String) = 1241614503
@@ -504,7 +504,7 @@ OGRFeature(gis_osm_places_free_1):61
   fclass (String) = locality
   population (Integer) = 0
   name (String) = La Vaca Morta
-1.696 42.480 0.000
+  POINT (1.6958275 42.4803192)
 
 OGRFeature(gis_osm_places_free_1):62
   osm_id (String) = 1241625982
@@ -512,7 +512,7 @@ OGRFeature(gis_osm_places_free_1):62
   fclass (String) = locality
   population (Integer) = 0
   name (String) = l'Obaga
-1.493 42.432 0.000
+  POINT (1.4934925 42.4322803)
 
 OGRFeature(gis_osm_places_free_1):63
   osm_id (String) = 1241632609
@@ -520,7 +520,7 @@ OGRFeature(gis_osm_places_free_1):63
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Calm Borrut
-1.557 42.454 0.000
+  POINT (1.5572017 42.4541824)
 
 OGRFeature(gis_osm_places_free_1):64
   osm_id (String) = 1241636113
@@ -528,7 +528,7 @@ OGRFeature(gis_osm_places_free_1):64
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Roc d'Aïll
-1.443 42.460 0.000
+  POINT (1.4433447 42.4598344)
 
 OGRFeature(gis_osm_places_free_1):65
   osm_id (String) = 1241652928
@@ -536,7 +536,7 @@ OGRFeature(gis_osm_places_free_1):65
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Torrent de la Font del' Altar
-1.419 42.535 0.000
+  POINT (1.418893 42.534941)
 
 OGRFeature(gis_osm_places_free_1):66
   osm_id (String) = 2125730238
@@ -544,7 +544,7 @@ OGRFeature(gis_osm_places_free_1):66
   fclass (String) = village
   population (Integer) = 0
   name (String) = Engolasters
-1.559 42.511 0.000
+  POINT (1.5592332 42.5105107)
 
 OGRFeature(gis_osm_places_free_1):67
   osm_id (String) = 2125770584
@@ -552,7 +552,7 @@ OGRFeature(gis_osm_places_free_1):67
   fclass (String) = village
   population (Integer) = 0
   name (String) = la Margineda
-1.491 42.487 0.000
+  POINT (1.4913963 42.4870099)
 
 OGRFeature(gis_osm_places_free_1):68
   osm_id (String) = 2851742099
@@ -560,7 +560,7 @@ OGRFeature(gis_osm_places_free_1):68
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Crête d'Arial
-1.540 42.653 0.000
+  POINT (1.5399077 42.6532059)
 
 OGRFeature(gis_osm_places_free_1):69
   osm_id (String) = 2851859883
@@ -568,7 +568,7 @@ OGRFeature(gis_osm_places_free_1):69
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Crête de Fontargente
-1.717 42.615 0.000
+  POINT (1.7168643 42.615409)
 
 OGRFeature(gis_osm_places_free_1):70
   osm_id (String) = 2851877050
@@ -576,7 +576,7 @@ OGRFeature(gis_osm_places_free_1):70
   fclass (String) = locality
   population (Integer) = 0
   name (String) = la Tosa de les Mussoles
-1.683 42.622 0.000
+  POINT (1.6827607 42.6221405)
 
 OGRFeature(gis_osm_places_free_1):71
   osm_id (String) = 3141318194
@@ -584,7 +584,7 @@ OGRFeature(gis_osm_places_free_1):71
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Agulles d'Engolasters
-1.573 42.516 0.000
+  POINT (1.5733296 42.5158544)
 
 OGRFeature(gis_osm_places_free_1):72
   osm_id (String) = 3631189564
@@ -592,7 +592,7 @@ OGRFeature(gis_osm_places_free_1):72
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Coma Estremera
-1.692 42.514 0.000
+  POINT (1.6920402 42.5143167)
 
 OGRFeature(gis_osm_places_free_1):73
   osm_id (String) = 3631190198
@@ -600,7 +600,7 @@ OGRFeature(gis_osm_places_free_1):73
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Els Collels
-1.698 42.515 0.000
+  POINT (1.698499 42.5145223)
 
 OGRFeature(gis_osm_places_free_1):74
   osm_id (String) = 3631190199
@@ -608,7 +608,7 @@ OGRFeature(gis_osm_places_free_1):74
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Bosc dels Collels
-1.700 42.524 0.000
+  POINT (1.6996577 42.5242329)
 
 OGRFeature(gis_osm_places_free_1):75
   osm_id (String) = 3631190200
@@ -616,7 +616,7 @@ OGRFeature(gis_osm_places_free_1):75
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Bosc del Peu dels Pessons
-1.694 42.527 0.000
+  POINT (1.693671 42.5273957)
 
 OGRFeature(gis_osm_places_free_1):76
   osm_id (String) = 3631202189
@@ -624,7 +624,7 @@ OGRFeature(gis_osm_places_free_1):76
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Cretes de Gargantillar
-1.655 42.506 0.000
+  POINT (1.6553393 42.5063496)
 
 OGRFeature(gis_osm_places_free_1):77
   osm_id (String) = 3631202408
@@ -632,7 +632,7 @@ OGRFeature(gis_osm_places_free_1):77
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Pleta de les Bacives
-1.650 42.497 0.000
+  POINT (1.6504048 42.4970499)
 
 OGRFeature(gis_osm_places_free_1):78
   osm_id (String) = 3632502331
@@ -640,7 +640,7 @@ OGRFeature(gis_osm_places_free_1):78
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Coll de Colts
-1.775 42.581 0.000
+  POINT (1.7746355 42.5812046)
 
 OGRFeature(gis_osm_places_free_1):79
   osm_id (String) = 3632562618
@@ -648,7 +648,7 @@ OGRFeature(gis_osm_places_free_1):79
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Picnic del Travenc
-1.697 42.601 0.000
+  POINT (1.6971783 42.6012346)
 
 OGRFeature(gis_osm_places_free_1):80
   osm_id (String) = 3632572929
@@ -656,7 +656,7 @@ OGRFeature(gis_osm_places_free_1):80
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Port Dret
-1.700 42.574 0.000
+  POINT (1.7001465 42.5741423)
 
 OGRFeature(gis_osm_places_free_1):81
   osm_id (String) = 3632608734
@@ -664,7 +664,7 @@ OGRFeature(gis_osm_places_free_1):81
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Pont de la Baladosa
-1.688 42.602 0.000
+  POINT (1.6881738 42.6020117)
 
 OGRFeature(gis_osm_places_free_1):82
   osm_id (String) = 3671959254
@@ -672,7 +672,7 @@ OGRFeature(gis_osm_places_free_1):82
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Clot Sord
-1.656 42.600 0.000
+  POINT (1.6564357 42.5997002)
 
 OGRFeature(gis_osm_places_free_1):83
   osm_id (String) = 3723224087
@@ -680,7 +680,7 @@ OGRFeature(gis_osm_places_free_1):83
   fclass (String) = locality
   population (Integer) = 0
   name (String) = La Planada
-1.598 42.608 0.000
+  POINT (1.5980624 42.6076767)
 
 OGRFeature(gis_osm_places_free_1):84
   osm_id (String) = 3723369585
@@ -688,7 +688,7 @@ OGRFeature(gis_osm_places_free_1):84
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Planells de Caraup
-1.650 42.611 0.000
+  POINT (1.6495159 42.6110007)
 
 OGRFeature(gis_osm_places_free_1):85
   osm_id (String) = 3731998600
@@ -696,7 +696,7 @@ OGRFeature(gis_osm_places_free_1):85
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Circ de Pessons
-1.666 42.510 0.000
+  POINT (1.6661221 42.5101735)
 
 OGRFeature(gis_osm_places_free_1):86
   osm_id (String) = 3750453587
@@ -704,7 +704,7 @@ OGRFeature(gis_osm_places_free_1):86
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Pla de l'Estany
-1.461 42.592 0.000
+  POINT (1.4614697 42.5923186)
 
 OGRFeature(gis_osm_places_free_1):87
   osm_id (String) = 3885809195
@@ -712,7 +712,7 @@ OGRFeature(gis_osm_places_free_1):87
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Jardí de Riba
-1.643 42.568 0.000
+  POINT (1.6425457 42.567916)
 
 OGRFeature(gis_osm_places_free_1):88
   osm_id (String) = 3887374063
@@ -720,7 +720,7 @@ OGRFeature(gis_osm_places_free_1):88
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Obac d'Incles
-1.684 42.596 0.000
+  POINT (1.6841342 42.5956787)
 
 OGRFeature(gis_osm_places_free_1):89
   osm_id (String) = 3887374064
@@ -728,7 +728,7 @@ OGRFeature(gis_osm_places_free_1):89
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Obaga de Juclar
-1.700 42.612 0.000
+  POINT (1.6997139 42.6120189)
 
 OGRFeature(gis_osm_places_free_1):90
   osm_id (String) = 3887374065
@@ -736,7 +736,7 @@ OGRFeature(gis_osm_places_free_1):90
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Pleta de la Cabana Sorda
-1.681 42.607 0.000
+  POINT (1.6810514 42.6072321)
 
 OGRFeature(gis_osm_places_free_1):91
   osm_id (String) = 3887374066
@@ -744,7 +744,7 @@ OGRFeature(gis_osm_places_free_1):91
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Solana de Juclar
-1.700 42.606 0.000
+  POINT (1.7001913 42.6057878)
 
 OGRFeature(gis_osm_places_free_1):92
   osm_id (String) = 3887374067
@@ -752,7 +752,7 @@ OGRFeature(gis_osm_places_free_1):92
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Tosa d'Incles
-1.691 42.586 0.000
+  POINT (1.6914803 42.5860977)
 
 OGRFeature(gis_osm_places_free_1):93
   osm_id (String) = 3887374068
@@ -760,7 +760,7 @@ OGRFeature(gis_osm_places_free_1):93
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Tosa de Juclar
-1.715 42.599 0.000
+  POINT (1.7146635 42.5993811)
 
 OGRFeature(gis_osm_places_free_1):94
   osm_id (String) = 3887568446
@@ -768,7 +768,7 @@ OGRFeature(gis_osm_places_free_1):94
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Obac d'Envalira
-1.676 42.562 0.000
+  POINT (1.6762199 42.5621744)
 
 OGRFeature(gis_osm_places_free_1):95
   osm_id (String) = 3887568447
@@ -776,7 +776,7 @@ OGRFeature(gis_osm_places_free_1):95
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Obac de Canillo
-1.631 42.573 0.000
+  POINT (1.6313315 42.5725757)
 
 OGRFeature(gis_osm_places_free_1):96
   osm_id (String) = 3887568448
@@ -784,7 +784,7 @@ OGRFeature(gis_osm_places_free_1):96
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Obac de Soldeu
-1.665 42.571 0.000
+  POINT (1.6651981 42.5711563)
 
 OGRFeature(gis_osm_places_free_1):97
   osm_id (String) = 3887568449
@@ -792,7 +792,7 @@ OGRFeature(gis_osm_places_free_1):97
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Obac del Tarter
-1.647 42.572 0.000
+  POINT (1.6473317 42.5724856)
 
 OGRFeature(gis_osm_places_free_1):98
   osm_id (String) = 3940604188
@@ -800,7 +800,7 @@ OGRFeature(gis_osm_places_free_1):98
   fclass (String) = village
   population (Integer) = 0
   name (String) = les Bordes d'Envalira
-1.685 42.560 0.000
+  POINT (1.6848967 42.5599673)
 
 OGRFeature(gis_osm_places_free_1):99
   osm_id (String) = 3979427484
@@ -808,7 +808,7 @@ OGRFeature(gis_osm_places_free_1):99
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Carena de Pessons
-1.659 42.515 0.000
+  POINT (1.6590712 42.5150624)
 
 OGRFeature(gis_osm_places_free_1):100
   osm_id (String) = 3979428174
@@ -816,7 +816,7 @@ OGRFeature(gis_osm_places_free_1):100
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Cap dels Agols
-1.623 42.500 0.000
+  POINT (1.6228805 42.5004593)
 
 OGRFeature(gis_osm_places_free_1):101
   osm_id (String) = 3979440106
@@ -824,7 +824,7 @@ OGRFeature(gis_osm_places_free_1):101
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Canal de la Bova
-1.588 42.495 0.000
+  POINT (1.587734 42.4949731)
 
 OGRFeature(gis_osm_places_free_1):102
   osm_id (String) = 3979440107
@@ -832,7 +832,7 @@ OGRFeature(gis_osm_places_free_1):102
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Canal del Pletiu
-1.583 42.498 0.000
+  POINT (1.5834562 42.4977916)
 
 OGRFeature(gis_osm_places_free_1):103
   osm_id (String) = 3979472469
@@ -840,7 +840,7 @@ OGRFeature(gis_osm_places_free_1):103
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Camp Borrut
-1.560 42.449 0.000
+  POINT (1.5603226 42.4489224)
 
 OGRFeature(gis_osm_places_free_1):104
   osm_id (String) = 3979957978
@@ -848,7 +848,7 @@ OGRFeature(gis_osm_places_free_1):104
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Pleta dels Borrencs
-1.679 42.591 0.000
+  POINT (1.6787348 42.5911745)
 
 OGRFeature(gis_osm_places_free_1):105
   osm_id (String) = 3981463738
@@ -856,7 +856,7 @@ OGRFeature(gis_osm_places_free_1):105
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Pleta de les Planes
-1.507 42.640 0.000
+  POINT (1.5069384 42.6397449)
 
 OGRFeature(gis_osm_places_free_1):106
   osm_id (String) = 4065022132
@@ -864,7 +864,7 @@ OGRFeature(gis_osm_places_free_1):106
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Pla de les Pedres
-1.680 42.553 0.000
+  POINT (1.6802805 42.5531504)
 
 OGRFeature(gis_osm_places_free_1):107
   osm_id (String) = 4065022133
@@ -872,7 +872,7 @@ OGRFeature(gis_osm_places_free_1):107
   fclass (String) = locality
   population (Integer) = 0
   name (String) = els Espiolets
-1.665 42.563 0.000
+  POINT (1.6645842 42.5634635)
 
 OGRFeature(gis_osm_places_free_1):108
   osm_id (String) = 4314643597
@@ -880,7 +880,7 @@ OGRFeature(gis_osm_places_free_1):108
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Aixás
-1.467 42.486 0.000
+  POINT (1.4672624 42.4864514)
 
 OGRFeature(gis_osm_places_free_1):109
   osm_id (String) = 4314644011
@@ -888,7 +888,7 @@ OGRFeature(gis_osm_places_free_1):109
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Coma d'Arc
-1.482 42.632 0.000
+  POINT (1.4821463 42.6317796)
 
 OGRFeature(gis_osm_places_free_1):110
   osm_id (String) = 4314644016
@@ -896,7 +896,7 @@ OGRFeature(gis_osm_places_free_1):110
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Planells de Rialb
-1.557 42.646 0.000
+  POINT (1.5572315 42.6457671)
 
 OGRFeature(gis_osm_places_free_1):111
   osm_id (String) = 5344496348
@@ -904,7 +904,7 @@ OGRFeature(gis_osm_places_free_1):111
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Prat dels Orris
-1.633 42.537 0.000
+  POINT (1.6328146 42.537133)
 
 OGRFeature(gis_osm_places_free_1):112
   osm_id (String) = 5753637937
@@ -912,7 +912,7 @@ OGRFeature(gis_osm_places_free_1):112
   fclass (String) = locality
   population (Integer) = 0
   name (String) = pleta de Duedra
-1.566 42.621 0.000
+  POINT (1.5655552 42.6210132)
 
 OGRFeature(gis_osm_places_free_1):113
   osm_id (String) = 5753646717
@@ -920,7 +920,7 @@ OGRFeature(gis_osm_places_free_1):113
   fclass (String) = locality
   population (Integer) = 0
   name (String) = Planell dels Beços
-1.561 42.621 0.000
+  POINT (1.5606843 42.6209579)
 
 OGRFeature(gis_osm_places_free_1):114
   osm_id (String) = 5753654046
@@ -928,7 +928,7 @@ OGRFeature(gis_osm_places_free_1):114
   fclass (String) = locality
   population (Integer) = 0
   name (String) = estret de l'Estanyò
-1.571 42.614 0.000
+  POINT (1.5712737 42.6144131)
 
 OGRFeature(gis_osm_places_free_1):115
   osm_id (String) = 5753657986
@@ -936,7 +936,7 @@ OGRFeature(gis_osm_places_free_1):115
   fclass (String) = locality
   population (Integer) = 0
   name (String) = saleres de l'Estanyò
-1.573 42.613 0.000
+  POINT (1.5725933 42.613363)
 
 OGRFeature(gis_osm_places_free_1):116
   osm_id (String) = 5753699365
@@ -944,7 +944,7 @@ OGRFeature(gis_osm_places_free_1):116
   fclass (String) = locality
   population (Integer) = 0
   name (String) = pleta de la Rabassa
-1.560 42.632 0.000
+  POINT (1.5598212 42.6319062)
 
 OGRFeature(gis_osm_places_free_1):117
   osm_id (String) = 5753700012
@@ -952,7 +952,7 @@ OGRFeature(gis_osm_places_free_1):117
   fclass (String) = locality
   population (Integer) = 0
   name (String) = pas del Monjo
-1.561 42.639 0.000
+  POINT (1.5607337 42.6389858)
 
 
 

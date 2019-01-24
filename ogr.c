@@ -237,9 +237,7 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_g_exporttowkt,   two_args_second_arg_force_ref)
     PHP_FE(ogr_g_getgeometrytype,   NULL)
     PHP_FE(ogr_g_getgeometryname,   NULL)
-#ifdef CONSTRUCT_FLAG
-    PHP_FE(ogr_g_dumpreadable, three_args_first_arg_force_ref)
-#endif
+    PHP_FE(ogr_g_dumpreadable,   NULL)
     PHP_FE(ogr_g_flattento2d,   NULL)
     PHP_FE(ogr_g_assignspatialreference,    NULL)
     PHP_FE(ogr_g_getspatialreference,   NULL)
@@ -322,9 +320,7 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_f_setfieldraw,   NULL)
     PHP_FE(ogr_f_getfid,    NULL)
     PHP_FE(ogr_f_setfid,    NULL)
-#ifdef CONSTRUCT_FLAG
     PHP_FE(ogr_f_dumpreadable,  NULL)
-#endif
     PHP_FE(ogr_f_setfrom,   NULL)
     PHP_FE(ogr_f_getstylestring,    NULL)
     PHP_FE(ogr_f_setstylestring,    NULL)
@@ -1508,7 +1504,6 @@ PHP_FUNCTION(ogr_g_getgeometryname)
     }
 }
 
-#ifdef CONSTRUCT_FLAG
 /* }}} */
 
 /* {{{ proto void ogr_g_dumpreadable(resource hgeom, resource hfile,
@@ -1519,13 +1514,15 @@ PHP_FUNCTION(ogr_g_dumpreadable)
     char *strprefix = NULL;
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    int hfile_id = -1;
     int strprefix_len;
+
     zval *hgeom = NULL;
     zval *hfile = NULL;
+    php_stream *stream = NULL;
+    FILE *file = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rrs", &hgeom, &hfile,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr|s", &hgeom, &hfile,
                               &strprefix, &strprefix_len) == FAILURE)
         return;
 
@@ -1533,14 +1530,28 @@ PHP_FUNCTION(ogr_g_dumpreadable)
         ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
-    if (hfile) {
-        ZEND_FETCH_RESOURCE(???, ???, hfile, hfile_id, "Text File Ptr",
-        ???_rsrc_id);
+
+    if (!hGeometry) {
+        return;
     }
 
-    OGR_G_DumpReadable
+    php_stream_from_zval(stream, &hfile);
+
+    if (php_stream_cast(stream, PHP_STREAM_AS_STDIO, (void**) &file, REPORT_ERRORS) == FAILURE) {
+        return;
+    }
+
+    /* stream is now NULL */
+
+    OGR_G_DumpReadable(hGeometry, file, strprefix);
+
+    /* resynchronise stream position in PHP resource if stream supports it */
+
+    php_stream_from_zval(stream, &hfile);
+    if (stream->ops->seek && (stream->flags & PHP_STREAM_FLAG_NO_SEEK) == 0) {
+        php_stream_seek(stream, ftell(file), SEEK_SET);
+    }
 }
-#endif
 
 /* }}} */
 
@@ -3866,29 +3877,49 @@ PHP_FUNCTION(ogr_f_setfid)
     RETURN_LONG(eErr);
 }
 
-#ifdef CONSTRUCT_FLAG
 /* }}} */
 
-/* {{{ proto void ogr_f_dumpreadable(resource hfeature)
-   hfileout ) */
+/* {{{ proto void ogr_f_dumpreadable(resource hfeature, resource hfile )
+    */
 PHP_FUNCTION(ogr_f_dumpreadable)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
     zval *hfeature = NULL;
+    zval *hfile = NULL;
+    OGRFeatureH hFeat = NULL;
+    php_stream *stream = NULL;
+    FILE *file = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r", &hfeature) == FAILURE)
+    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, &hfile) == FAILURE)
         return;
 
     if (hfeature) {
-        ZEND_FETCH_RESOURCE(???, ???, hfeature, hfeature_id, "???",
-        ???_rsrc_id);
+        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature,
+                            hfeature_id, "OGRFeature", le_Feature);
     }
 
-    php_error(E_WARNING, "ogr_f_dumpreadable: not yet implemented");
-}
+    if (!hFeat) {
+        return;
+    }
 
-#endif
+    php_stream_from_zval(stream, &hfile);
+
+    /* stream is now NULL */
+
+    if (php_stream_cast(stream, PHP_STREAM_AS_STDIO, (void**) &file, REPORT_ERRORS) == FAILURE) {
+        return;
+    }
+
+    OGR_F_DumpReadable(hFeat, file);
+
+    /* resynchronise stream position in PHP resource if stream supports it */
+
+    php_stream_from_zval(stream, &hfile);
+    if (stream->ops->seek && (stream->flags & PHP_STREAM_FLAG_NO_SEEK) == 0) {
+        php_stream_seek(stream, ftell(file), SEEK_SET);
+    }
+}
 
 /* }}} */
 

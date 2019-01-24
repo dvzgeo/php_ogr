@@ -115,7 +115,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_F_DumpReadable($fpOut, $hDestFeature);
+        OGR_F_DumpReadable($hDestFeature, $fpOut);
 
         OGR_F_Destroy($hDestFeature);
         OGR_F_Destroy($hSrcF);
@@ -150,7 +150,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_F_DumpReadable($fpOut, $hF2);
+        OGR_F_DumpReadable($hF2, $fpOut);
 
         OGR_F_Destroy($hF1);
         OGR_F_Destroy($hF2);

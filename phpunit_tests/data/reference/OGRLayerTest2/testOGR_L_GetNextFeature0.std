@@ -5,5 +5,5 @@ OGRFeature(gis_osm_places_free_1):12
   population (Integer) = 0
   name (String) = Sispony
   Style = SYMBOL(a:0,c:#000000,s:12pt,id:"mapinfo-sym-35,ogr-sym-10")
-1.516 42.534 0.000
+  POINT (1.515627 42.5338717)
 

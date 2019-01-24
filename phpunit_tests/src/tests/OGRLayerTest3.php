@@ -166,7 +166,7 @@ class OGRLayerTest3 extends PHPUnit_Framework_TestCase
 
         $hFeature = OGR_L_GetFeature($hSrcLayer, $nFeatureId);
 
-        OGR_F_DumpReadable($fpOut, $hFeature);
+        OGR_F_DumpReadable($hFeature, $fpOut);
 
         CPLErrorReset();
 
@@ -191,7 +191,7 @@ class OGRLayerTest3 extends PHPUnit_Framework_TestCase
 
         $hFeature = OGR_L_GetFeature($hSrcLayer, $nFeatureCount - 1);
 
-        OGR_F_DumpReadable($fpOut, $hFeature);
+        OGR_F_DumpReadable($hFeature, $fpOut);
 
         fclose($fpOut);
 

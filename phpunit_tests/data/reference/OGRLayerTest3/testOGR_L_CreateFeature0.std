@@ -4,7 +4,7 @@ OGRFeature(gis_osm_places_free_1):10
   fclass (String) = village
   population (Integer) = 0
   name (String) = Prats
-1.594 42.561 0.000
+  POINT (1.5936564 42.5605597)
 
 OGRFeature(gis_osm_places_free_1):118
   osm_id (String) = 64954409
@@ -12,5 +12,5 @@ OGRFeature(gis_osm_places_free_1):118
   fclass (String) = village
   population (Integer) = 0
   name (String) = Prats
-1.594 42.561 0.000
+  POINT (1.5936564 42.5605597)
 
