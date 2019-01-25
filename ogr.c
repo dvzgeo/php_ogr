@@ -1131,8 +1131,7 @@ PHP_FUNCTION(ogr_g_createfromwkt)
 		zval_dtor(refhnewgeom);
         ZEND_REGISTER_RESOURCE(refhnewgeom, hNewGeom, le_Geometry);
     }
-    else
-        RETURN_LONG(eErr);
+    RETURN_LONG(eErr);
 }
 
 /* }}} */
