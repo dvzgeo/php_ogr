@@ -174,9 +174,6 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_g_getgeometrycount,  NULL)
     PHP_FE(ogr_g_getgeometryref,    NULL)
     PHP_FE(ogr_g_addgeometry,   NULL)
-#ifdef CONSTRUCT_FLAG
-    PHP_FE(ogr_g_addgeometrydirectly,   NULL)
-#endif
     PHP_FE(ogr_g_removegeometry,    NULL)
     PHP_FE(ogrbuildpolygonfromedges,    NULL)
     PHP_FE(ogr_fld_create,  NULL)
@@ -208,9 +205,6 @@ zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_f_create,    NULL)
     PHP_FE(ogr_f_destroy,   NULL)
     PHP_FE(ogr_f_getdefnref,    NULL)
-#ifdef CONSTRUCT_FLAG
-    PHP_FE(ogr_f_setgeometrydirectly,   NULL)
-#endif
     PHP_FE(ogr_f_setgeometry,   NULL)
     PHP_FE(ogr_f_getgeometryref,    NULL)
     PHP_FE(ogr_f_clone, NULL)
@@ -2002,48 +1996,6 @@ PHP_FUNCTION(ogr_g_addgeometry)
     RETURN_LONG(eErr);
 }
 
-#ifdef CONSTRUCT_FLAG
-
-/* }}} */
-
-/* {{{ proto int ogr_g_addgeometrydirectly(resource hgeom,
-   resource hothergeom )
- */
-PHP_FUNCTION(ogr_g_addgeometrydirectly)
-{
-    int argc = ZEND_NUM_ARGS();
-    int hgeom_id = -1;
-    zval *hgeom = NULL;
-    int hothergeom_id = -1;
-    zval *hothergeom = NULL;
-    OGRGeometryH hGeometry = NULL, hOtherGeometry;
-    OGRErr eErr = OGRERR_NONE;
-
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom)
-                              == FAILURE)
-        return;
-
-    if (hgeom) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeom, hgeom_id,
-                             "OGRGeometryH", le_Geometry, le_GeometryRef);
-    }
-    if (hothergeom) {
-        ZEND_FETCH_RESOURCE2(hOtherGeometry, OGRGeometryH, &hothergeom,
-                             hothergeom_id, "hGeometryH", le_Geometry,
-                             le_GeometryRef);
-    }
-    if (hGeometry &&hOtherGeometry)
-        eErr = OGR_G_AddGeometryDirectly(hGeometry, hOtherGeometry);
-
-    if (eErr != OGRERR_NONE){
-        php_report_ogr_error(E_WARNING);
-    }
-    zend_list_delete(hothergeom->value.lval);
-
-    RETURN_LONG(eErr);
-}
-#endif
-
 /* }}} */
 
 /* {{{ proto int ogr_g_removegeometry(resource hgeom, int igeom,
@@ -2858,50 +2810,6 @@ PHP_FUNCTION(ogr_f_getdefnref)
     if (hFeatureDefn)
         ZEND_REGISTER_RESOURCE(return_value, hFeatureDefn, le_FeatureDefnRef);
 }
-
-#ifdef CONSTRUCT_FLAG
-/* }}} */
-
-/* {{{ proto int ogr_f_setgeometrydirectly(resource hfeature, resource hgeomin)
-    */
-PHP_FUNCTION(ogr_f_setgeometrydirectly)
-{
-    int argc = ZEND_NUM_ARGS();
-    int hfeature_id = -1;
-    int hgeomin_id = -1;
-    zval *hfeature = NULL;
-    zval *hgeomin = NULL;
-    OGRGeometryH hGeometry = NULL;
-    OGRFeatureH hFeat = NULL;
-    OGRErr eErr = OGRERR_NONE;
-
-    if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hfeature, &hgeomin)
-                              == FAILURE)
-        return;
-
-    if (hfeature) {
-        ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, &hfeature, hfeature_id,
-                            "OGRFeature", le_Feature);
-    }
-    if (hgeomin) {
-        ZEND_FETCH_RESOURCE2(hGeometry, OGRGeometryH, &hgeomin, hgeomin_id,
-                             "OGRGeometry", le_Geometry, le_GeometryRef);
-    }
-
-    if (hGeometry && hFeat)
-        eErr = OGR_F_SetGeometryDirectly(hFeat, hGeometry);
-
-    if (eErr != OGRERR_NONE){
-        php_report_ogr_error(E_WARNING);
-    }
-
-    zend_list_delete(hgeomin->value.lval);
-
-    RETURN_LONG(eErr);
-}
-
-
-#endif
 
 /* }}} */
 
