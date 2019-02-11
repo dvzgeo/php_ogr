@@ -78,6 +78,12 @@ ZEND_DECLARE_MODULE_GLOBALS(ogr)
    if (rsrc == NULL) RETURN_FALSE;
 #endif
 
+/* Define macro ZEND_REGISTER_RESOURCE for PHP7 */
+#if PHP_MAJOR_VERSION >= 7
+#define ZEND_REGISTER_RESOURCE(zval, rsrc, resource_type) \
+    ZVAL_RES(zval, zend_register_resource(rsrc, resource_type));
+#endif
+
 /* Shim function zend_list_delete for PHP7 */
 #if PHP_MAJOR_VERSION < 7
 #define _ZEND_FREE_RESOURCE(zv) zend_list_delete(Z_LVAL_P(zv))
