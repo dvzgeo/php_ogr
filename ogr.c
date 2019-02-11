@@ -78,6 +78,13 @@ ZEND_DECLARE_MODULE_GLOBALS(ogr)
    if (rsrc == NULL) RETURN_FALSE;
 #endif
 
+/* Shim function zend_list_delete for PHP7 */
+#if PHP_MAJOR_VERSION < 7
+#define _ZEND_FREE_RESOURCE(zv) zend_list_delete(Z_LVAL_P(zv))
+#else
+#define _ZEND_FREE_RESOURCE(zv) zend_list_close(Z_RES_P(zv))
+#endif
+
 /* True global resources - no need for thread safety here */
 
 static int le_Datasource;
@@ -1075,7 +1082,7 @@ PHP_FUNCTION(ogr_g_destroygeometry)
                              "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry)
-        zend_list_delete(hgeom->value.lval);
+        _ZEND_FREE_RESOURCE(hgeom);
 }
 
 /* }}} */
@@ -2126,7 +2133,7 @@ PHP_FUNCTION(ogr_fld_destroy)
     }
 
     if(hFieldDefn)
-        zend_list_delete(hfield->value.lval);
+        _ZEND_FREE_RESOURCE(hfield);
 }
 
 /* }}} */
@@ -2475,7 +2482,7 @@ PHP_FUNCTION(ogr_fd_destroy)
                              le_FeatureDefnRef);
     }
     if (hFeatureDefn)
-        zend_list_delete(hdefin->value.lval);
+        _ZEND_FREE_RESOURCE(hdefin);
 }
 
 /* }}} */
@@ -2796,7 +2803,7 @@ PHP_FUNCTION(ogr_f_destroy)
                             "OGRFeature", le_Feature);
     }
     if (hFeat)
-        zend_list_delete(hfeature->value.lval);
+        _ZEND_FREE_RESOURCE(hfeature);
 }
 
 /* }}} */
@@ -4411,7 +4418,7 @@ PHP_FUNCTION(ogr_ds_destroy)
     }
 
     if (hDataSource)
-       zend_list_delete(hDS->value.lval);
+       _ZEND_FREE_RESOURCE(hDS);
 }
 
 /* }}} */
@@ -4689,7 +4696,7 @@ PHP_FUNCTION(ogr_ds_releaseresultset)
     }
     if (hDataSource && hLayerResource){
         OGR_DS_ReleaseResultSet(hDataSource, hLayerResource);
-        zend_list_delete(hlayer->value.lval);
+        _ZEND_FREE_RESOURCE(hlayer);
     }
 }
 
@@ -4729,10 +4736,10 @@ PHP_FUNCTION(ogr_ds_getdriver)
     zval *hds = NULL;
     OGRDataSourceH hDataSource = NULL;
     OGRSFDriverH hDriver = NULL;
-    
+
     if (zend_parse_parameters(argc TSRMLS_CC, "r", &hds) == FAILURE)
         return;
-    
+
     if (hds) {
         _ZEND_FETCH_RESOURCE(hDataSource, OGRDataSourceH, hds, hds_id,
                             "OGRDataSource", le_Datasource);
@@ -4740,12 +4747,12 @@ PHP_FUNCTION(ogr_ds_getdriver)
     if (hDataSource) {
         hDriver = OGR_DS_GetDriver(hDataSource);
     }
-    
+
     if (!hDriver) {
         php_report_ogr_error(E_WARNING);
         RETURN_NULL();
     }
-    
+
     ZEND_REGISTER_RESOURCE(return_value, hDriver, le_SFDriver)
 }
 
@@ -5047,7 +5054,7 @@ PHP_FUNCTION(osr_destroyspatialreference)
     	/* Actual destroy occurs when PHP doesn't hold any more references to SRS
     	 * - see ogr_free_SpatialReference()
     	 */
-        zend_list_delete(Z_LVAL_P(hsrs));
+        _ZEND_FREE_RESOURCE(hsrs);
     }
 }
 
@@ -5125,7 +5132,7 @@ PHP_FUNCTION(osr_release)
     	 */
 		refs = OSRDereference(hSpatialReference);
 		if (refs == 0) { // provoke the destroy
-			zend_list_delete(Z_LVAL_P(hsrs));
+			_ZEND_FREE_RESOURCE(hsrs);
 		}
 	}
 }
