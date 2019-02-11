@@ -4,11 +4,11 @@
  * Project:  PHP Interface for OGR C API
  * Purpose:  Implementation of PHP wrapper functions.
  * Author:   Normand Savard, nsavard@dmsolutions.ca
- * Author (OSR binding): Edward Nash, e.nash@dvz-mv.de
+ * Author (OSR binding/PHP7-compatibility): Edward Nash, e.nash@dvz-mv.de
  *
  ******************************************************************************
  * Copyright (c) 2003, DM Solutions Group Inc
- * Copyright (c) 2011, DVZ-MV GmbH
+ * Copyright (c) 2019, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
