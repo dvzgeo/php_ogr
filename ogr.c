@@ -106,6 +106,24 @@ typedef zend_rsrc_list_entry zend_resource_t;
 typedef zend_resource zend_resource_t;
 #endif
 
+/* shim string handling functions */
+#if PHP_MAJOR_VERSION < 7
+#define _RETURN_DUPLICATED_STRING(str) RETURN_STRING(str, 1)
+#define _ZVAL_STRING(zv, str) ZVAL_STRING(zv, str, 1)
+#define _ZVAL_STRINGL(zv, str, len) ZVAL_STRINGL(zv, str, len, 1)
+#else
+#define _RETURN_DUPLICATED_STRING(str) \
+    RETURN_STR(zend_string_init(str, strlen(str), 0))
+#define _ZVAL_STRING(zv, str) ZVAL_STRING(zv, str)
+#define _ZVAL_STRINGL(zv, str, len) ZVAL_STRINGL(zv, str, len)
+#endif
+
+/* define a macro for returning a (duplicated) CPLString */
+#define RETURN_CPL_STRING(str) \
+    _ZVAL_STRING(return_value, estrdup(str)); \
+    CPLFree(str); \
+    return
+
 /* True global resources - no need for thread safety here */
 
 static int le_Datasource;
@@ -1820,7 +1838,7 @@ PHP_FUNCTION(cplgetlasterrormsg)
     }
 
     if ((pszMsg = CPLGetLastErrorMsg()) != NULL)
-            RETURN_STRING((char *)pszMsg, 1);
+            _RETURN_DUPLICATED_STRING((char *)pszMsg);
 }
 
 /**********************************************************************
@@ -2105,7 +2123,7 @@ PHP_FUNCTION(ogr_g_exporttowkb)
     long ibyteorder;
     zval *hgeom = NULL;
     zval *strdata = NULL;
-    unsigned char *strwkb = NULL;
+    char *strwkb = NULL;
     int isize;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
@@ -2128,9 +2146,10 @@ PHP_FUNCTION(ogr_g_exporttowkb)
         php_report_ogr_error(E_WARNING);
     }
 
-
     convert_to_null(strdata);
-    ZVAL_STRINGL(strdata, strwkb, isize, 1);
+    if (strwkb) {
+        _ZVAL_STRINGL(strdata, strwkb, isize);
+    }
     efree(strwkb);
 
      RETURN_LONG(eErr);
@@ -2223,8 +2242,9 @@ PHP_FUNCTION(ogr_g_exporttowkt)
     }
 
     convert_to_null(strtext);
-    ZVAL_STRING(strtext, strwkt, 1);
-
+    if (strwkt) {
+        _ZVAL_STRING(strtext, strwkt);
+    }
     CPLFree(strwkt);
 
     RETURN_LONG(eErr);
@@ -2277,7 +2297,7 @@ PHP_FUNCTION(ogr_g_getgeometryname)
     if (hGeometry){
         const char *pszName;
         if ((pszName = OGR_G_GetGeometryName(hGeometry)) != NULL)
-            RETURN_STRING((char *) pszName,1);
+            _RETURN_DUPLICATED_STRING((char *) pszName);
     }
 }
 
@@ -3029,7 +3049,7 @@ PHP_FUNCTION(ogr_fld_getnameref)
     if (hFieldDefn){
         const char *pszName;
         if ((pszName = OGR_Fld_GetNameRef(hFieldDefn)) != NULL)
-            RETURN_STRING((char *) pszName, 1);
+            _RETURN_DUPLICATED_STRING((char *) pszName);
     }
 }
 
@@ -3280,7 +3300,7 @@ PHP_FUNCTION(ogr_getfieldtypename)
         return;
 
     if ((pszName = OGR_GetFieldTypeName(itype)) != NULL)
-        RETURN_STRING((char *)pszName, 1);
+        _RETURN_DUPLICATED_STRING((char *)pszName);
 }
 
 /* }}} */
@@ -3351,7 +3371,7 @@ PHP_FUNCTION(ogr_fd_getname)
     if (hFeatureDefn){
         const char *pszName;
         if ((pszName = OGR_FD_GetName(hFeatureDefn)) != NULL)
-            RETURN_STRING((char *) pszName, 1);
+            _RETURN_DUPLICATED_STRING((char *) pszName);
     }
 }
 
@@ -4029,7 +4049,7 @@ PHP_FUNCTION(ogr_f_getfieldasstring)
     if(hFeat){
         const char *pszValue;
         if ((pszValue = OGR_F_GetFieldAsString(hFeat, ifield)) != NULL)
-            RETURN_STRING((char *)pszValue, 1);
+            _RETURN_DUPLICATED_STRING((char *)pszValue);
     }
 }
 
@@ -4673,7 +4693,7 @@ PHP_FUNCTION(ogr_f_getstylestring)
     if (hFeat) {
         const char *pszStyleString;
         if ((pszStyleString = OGR_F_GetStyleString(hFeat)) != NULL)
-            RETURN_STRING((char *)pszStyleString, 1);
+            _RETURN_DUPLICATED_STRING((char *)pszStyleString);
     }
 }
 
@@ -5287,7 +5307,7 @@ PHP_FUNCTION(ogr_ds_getname)
     if (hDataSource){
         const char *pszName;
         if ((pszName = OGR_DS_GetName(hDataSource)) != NULL)
-            RETURN_STRING((char *)pszName, 1);
+            _RETURN_DUPLICATED_STRING((char *)pszName);
     }
 }
 
@@ -5565,7 +5585,7 @@ PHP_FUNCTION(ogr_dr_getname)
     if (hDriver){
         const char *pszName;
         if ((pszName = OGR_Dr_GetName(hDriver)) != NULL)
-            RETURN_STRING((char *)pszName, 1);
+            _RETURN_DUPLICATED_STRING((char *)pszName);
     }
 }
 
@@ -6243,7 +6263,6 @@ PHP_FUNCTION(osr_exporttowkt)
 	int argc = ZEND_NUM_ARGS();
 	int hsrs_id = -1;
 	char *refres = NULL;
-	const char *res = NULL;
 	zval *hsrs = NULL;
 	OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
@@ -6260,9 +6279,7 @@ PHP_FUNCTION(osr_exporttowkt)
 	}
 
     if (refres) {
-    	res = estrdup(refres);
-    	free(refres);
-        RETURN_STRING(res, 0);
+        RETURN_CPL_STRING(refres);
     }
     RETURN_LONG(eErr);
 }
@@ -6277,7 +6294,6 @@ PHP_FUNCTION(osr_exporttoprettywkt)
 	int hsrs_id = -1;
 	zend_bool simplify = 0;
 	char *refres = NULL;
-	const char *res = NULL;
 	zval *hsrs = NULL;
 	OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
@@ -6294,9 +6310,7 @@ PHP_FUNCTION(osr_exporttoprettywkt)
 	}
 
     if (refres) {
-    	res = estrdup(refres);
-    	free(refres);
-        RETURN_STRING(res, 0);
+        RETURN_CPL_STRING(refres);
     }
     RETURN_LONG(eErr);
 }
@@ -6310,7 +6324,6 @@ PHP_FUNCTION(osr_exporttoproj4)
 	int argc = ZEND_NUM_ARGS();
 	int hsrs_id = -1;
 	char *refres = NULL;
-	const char *res = NULL;
 	zval *hsrs = NULL;
 	OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
@@ -6327,9 +6340,7 @@ PHP_FUNCTION(osr_exporttoproj4)
 	}
 
     if (refres) {
-    	res = estrdup(refres);
-    	free(refres);
-        RETURN_STRING(res, 0);
+        RETURN_CPL_STRING(refres);
     }
     RETURN_LONG(eErr);
 }
@@ -6406,7 +6417,7 @@ PHP_FUNCTION(osr_getattrvalue)
     if (hSpatialReference)
     	res = OSRGetAttrValue(hSpatialReference, refNodeName, iAttr);
     if (res) {
-    	RETURN_STRING(res, 1);
+    	_RETURN_DUPLICATED_STRING(res);
     }
 }
 
@@ -6864,7 +6875,7 @@ PHP_FUNCTION(osr_getauthoritycode)
 	}
 	if (hSpatialReference) {
 		res = OSRGetAuthorityCode(hSpatialReference, refTargetKey);
-		if (res) RETURN_STRING(res, 1);
+		if (res) _RETURN_DUPLICATED_STRING(res);
 	}
 }
 
@@ -6894,7 +6905,7 @@ PHP_FUNCTION(osr_getauthorityname)
 	}
 	if (hSpatialReference) {
 		res = OSRGetAuthorityName(hSpatialReference, refTargetKey);
-		if (res) RETURN_STRING(res, 1);
+		if (res) _RETURN_DUPLICATED_STRING(res);
 	}
 }
 
