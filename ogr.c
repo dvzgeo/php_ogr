@@ -58,11 +58,6 @@
 ZEND_DECLARE_MODULE_GLOBALS(ogr)
 */
 
-
-#ifdef PHP4
-#define ZEND_DEBUG 0
-#endif
-
 /* Shim macros ZEND_FETCH_RESOURCE and ZEND_FETCH_RESOURCE2 for PHP7 */
 #if PHP_MAJOR_VERSION < 7
 #define _ZEND_FETCH_RESOURCE(rsrc, rsrc_type, passed_id, default_id, resource_type_name, resource_type) \
