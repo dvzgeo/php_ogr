@@ -3269,12 +3269,12 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
 
     if ((!panList) || (ncount <= 0)){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL;
     }
 
 	if (array_init(return_value) == FAILURE)
 	{
-		RETURN_FALSE;
+		RETURN_NULL;
 	}
 
 	while (numelements < ncount) {
@@ -3316,12 +3316,12 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 
     if ((!padfList) || (ncount <= 0)){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL;
     }
 
 	if (array_init(return_value) == FAILURE)
 	{
-		RETURN_FALSE;
+		RETURN_NULL;
 	}
 
 	while (numelements < ncount) {
@@ -3363,19 +3363,19 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
 
     if (!papszStrList){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL;
     }
 
     ncount = CSLCount(papszStrList);
 
     if (ncount <=0){
         php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
+        RETURN_NULL;
     }
 
 	if (array_init(return_value) == FAILURE)
 	{
-		RETURN_FALSE;
+		RETURN_NULL;
 	}
 
 	while (numelements < ncount) {
