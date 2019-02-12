@@ -99,6 +99,13 @@ ZEND_DECLARE_MODULE_GLOBALS(ogr)
     ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null)
 #endif
 
+/* shim zend_rsrc_list_entry (PHP5) and zend_resource (PHP7) */
+#if PHP_MAJOR_VERSION < 7
+typedef zend_rsrc_list_entry zend_resource_t;
+#else
+typedef zend_resource zend_resource_t;
+#endif
+
 /* True global resources - no need for thread safety here */
 
 static int le_Datasource;
@@ -1235,7 +1242,7 @@ static void php_ogr_init_globals(zend_ogr_globals *ogr_globals)
 /* {{{ ogr_free_Datasource() */
 
 static void
-ogr_free_Datasource(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_Datasource(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRDataSourceH hds = (OGRDataSourceH)rsrc->ptr;
 
@@ -1248,7 +1255,7 @@ ogr_free_Datasource(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_SFDriver() */
 
 static void
-ogr_free_SFDriver(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_SFDriver(zend_resource_t *rsrc TSRMLS_DC)
 {
 
 /* Nothing to do here since the datasource destructor already frees all
@@ -1259,7 +1266,7 @@ ogr_free_SFDriver(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* }}} */
 /* {{{ ogr_free_Layer() */
 static void
-ogr_free_Layer(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_Layer(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* Nothing to do here since the datasource destructor already frees all
  * layers.
@@ -1269,7 +1276,7 @@ ogr_free_Layer(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* }}} */
 /* {{{ ogr_free_SpatialReference() */
 static void
-ogr_free_SpatialReference(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_SpatialReference(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRSpatialReferenceH hSRS = (OGRSpatialReferenceH)rsrc->ptr;
     /* Release rather than Destroy in case OGR still references the object */
@@ -1279,7 +1286,7 @@ ogr_free_SpatialReference(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* }}} */
 /* {{{ ogr_free_SpatialReferenceRef() */
 static void
-ogr_free_SpatialReferenceRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_SpatialReferenceRef(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* Dummy destructor since this is only a reference on a resource
  * and we are not the owner.
@@ -1289,7 +1296,7 @@ ogr_free_SpatialReferenceRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* }}} */
 /* {{{ ogr_free_CoordinateTransformation() */
 static void
-ogr_free_CoordinateTransformation(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_CoordinateTransformation(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRCoordinateTransformationH hCT = (OGRCoordinateTransformationH)rsrc->ptr;
     OCTDestroyCoordinateTransformation(hCT);
@@ -1301,7 +1308,7 @@ ogr_free_CoordinateTransformation(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_Geometry() */
 
 static void
-ogr_free_Geometry(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_Geometry(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRGeometryH hGeom = (OGRGeometryH)rsrc->ptr;
     OGR_G_DestroyGeometry( hGeom );
@@ -1314,7 +1321,7 @@ ogr_free_Geometry(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_GeometryRef() */
 
 static void
-ogr_free_GeometryRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_GeometryRef(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* Dummy destructor since this is only a reference on a resource
  * and we are not the owner.
@@ -1326,7 +1333,7 @@ ogr_free_GeometryRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_FieldDefn() */
 
 static void
-ogr_free_FieldDefn(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_FieldDefn(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRFieldDefnH hFieldDefn = (OGRFieldDefnH)rsrc->ptr;
     OGR_Fld_Destroy( hFieldDefn );
@@ -1338,7 +1345,7 @@ ogr_free_FieldDefn(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_FieldDefnRef() */
 
 static void
-ogr_free_FieldDefnRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_FieldDefnRef(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* Dummy destructor since this is only a reference on a resource
  * and we are not the owner.
@@ -1350,7 +1357,7 @@ ogr_free_FieldDefnRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_Field() */
 
 static void
-ogr_free_Field(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_Field(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* Nothing to do here since the FieldDefn destructor already frees all
  * fields.
@@ -1362,7 +1369,7 @@ ogr_free_Field(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_FieldRef() */
 
 static void
-ogr_free_FieldRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_FieldRef(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* Dummy destructor since this is only a reference on a resource
  * and we are not the owner.
@@ -1374,7 +1381,7 @@ ogr_free_FieldRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_FeatureDefn() */
 
 static void
-ogr_free_FeatureDefn(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_FeatureDefn(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* TODO segfaults
     OGRFeatureDefnH hFeatureDefn = (OGRFeatureDefnH)rsrc->ptr;
@@ -1387,7 +1394,7 @@ ogr_free_FeatureDefn(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_FeatureDefnRef() */
 
 static void
-ogr_free_FeatureDefnRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_FeatureDefnRef(zend_resource_t *rsrc TSRMLS_DC)
 {
 /* Dummy destructor since this is only a reference on a resource
  * and we are not the owner.
@@ -1399,7 +1406,7 @@ ogr_free_FeatureDefnRef(zend_rsrc_list_entry *rsrc TSRMLS_DC)
 /* {{{ ogr_free_Feature() */
 
 static void
-ogr_free_Feature(zend_rsrc_list_entry *rsrc TSRMLS_DC)
+ogr_free_Feature(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRFeatureH hFeature = (OGRFeatureH)rsrc->ptr;
     OGR_F_Destroy( hFeature );
