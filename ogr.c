@@ -174,6 +174,13 @@ typedef zval* zval_loop_iterator_t;
 typedef long zend_long;
 #endif
 
+/* shim zval string length type */
+#if PHP_MAJOR_VERSION < 7
+typedef int strsize_t;
+#else
+typedef size_t strsize_t;
+#endif
+
 /* True global resources - no need for thread safety here */
 
 static int le_Datasource;
@@ -1896,7 +1903,7 @@ PHP_FUNCTION(ogr_g_createfromwkb)
     int hsrs_id = -1;
     int refhnewgeom_id = -1;
     unsigned char *strbydata = NULL;
-    int strbydata_len;
+    strsize_t strbydata_len;
     zval *hsrs = NULL;
     zval *refhnewgeom = NULL;
     OGRGeometryH hNewGeom = NULL;
@@ -1937,7 +1944,7 @@ PHP_FUNCTION(ogr_g_createfromwkt)
     int hsrs_id = -1;
     int refhnewgeom_id = -1;
     char *refstrdata = NULL;
-    int refstrdata_len;
+    strsize_t refstrdata_len;
     zval *hsrs = NULL;
     zval *refhnewgeom = NULL;
     OGRGeometryH hNewGeom = NULL;
@@ -2129,7 +2136,7 @@ PHP_FUNCTION(ogr_g_importfromwkb)
     int hgeom_id = -1;
     zval *hgeom = NULL;
     char *strdata = NULL;
-    int strdata_len;
+    strsize_t strdata_len;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
@@ -2230,7 +2237,7 @@ PHP_FUNCTION(ogr_g_importfromwkt)
     int hgeom_id = -1;
     zval *hgeom = NULL;
     char *strinput = NULL;
-    int strinput_len;
+    strsize_t strinput_len;
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
@@ -2352,7 +2359,7 @@ PHP_FUNCTION(ogr_g_dumpreadable)
     char *strprefix = NULL;
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    int strprefix_len;
+    strsize_t strprefix_len;
 
     zval *hgeom = NULL;
     zval *hfile = NULL;
@@ -3003,7 +3010,7 @@ PHP_FUNCTION(ogr_fld_create)
 {
     char *strnamein = NULL;
     int argc = ZEND_NUM_ARGS();
-    int strnamein_len;
+    strsize_t strnamein_len;
     zend_long itype;
     OGRFieldDefnH hFieldDefn = NULL;
 
@@ -3050,7 +3057,7 @@ PHP_FUNCTION(ogr_fld_setname)
     char *strnamein = NULL;
     int argc = ZEND_NUM_ARGS();
     int hfieldh_id = -1;
-    int strnamein_len;
+    strsize_t strnamein_len;
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
@@ -3304,7 +3311,7 @@ PHP_FUNCTION(ogr_fld_set)
     char *strnamein = NULL;
     int argc = ZEND_NUM_ARGS();
     int hfieldh_id = -1;
-    int strnamein_len;
+    strsize_t strnamein_len;
     zend_long itypein;
     zend_long nwidthin;
     zend_long nprecisionin;
@@ -3352,7 +3359,7 @@ PHP_FUNCTION(ogr_fd_create)
 {
     char *strname = NULL;
     int argc = ZEND_NUM_ARGS();
-    int strname_len;
+    strsize_t strname_len;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "s", &strname, &strname_len)
@@ -3478,7 +3485,7 @@ PHP_FUNCTION(ogr_fd_getfieldindex)
     char *strfieldname = NULL;
     int argc = ZEND_NUM_ARGS();
     int hdefin_id = -1;
-    int strfieldname_len;
+    strsize_t strfieldname_len;
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
 
@@ -3922,7 +3929,7 @@ PHP_FUNCTION(ogr_f_getfieldindex)
     char *strname = NULL;
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    int strname_len;
+    strsize_t strname_len;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -4347,7 +4354,7 @@ PHP_FUNCTION(ogr_f_setfieldstring)
     char *strvalue = NULL;
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    int strvalue_len;
+    strsize_t strvalue_len;
     zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4740,7 +4747,7 @@ PHP_FUNCTION(ogr_f_setstylestring)
     char *strstring = NULL;
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    int strstring_len;
+    strsize_t strstring_len;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -4826,7 +4833,7 @@ PHP_FUNCTION(ogr_l_setattributefilter)
     char *strquery = NULL;
     int argc = ZEND_NUM_ARGS();
     int hlayer_id = -1;
-    int strquery_len;
+    strsize_t strquery_len;
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
@@ -5167,7 +5174,7 @@ PHP_FUNCTION(ogr_l_testcapability)
     char *strcapability = NULL;
     int argc = ZEND_NUM_ARGS();
     int hlayer_id = -1;
-    int strcapability_len;
+    strsize_t strcapability_len;
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
 
@@ -5410,7 +5417,7 @@ PHP_FUNCTION(ogr_ds_getlayerbyname)
     char *strlayername = NULL;
     int argc = ZEND_NUM_ARGS();
     int hds_id = -1;
-    int strname_len;
+    strsize_t strname_len;
     zval *hds = NULL;
     OGRDataSourceH hDataSource = NULL;
     OGRLayerH hLayer = NULL;
@@ -5445,7 +5452,7 @@ PHP_FUNCTION(ogr_ds_createlayer)
     char *strname = NULL;
     int argc = ZEND_NUM_ARGS();
     int hds_id = -1;
-    int strname_len;
+    strsize_t strname_len;
     int hsrs_id = -1;
     zend_long igeometrytype;
     zval *hds = NULL;
@@ -5501,7 +5508,7 @@ PHP_FUNCTION(ogr_ds_testcapability)
     char *strcapability = NULL;
     int argc = ZEND_NUM_ARGS();
     int hds_id = -1;
-    int strcapability_len;
+    strsize_t strcapability_len;
     zval *hds = NULL;
     OGRDataSourceH hDataSource = NULL;
 
@@ -5529,9 +5536,9 @@ PHP_FUNCTION(ogr_ds_executesql)
     char *strdialect = NULL;
     int argc = ZEND_NUM_ARGS();
     int hds_id = -1;
-    int strsqlcommand_len;
+    strsize_t strsqlcommand_len;
     int hspatialfilter_id = -1;
-    int strdialect_len;
+    strsize_t strdialect_len;
     zval *hds = NULL;
     zval *hspatialfilter = NULL;
     OGRDataSourceH hDataSource = NULL;
@@ -5662,7 +5669,7 @@ PHP_FUNCTION(ogr_dr_open)
     char *strname = NULL;
     int argc = ZEND_NUM_ARGS();
     int hsfdriver_id = -1;
-    int strname_len;
+    strsize_t strname_len;
     zend_bool bupdate;
     zval *hsfdriver = NULL;
     OGRSFDriverH hDriver = NULL;
@@ -5697,7 +5704,7 @@ PHP_FUNCTION(ogr_dr_testcapability)
     char *strcapability = NULL;
     int argc = ZEND_NUM_ARGS();
     int hsfdriver_id = -1;
-    int strcapability_len;
+    strsize_t strcapability_len;
     zval *hsfdriver = NULL;
     OGRSFDriverH hDriver = NULL;
 
@@ -5724,7 +5731,7 @@ PHP_FUNCTION(ogr_dr_createdatasource)
     char *strname = NULL;
     int argc = ZEND_NUM_ARGS();
     int hsfdriver_id = -1;
-    int strname_len;
+    strsize_t strname_len;
     zval *hsfdriver = NULL;
     zval *astroptions = NULL;
     char **papszoptions = NULL;
@@ -5766,7 +5773,7 @@ PHP_FUNCTION(ogropen)
 {
     char *strName = NULL;
     int argc = ZEND_NUM_ARGS();
-    int strName_len;
+    strsize_t strName_len;
     zend_bool bUpdate;
     zval *refhSFDriver = NULL;
     OGRSFDriverH hDriver=NULL;
@@ -5878,7 +5885,7 @@ PHP_FUNCTION(ogrgetdriverbyname)
 {
     int argc = ZEND_NUM_ARGS();
     char* strname = NULL;
-    int strname_len;
+    strsize_t strname_len;
     OGRSFDriverH hDriver=NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "s", &strname, &strname_len) == FAILURE)
@@ -5917,7 +5924,7 @@ PHP_FUNCTION(osr_newspatialreference)
 {
     int argc = ZEND_NUM_ARGS();
     char *refstrdata = NULL;
-    int refstrdata_len;
+    strsize_t refstrdata_len;
     OGRSpatialReferenceH hNewSpatialReference = NULL;
     if (zend_parse_parameters(argc TSRMLS_CC, "|s", &refstrdata,
                               &refstrdata_len) == FAILURE)
@@ -6181,7 +6188,7 @@ PHP_FUNCTION(osr_importfromwkt)
 {
     int argc = ZEND_NUM_ARGS();
     char *refstrdata = NULL;
-    int refstrdata_len;
+    strsize_t refstrdata_len;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -6207,7 +6214,7 @@ PHP_FUNCTION(osr_importfromproj4)
 {
     int argc = ZEND_NUM_ARGS();
     char *refstrdata = NULL;
-    int refstrdata_len;
+    strsize_t refstrdata_len;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -6407,7 +6414,7 @@ PHP_FUNCTION(osr_getattrvalue)
 	zval *hsrs = NULL;
     char *refNodeName = NULL;
     const char *res = NULL;
-    int refNodeName_len;
+    strsize_t refNodeName_len;
     zend_long iAttr = 0;
 	OGRSpatialReferenceH hSpatialReference = NULL;
 
@@ -6704,7 +6711,7 @@ PHP_FUNCTION(osr_setfromuserinput)
 {
     int argc = ZEND_NUM_ARGS();
     char *refstrdata = NULL;
-    int refstrdata_len;
+    strsize_t refstrdata_len;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -6862,7 +6869,7 @@ PHP_FUNCTION(osr_getauthoritycode)
 {
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
-    int refTargetKey_len;
+    strsize_t refTargetKey_len;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -6892,7 +6899,7 @@ PHP_FUNCTION(osr_getauthorityname)
 {
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
-    int refTargetKey_len;
+    strsize_t refTargetKey_len;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -6922,7 +6929,7 @@ PHP_FUNCTION(osr_getprojparm)
 {
     int argc = ZEND_NUM_ARGS();
     char *refName = NULL;
-    int refName_len;
+    strsize_t refName_len;
 	int hsrs_id = -1;
 	double defaultValue = 0.0;
     zval *hsrs = NULL;
@@ -6956,7 +6963,7 @@ PHP_FUNCTION(osr_getnormprojparm)
 {
     int argc = ZEND_NUM_ARGS();
     char *refName = NULL;
-    int refName_len;
+    strsize_t refName_len;
 	int hsrs_id = -1;
 	double defaultValue = 0.0;
     zval *hsrs = NULL;
@@ -7067,7 +7074,7 @@ PHP_FUNCTION(osr_getaxis)
 {
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
-    int refTargetKey_len;
+    strsize_t refTargetKey_len;
     zend_long iAxis = 0;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
