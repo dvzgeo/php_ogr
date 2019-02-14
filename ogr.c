@@ -124,6 +124,29 @@ typedef zend_resource zend_resource_t;
     CPLFree(str); \
     return
 
+/* define shim macros for looping over a PHP array zval */
+#if PHP_MAJOR_VERSION < 7
+typedef zval** zval_loop_iterator_t;
+#define _ZVAL_LOOP_ITERATOR_STRVAL(zv) Z_STRVAL_PP(zv)
+#define _ZVAL_LOOP_ITERATOR_LVAL(zv) Z_LVAL_PP(zv)
+#define _ZVAL_LOOP_ITERATOR_DVAL(zv) Z_DVAL_PP(zv)
+#define _ZVAL_SIMPLE_LOOP_START(azv, izv) \
+    zend_hash_internal_pointer_reset(Z_ARRVAL_P(azv)); \
+    while (zend_hash_get_current_data(Z_ARRVAL_P(azv), (void **) &izv) == SUCCESS) {
+#define _ZVAL_SIMPLE_LOOP_END(azv) \
+        zend_hash_move_forward(Z_ARRVAL_P(azv)); \
+    }
+#else
+typedef zval* zval_loop_iterator_t;
+#define _ZVAL_LOOP_ITERATOR_STRVAL(zv) Z_STRVAL_P(zv)
+#define _ZVAL_LOOP_ITERATOR_LVAL(zv) Z_LVAL_P(zv)
+#define _ZVAL_LOOP_ITERATOR_DVAL(zv) Z_DVAL_P(zv)
+#define _ZVAL_SIMPLE_LOOP_START(azv, izv) \
+    ZEND_HASH_FOREACH_VAL(Z_ARRVAL_P(azv), izv) {
+#define _ZVAL_SIMPLE_LOOP_END(azv) \
+    } ZEND_HASH_FOREACH_END();
+#endif
+
 /* True global resources - no need for thread safety here */
 
 static int le_Datasource;
@@ -1764,20 +1787,11 @@ static void php_report_ogr_error(int nErrLevel)
 
 static char **  php_array2string(char **papszStrList, zval *refastrvalues)
 {
-    int numelems = 0;
-    zval **tmp = NULL;
-
-	numelems = zend_hash_num_elements(Z_ARRVAL_P(refastrvalues));
-
-	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refastrvalues));
-	while (zend_hash_get_current_data(Z_ARRVAL_P(refastrvalues),
-										 (void **) &tmp) == SUCCESS) {
-		convert_to_string_ex(tmp);
-
-        papszStrList = (char **)CSLAddString(papszStrList, Z_STRVAL_PP(tmp));
-
-		zend_hash_move_forward(Z_ARRVAL_P(refastrvalues));
-	}
+    zval_loop_iterator_t tmp = NULL;
+    _ZVAL_SIMPLE_LOOP_START(refastrvalues, tmp)
+        convert_to_string_ex(tmp);
+        papszStrList = (char **) CSLAddString(papszStrList, _ZVAL_LOOP_ITERATOR_STRVAL(tmp));
+    _ZVAL_SIMPLE_LOOP_END(refastrvalues)
     return papszStrList;
 }
 
@@ -4377,7 +4391,7 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
     OGRFeatureH hFeat = NULL;
     int *alTmp = NULL;
     int numelements = 0;
-    zval **tmp = NULL;
+    zval_loop_iterator_t tmp = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rlla", &hfeature, &ifield,
                               &ncount, &refanvalues) == FAILURE)
@@ -4398,16 +4412,12 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
 
     numelements = 0;
 
-	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refanvalues));
-	while (zend_hash_get_current_data(Z_ARRVAL_P(refanvalues),
-										 (void **) &tmp) == SUCCESS) {
+    _ZVAL_SIMPLE_LOOP_START(refanvalues, tmp)
 
-
-        alTmp[numelements] = Z_LVAL_PP(tmp);
+        alTmp[numelements] = _ZVAL_LOOP_ITERATOR_LVAL(tmp);
         numelements++;
 
-		zend_hash_move_forward(Z_ARRVAL_P(refanvalues));
-	}
+    _ZVAL_SIMPLE_LOOP_END(refanvalues)
 
     if (hFeat)
         OGR_F_SetFieldIntegerList(hFeat, ifield, ncount, (int *)alTmp);
@@ -4431,7 +4441,7 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
     OGRFeatureH hFeat = NULL;
     double *adfTmp = NULL;
     int numelements = 0;
-    zval **tmp = NULL;
+    zval_loop_iterator_t tmp = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rlla", &hfeature, &ifield,
                               &ncount, &refadfvalues) == FAILURE)
@@ -4453,15 +4463,12 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
 
     numelements = 0;
 
-	zend_hash_internal_pointer_reset(Z_ARRVAL_P(refadfvalues));
-	while (zend_hash_get_current_data(Z_ARRVAL_P(refadfvalues),
-										 (void **) &tmp) == SUCCESS) {
+    _ZVAL_SIMPLE_LOOP_START(refadfvalues, tmp)
 
-        adfTmp[numelements] = Z_DVAL_PP(tmp);
+        adfTmp[numelements] = _ZVAL_LOOP_ITERATOR_DVAL(tmp);
         numelements++;
 
-		zend_hash_move_forward(Z_ARRVAL_P(refadfvalues));
-	}
+    _ZVAL_SIMPLE_LOOP_END(refadfvalues)
 
     if (hFeat)
         OGR_F_SetFieldDoubleList(hFeat, ifield, ncount, (double *)adfTmp);
@@ -6201,15 +6208,9 @@ PHP_FUNCTION(osr_importfromesri)
 	int hsrs_id = -1;
 	zval *prjdata = NULL;
     zval *hsrs = NULL;
-    HashTable *prjhash = NULL;
-    HashPosition pointer;
-    zval **prjentry = NULL;
-    zval temp;
     char **prjstrings = NULL;
-    char *tempString = NULL;
     int i = 0;
-    int stringsOK = 0;
-    int res;
+    int res = OGRERR_FAILURE;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!a!", &hsrs, &prjdata) == FAILURE)
@@ -6221,37 +6222,14 @@ PHP_FUNCTION(osr_importfromesri)
 	}
 	/* OSRImportFromESRI requires a null-terminated list of strings as input */
 	if (prjdata) {
-		prjhash = Z_ARRVAL_P(prjdata);
-		prjstrings = emalloc((1 + zend_hash_num_elements(prjhash)) * sizeof(char *));
-		if (prjstrings) {
-			for(zend_hash_internal_pointer_reset_ex(prjhash, &pointer);
-					zend_hash_get_current_data_ex(prjhash, (void **) &prjentry, &pointer) == SUCCESS;
-					zend_hash_move_forward_ex(prjhash, &pointer)) {
-				temp = **prjentry;
-				zval_copy_ctor(&temp);
-				convert_to_string(&temp);
-				prjstrings[i] = estrdup(Z_STRVAL(temp));
-				if (!prjstrings[i])	break; /* bail out at first sign of problems */
-				zval_dtor(&temp);
-				i++;
-			}
-			if (i == zend_hash_num_elements(prjhash)) {
-				prjstrings[i] = NULL;
-				stringsOK = 1; /* only call actual function if memory allocation successful */
-			}
-		}
+		prjstrings = php_array2string(prjstrings, prjdata);
 	}
-	if (hSpatialReference && prjstrings && stringsOK){
+	if (hSpatialReference && prjstrings){
 	    res = OSRImportFromESRI(hSpatialReference, prjstrings);
 	}
 	/* tidy up newly allocated string list */
-	if (prjstrings) {
-		for (; --i >= 0;) {
-			if (prjstrings[i]) efree(prjstrings[i]);
-		}
-		efree(prjstrings);
-		RETURN_LONG(res);
-	}
+	CSLDestroy(prjstrings);
+	RETURN_LONG(res);
 }
 
 /* }}} */
