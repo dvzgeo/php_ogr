@@ -7089,13 +7089,11 @@ PHP_FUNCTION(is_osr)
 	int hsrs_id = -1;
 	zval *hsrs = NULL;
 	int zvalType = -1;
-	const char *rsrcType = NULL;
 	OGRSpatialReferenceH hSpatialReference = NULL;
 	zend_parse_parameters(argc TSRMLS_CC, "z!", &hsrs);
 
 	if (hsrs) {
 		if (Z_TYPE_P(hsrs) == IS_RESOURCE) {
-			rsrcType = zend_rsrc_list_get_rsrc_type(Z_RESVAL_P(hsrs));
 			zend_list_find(Z_RESVAL_P(hsrs), &zvalType);
 			if ((zvalType == le_SpatialReference) || (zvalType == le_SpatialReferenceRef)) {
 				_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
