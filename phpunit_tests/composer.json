@@ -5,8 +5,7 @@
     "type": "project",
     "license": "MIT",
     "require": {
-      "php": "^5.4",
-      "ext-ogr": "*",
+      "php": "^5.4|^7",
       "phpunit/phpunit": "^5.7"
     },
     "autoload": {
