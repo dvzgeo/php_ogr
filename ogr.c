@@ -162,6 +162,13 @@ typedef zval* zval_loop_iterator_t;
     } ZEND_HASH_FOREACH_END();
 #endif
 
+/* shim php_stream_from_zval */
+#if PHP_MAJOR_VERSION < 7
+#define _PHP_STREAM_FROM_ZVAL(stream, hfile) php_stream_from_zval(stream, &hfile)
+#else
+#define _PHP_STREAM_FROM_ZVAL(stream, hfile) php_stream_from_zval(stream, hfile)
+#endif
+
 /* True global resources - no need for thread safety here */
 
 static int le_Datasource;
@@ -2361,7 +2368,7 @@ PHP_FUNCTION(ogr_g_dumpreadable)
         return;
     }
 
-    php_stream_from_zval(stream, &hfile);
+    _PHP_STREAM_FROM_ZVAL(stream, hfile);
 
     if (php_stream_cast(stream, PHP_STREAM_AS_STDIO, (void**) &file, REPORT_ERRORS) == FAILURE) {
         return;
@@ -2373,7 +2380,7 @@ PHP_FUNCTION(ogr_g_dumpreadable)
 
     /* resynchronise stream position in PHP resource if stream supports it */
 
-    php_stream_from_zval(stream, &hfile);
+    _PHP_STREAM_FROM_ZVAL(stream, hfile);
     if (stream->ops->seek && (stream->flags & PHP_STREAM_FLAG_NO_SEEK) == 0) {
         php_stream_seek(stream, ftell(file), SEEK_SET);
     }
@@ -4636,7 +4643,7 @@ PHP_FUNCTION(ogr_f_dumpreadable)
         return;
     }
 
-    php_stream_from_zval(stream, &hfile);
+    _PHP_STREAM_FROM_ZVAL(stream, hfile);
 
     /* stream is now NULL */
 
@@ -4648,7 +4655,7 @@ PHP_FUNCTION(ogr_f_dumpreadable)
 
     /* resynchronise stream position in PHP resource if stream supports it */
 
-    php_stream_from_zval(stream, &hfile);
+    _PHP_STREAM_FROM_ZVAL(stream, hfile);
     if (stream->ops->seek && (stream->flags & PHP_STREAM_FLAG_NO_SEEK) == 0) {
         php_stream_seek(stream, ftell(file), SEEK_SET);
     }
