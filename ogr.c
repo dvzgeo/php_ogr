@@ -118,6 +118,13 @@ typedef zend_resource zend_resource_t;
 #define _ZVAL_STRINGL(zv, str, len) ZVAL_STRINGL(zv, str, len)
 #endif
 
+/* shim usage of zend_list_find */
+#if PHP_MAJOR_VERSION < 7
+#define _ZEND_LIST_FINDD(zv, zvType) zend_list_find(Z_RESVAL_P(zv), &zvType)
+#else
+#define _ZEND_LIST_FINDD(zv, zvType) zvType = Z_RES_P(zv)->type
+#endif
+
 /* define a macro for returning a (duplicated) CPLString */
 #define RETURN_CPL_STRING(str) \
     _ZVAL_STRING(return_value, estrdup(str)); \
@@ -7094,7 +7101,7 @@ PHP_FUNCTION(is_osr)
 
 	if (hsrs) {
 		if (Z_TYPE_P(hsrs) == IS_RESOURCE) {
-			zend_list_find(Z_RESVAL_P(hsrs), &zvalType);
+			_ZEND_LIST_FINDD(hsrs, zvalType);
 			if ((zvalType == le_SpatialReference) || (zvalType == le_SpatialReferenceRef)) {
 				_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
 									 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
