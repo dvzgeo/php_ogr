@@ -111,11 +111,19 @@ typedef zend_resource zend_resource_t;
 #define _RETURN_DUPLICATED_STRING(str) RETURN_STRING(str, 1)
 #define _ZVAL_STRING(zv, str) ZVAL_STRING(zv, str, 1)
 #define _ZVAL_STRINGL(zv, str, len) ZVAL_STRINGL(zv, str, len, 1)
+#define _ADD_ASSOC_STRING(zval, key, str) \
+    add_assoc_string(zval, key, str, 1)
+#define _ADD_NEXT_INDEX_STRING(zval, str) \
+    add_next_index_string(zval, str, 1)
 #else
 #define _RETURN_DUPLICATED_STRING(str) \
     RETURN_STR(zend_string_init(str, strlen(str), 0))
 #define _ZVAL_STRING(zv, str) ZVAL_STRING(zv, str)
 #define _ZVAL_STRINGL(zv, str, len) ZVAL_STRINGL(zv, str, len)
+#define _ADD_ASSOC_STRING(zval, key, str) \
+    add_assoc_str(zval, key, zend_string_init(str, strlen(str), 0))
+#define _ADD_NEXT_INDEX_STRING(zval, str) \
+    add_next_index_str(zval, zend_string_init(str, strlen(str), 0))
 #endif
 
 /* shim usage of zend_list_find */
@@ -4258,8 +4266,8 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
 	}
 
 	while (numelements < ncount) {
-        add_next_index_string(return_value, (char *)
-                              CSLGetField(papszStrList, numelements), 1);
+        _ADD_NEXT_INDEX_STRING(return_value, (char *)
+                              CSLGetField(papszStrList, numelements));
         numelements++;
 	}
 }
@@ -6430,7 +6438,7 @@ PHP_FUNCTION(osr_getangularunits)
     	array_init(return_value);
     	add_assoc_double(return_value, "multiplier", units);
     	if (refName) {
-    		add_assoc_string(return_value, "name", refName, 1);
+    		_ADD_ASSOC_STRING(return_value, "name", refName);
     	} else {
     		add_assoc_null(return_value, "name");
     	}
@@ -6461,7 +6469,7 @@ PHP_FUNCTION(osr_getlinearunits)
     	array_init(return_value);
     	add_assoc_double(return_value, "multiplier", units);
     	if (refName) {
-    		add_assoc_string(return_value, "name", refName, 1);
+    		_ADD_ASSOC_STRING(return_value, "name", refName);
      	} else {
     		add_assoc_null(return_value, "name");
     	}
@@ -6492,7 +6500,7 @@ PHP_FUNCTION(osr_getprimemeridian)
     	array_init(return_value);
     	add_assoc_double(return_value, "offset", units);
     	if (refName) {
-    		add_assoc_string(return_value, "name", refName, 1);
+    		_ADD_ASSOC_STRING(return_value, "name", refName);
     	} else {
     		add_assoc_null(return_value, "name");
     	}
@@ -7052,10 +7060,9 @@ PHP_FUNCTION(osr_getaxis)
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
-    const char *res = NULL;
-    char *res_local = NULL;
+    char *res = NULL;
     OGRAxisOrientation orientation;
-    char *orient_local = NULL;
+    char *res_orient = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!sl", &hsrs, &refTargetKey,
     		                  &refTargetKey_len, &iAxis) == FAILURE)
@@ -7065,23 +7072,18 @@ PHP_FUNCTION(osr_getaxis)
 							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
 	}
     if (hSpatialReference) {
-    	res = OSRGetAxis(hSpatialReference, refTargetKey, iAxis, &orientation);
+        res = (char *) OSRGetAxis(hSpatialReference, refTargetKey, iAxis, &orientation);
     	if (res) {
-    		// add_assoc_string wants non-const char *, so create some that we own
-    		res_local = estrdup(res);
-    		if (orientation) orient_local = estrdup(OSRAxisEnumToName(orientation));
-    		if (res_local && orient_local) {
-				array_init(return_value);
-				add_assoc_string(return_value, "name", res_local, 0);
-				if (orient_local) {
-					add_assoc_string(return_value, "orientation", orient_local, 0);
-				} else {
-					add_assoc_null(return_value, "orientation");
-				}
-    		} else {
-    			if (res_local) efree(res_local);
-    			if (orient_local) efree(orient_local);
-    		}
+            array_init(return_value);
+            _ADD_ASSOC_STRING(return_value, "name", res);
+            if (orientation) {
+                res_orient = (char *) OSRAxisEnumToName(orientation);
+            }
+            if (res_orient) {
+                _ADD_ASSOC_STRING(return_value, "orientation", res_orient);
+            } else {
+                add_assoc_null(return_value, "orientation");
+            }
     	}
     }
 }
