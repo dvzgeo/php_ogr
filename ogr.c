@@ -133,12 +133,6 @@ typedef zend_resource zend_resource_t;
 #define _ZEND_LIST_FINDD(zv, zvType) zvType = Z_RES_P(zv)->type
 #endif
 
-/* define a macro for returning a (duplicated) CPLString */
-#define RETURN_CPL_STRING(str) \
-    _ZVAL_STRING(return_value, estrdup(str)); \
-    CPLFree(str); \
-    return
-
 /* define shim macros for looping over a PHP array zval */
 #if PHP_MAJOR_VERSION < 7
 typedef zval** zval_loop_iterator_t;
@@ -180,6 +174,12 @@ typedef int strsize_t;
 #else
 typedef size_t strsize_t;
 #endif
+
+/* define a macro for returning a (duplicated) CPLString */
+#define RETURN_CPL_STRING(str) \
+    _ZVAL_STRING(return_value, estrdup(str)); \
+    CPLFree(str); \
+    return
 
 /* True global resources - no need for thread safety here */
 
