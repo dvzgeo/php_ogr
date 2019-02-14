@@ -169,6 +169,11 @@ typedef zval* zval_loop_iterator_t;
 #define _PHP_STREAM_FROM_ZVAL(stream, hfile) php_stream_from_zval(stream, hfile)
 #endif
 
+/* shim zend_long for PHP 5 */
+#if PHP_MAJOR_VERSION < 7
+typedef long zend_long;
+#endif
+
 /* True global resources - no need for thread safety here */
 
 static int le_Datasource;
@@ -1990,7 +1995,7 @@ PHP_FUNCTION(ogr_g_destroygeometry)
 PHP_FUNCTION(ogr_g_creategeometry)
 {
     int argc = ZEND_NUM_ARGS();
-    long igeometrytype;
+    zend_long igeometrytype;
     OGRGeometryH hGeometry = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "l", &igeometrytype) == FAILURE)
@@ -2156,7 +2161,7 @@ PHP_FUNCTION(ogr_g_exporttowkb)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long ibyteorder;
+    zend_long ibyteorder;
     zval *hgeom = NULL;
     zval *strdata = NULL;
     char *strwkb = NULL;
@@ -2663,7 +2668,7 @@ PHP_FUNCTION(ogr_g_getx)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long ipoint;
+    zend_long ipoint;
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
@@ -2688,7 +2693,7 @@ PHP_FUNCTION(ogr_g_gety)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long ipoint;
+    zend_long ipoint;
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
@@ -2713,7 +2718,7 @@ PHP_FUNCTION(ogr_g_getz)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long ipoint;
+    zend_long ipoint;
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
@@ -2739,7 +2744,7 @@ PHP_FUNCTION(ogr_g_getpoint)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long ipoint;
+    zend_long ipoint;
     zval *refdfx;
     zval *refdfy;
     zval *refdfz;
@@ -2781,7 +2786,7 @@ PHP_FUNCTION(ogr_g_setpoint)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long ipoint;
+    zend_long ipoint;
     double dfx;
     double dfy;
     double dfz;
@@ -2858,7 +2863,7 @@ PHP_FUNCTION(ogr_g_getgeometryref)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long isubgeom;
+    zend_long isubgeom;
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL, hGeometryRef = NULL;
 
@@ -2926,7 +2931,7 @@ PHP_FUNCTION(ogr_g_removegeometry)
 {
     int argc = ZEND_NUM_ARGS();
     int hgeom_id = -1;
-    long igeom;
+    zend_long igeom;
     zend_bool bdelete;
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
@@ -2999,7 +3004,7 @@ PHP_FUNCTION(ogr_fld_create)
     char *strnamein = NULL;
     int argc = ZEND_NUM_ARGS();
     int strnamein_len;
-    long itype;
+    zend_long itype;
     OGRFieldDefnH hFieldDefn = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "sl", &strnamein,
@@ -3121,7 +3126,7 @@ PHP_FUNCTION(ogr_fld_settype)
 {
     int argc = ZEND_NUM_ARGS();
     int hfieldh_id = -1;
-    long itype;
+    zend_long itype;
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
@@ -3171,7 +3176,7 @@ PHP_FUNCTION(ogr_fld_setjustify)
 {
     int argc = ZEND_NUM_ARGS();
     int hfieldh_id = -1;
-    long ijustify;
+    zend_long ijustify;
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
@@ -3222,7 +3227,7 @@ PHP_FUNCTION(ogr_fld_setwidth)
 {
     int argc = ZEND_NUM_ARGS();
     int hfieldh_id = -1;
-    long nwidth;
+    zend_long nwidth;
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
@@ -3271,7 +3276,7 @@ PHP_FUNCTION(ogr_fld_setprecision)
 {
     int argc = ZEND_NUM_ARGS();
     int hfieldh_id = -1;
-    long nprecision;
+    zend_long nprecision;
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
@@ -3300,10 +3305,10 @@ PHP_FUNCTION(ogr_fld_set)
     int argc = ZEND_NUM_ARGS();
     int hfieldh_id = -1;
     int strnamein_len;
-    long itypein;
-    long nwidthin;
-    long nprecisionin;
-    long justifyin;
+    zend_long itypein;
+    zend_long nwidthin;
+    zend_long nprecisionin;
+    zend_long justifyin;
     zval *hfieldh = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
 
@@ -3329,7 +3334,7 @@ PHP_FUNCTION(ogr_fld_set)
 PHP_FUNCTION(ogr_getfieldtypename)
 {
     int argc = ZEND_NUM_ARGS();
-    long itype;
+    zend_long itype;
     const char *pszName;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "l", &itype) == FAILURE)
@@ -3443,7 +3448,7 @@ PHP_FUNCTION(ogr_fd_getfielddefn)
 {
     int argc = ZEND_NUM_ARGS();
     int hdefin_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
@@ -3557,7 +3562,7 @@ PHP_FUNCTION(ogr_fd_setgeomtype)
 {
     int argc = ZEND_NUM_ARGS();
     int hdefin_id = -1;
-    long itype;
+    zend_long itype;
     zval *hdefin = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
     int iRefCount = 0;
@@ -3888,7 +3893,7 @@ PHP_FUNCTION(ogr_f_getfielddefnref)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
     OGRFieldDefnH hFieldDefn = NULL;
@@ -3941,7 +3946,7 @@ PHP_FUNCTION(ogr_f_isfieldset)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -3965,7 +3970,7 @@ PHP_FUNCTION(ogr_f_unsetfield)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -3989,7 +3994,7 @@ PHP_FUNCTION(ogr_f_getrawfieldref)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
     OGRField *hField = NULL;
@@ -4018,7 +4023,7 @@ PHP_FUNCTION(ogr_f_getfieldasinteger)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -4043,7 +4048,7 @@ PHP_FUNCTION(ogr_f_getfieldasdouble)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -4068,7 +4073,7 @@ PHP_FUNCTION(ogr_f_getfieldasstring)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
     int numelems = 0;
@@ -4099,7 +4104,7 @@ PHP_FUNCTION(ogr_f_getfieldasdatetime)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
     int iYear;
@@ -4142,7 +4147,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *refncount;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4188,7 +4193,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *refncount;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4236,7 +4241,7 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
     int numelements = 0;
@@ -4288,8 +4293,8 @@ PHP_FUNCTION(ogr_f_setfieldinteger)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
-    long nvalue;
+    zend_long ifield;
+    zend_long nvalue;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -4315,7 +4320,7 @@ PHP_FUNCTION(ogr_f_setfielddouble)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     double dfvalue;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4343,7 +4348,7 @@ PHP_FUNCTION(ogr_f_setfieldstring)
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
     int strvalue_len;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -4370,14 +4375,14 @@ PHP_FUNCTION(ogr_f_setfielddatetime)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
-    long iYear = 0;
-    long iMonth = 1;
-    long iDay = 1;
-    long iHour = 0;
-    long iMinute = 0;
-    long iSecond = 0;
-    long iTZFlag = 0;
+    zend_long ifield;
+    zend_long iYear = 0;
+    zend_long iMonth = 1;
+    zend_long iDay = 1;
+    zend_long iHour = 0;
+    zend_long iMinute = 0;
+    zend_long iSecond = 0;
+    zend_long iTZFlag = 0;
 
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4406,8 +4411,8 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
-    long ncount;
+    zend_long ifield;
+    zend_long ncount;
     zval *refanvalues = NULL;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4456,8 +4461,8 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
-    long ncount;
+    zend_long ifield;
+    zend_long ncount;
     zval *refadfvalues =NULL;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4507,7 +4512,7 @@ PHP_FUNCTION(ogr_f_setfieldstringlist)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     zval *refastrvalues = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4540,7 +4545,7 @@ PHP_FUNCTION(ogr_f_setfieldraw)
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
     int hogrfield_id = -1;
-    long ifield;
+    zend_long ifield;
     zval *hfeature = NULL;
     zval *hogrfield = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4595,7 +4600,7 @@ PHP_FUNCTION(ogr_f_setfid)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
-    long ifidin;
+    zend_long ifidin;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
     OGRErr eErr = OGRERR_FAILURE;
@@ -4900,7 +4905,7 @@ PHP_FUNCTION(ogr_l_getfeature)
 {
     int argc = ZEND_NUM_ARGS();
     int hlayer_id = -1;
-    long ifeatureid;
+    zend_long ifeatureid;
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
     OGRFeatureH hFeat = NULL;
@@ -4996,13 +5001,13 @@ PHP_FUNCTION(ogr_l_createfeature)
     RETURN_LONG(eErr);
 }
 
-/* {{{ proto int ogr_l_deletefeature(resource hlayer, long ifeatureid)
+/* {{{ proto int ogr_l_deletefeature(resource hlayer, zend_long ifeatureid)
     */
 PHP_FUNCTION(ogr_l_deletefeature)
 {
     int argc = ZEND_NUM_ARGS();
     int hlayer_id = -1;
-    long ifeatureid;
+    zend_long ifeatureid;
     zval *hlayer = NULL;
     zval *hfeature = NULL;
     OGRLayerH hLayerResource = NULL;
@@ -5372,7 +5377,7 @@ PHP_FUNCTION(ogr_ds_getlayer)
 {
     int argc = ZEND_NUM_ARGS();
     int hds_id = -1;
-    long ilayer;
+    zend_long ilayer;
     zval *hds = NULL;
     OGRDataSourceH hDataSource = NULL;
     OGRLayerH hLayer = NULL;
@@ -5442,7 +5447,7 @@ PHP_FUNCTION(ogr_ds_createlayer)
     int hds_id = -1;
     int strname_len;
     int hsrs_id = -1;
-    long igeometrytype;
+    zend_long igeometrytype;
     zval *hds = NULL;
     zval *hsrs = NULL;
     zval *astroptions = NULL;
@@ -5850,7 +5855,7 @@ PHP_FUNCTION(ogrgetdrivercount)
 PHP_FUNCTION(ogrgetdriver)
 {
     int argc = ZEND_NUM_ARGS();
-    long idriver;
+    zend_long idriver;
     OGRSFDriverH hDriver=NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "l", &idriver) == FAILURE)
@@ -6129,7 +6134,7 @@ PHP_FUNCTION(osr_stripctparms)
 PHP_FUNCTION(osr_importfromepsg)
 {
     int argc = ZEND_NUM_ARGS();
-    long nCode = -1;
+    zend_long nCode = -1;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -6152,7 +6157,7 @@ PHP_FUNCTION(osr_importfromepsg)
 PHP_FUNCTION(osr_importfromepsga)
 {
     int argc = ZEND_NUM_ARGS();
-    long nCode = -1;
+    zend_long nCode = -1;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
@@ -6403,7 +6408,7 @@ PHP_FUNCTION(osr_getattrvalue)
     char *refNodeName = NULL;
     const char *res = NULL;
     int refNodeName_len;
-    long iAttr = 0;
+    zend_long iAttr = 0;
 	OGRSpatialReferenceH hSpatialReference = NULL;
 
 	if (zend_parse_parameters(argc TSRMLS_CC, "r!s|l", &hsrs, &refNodeName,
@@ -7063,7 +7068,7 @@ PHP_FUNCTION(osr_getaxis)
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
     int refTargetKey_len;
-    long iAxis = 0;
+    zend_long iAxis = 0;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
