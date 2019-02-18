@@ -11,6 +11,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
     public $strDestDataSource;
     public $hOGRSFDriver;
     public $strOutputLayer;
+    public $eGeometryType;
 
     public static function setUpBeforeClass()
     {
@@ -42,6 +43,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             $this->hLayer,
             "Could not retrieve layer " . $iLayer
         );
+        $this->eGeometryType = wkbPoint;
     }
 
     public function tearDown()
@@ -58,6 +60,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
         unset($this->hLayer);
         unset($this->hOGRSFDriver);
         unset($this->strOutputLayer);
+        unset($this->eGeometryType);
     }
 
     /***********************************************************************
@@ -118,7 +121,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
         $hDestLayer = OGR_DS_CreateLayer(
             $hDestDS,
             $this->strOutputLayer,
-            $hSpatialRef,
+            null,
             $this->eGeometryType,
             null /*Options*/
         );
@@ -180,7 +183,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
         $hDestLayer = OGR_DS_CreateLayer(
             $hDestDS,
             $this->strOutputLayer,
-            $hSpatialRef,
+            null,
             $this->eGeometryType,
             null /*Options*/
         );

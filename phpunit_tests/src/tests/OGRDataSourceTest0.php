@@ -44,7 +44,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         $this->nLayerCount = 18;
         $this->hOGRSFDriver = null;
         $this->iDriver = "ESRI Shapefile";
-        $this->astrOptions[] = array();
+        $this->astrOptions = array();
     }
     // called after the test functions are executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
@@ -198,9 +198,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
 
         $hSpatialFilter = null;
 
@@ -231,7 +228,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 
@@ -288,10 +285,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             $this->hOGRSFDriver
         );
 
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
-
         $hSpatialFilter = null;
 
         $strSQLCommand = "SELECT fclass,name FROM gis_osm_places_free_1";
@@ -321,7 +314,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 
@@ -364,9 +357,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
 
         $hSpatialFilter = null;
 
@@ -397,7 +387,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 
@@ -440,9 +430,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
 
         $hSpatialFilter = null;
 
@@ -473,7 +460,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 

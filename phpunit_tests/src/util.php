@@ -127,8 +127,7 @@ function OGRDumpSingleLayer($fp, $hLayer, $bForce)
     );
 
     $strOutput = sprintf(
-        "Layer %d: '%s'\n\n",
-        $i,
+        "Layer '%s'\n\n",
         OGR_FD_GetName($hLayerDefn)
     );
     fputs($fp, $strOutput, strlen($strOutput));
@@ -192,8 +191,7 @@ function OGRDumpLayerDefn($fp, $hLayerDefn)
     );
 
     $strOutput = sprintf(
-        "Layer %d: '%s'\n\n",
-        $i,
+        "Layer: '%s'\n\n",
         OGR_FD_GetName($hLayerDefn)
     );
     fputs($fp, $strOutput, strlen($strOutput));

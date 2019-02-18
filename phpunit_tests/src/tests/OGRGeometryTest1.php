@@ -328,7 +328,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
     {
         CPLErrorReset();
 
-        OGR_G_GetEnvelope($this->hContainer, $hEnvelope);
+        $eErr = OGR_G_GetEnvelope($this->hContainer, $hEnvelope);
 
         $eErrMsg = CPLGetLastErrorMsg();
 

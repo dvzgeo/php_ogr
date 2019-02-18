@@ -112,7 +112,7 @@ class OGRLayerTest3 extends PHPUnit_Framework_TestCase
         $hDestDS = OGR_Dr_Open(
             $this->hOGRSFDriver,
             $this->strPathToOutputData . $this->strDestDataSource,
-            null /*Options*/
+            false /* update */
         );
         $this->assertNotNull($hDestDS, "Could not open new datasource");
 

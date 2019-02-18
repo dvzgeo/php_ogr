@@ -158,7 +158,7 @@ class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
         fclose($fpOut);
 
         $this->assertFileEquals(
-            $this->strPathToStandardData . $strStandardFile,
+            $strStandardFile,
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_F_Clone() : Files comparison did not matched."
         );
