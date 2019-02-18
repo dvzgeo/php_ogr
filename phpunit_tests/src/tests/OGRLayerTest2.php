@@ -79,7 +79,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
     public function testOGR_L_GetFeature0()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $nFeatureId = 12;
 
@@ -119,7 +119,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
     public function testOGR_L_GetNextFeature0()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         ;
 
         $nFeatureId = 12;
@@ -160,6 +160,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_L_GetSpatialRef0()
     {
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $hSrcLayer = OGR_DS_GetLayer($this->hSrcDataSource, 0);
 
         $hSpatialRef = OGR_L_GetSpatialRef($hSrcLayer);
@@ -169,10 +170,9 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
             "Problem with OGR_L_GetSpatialRef():  Spatial reference handle is not supposed to be NULL."
         );
 
-        $expected = 'GEOGCS["unnamed",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563],TOWGS84[0,0,0,-0,-0,-0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]';
         $actual = OSR_ExportToWKT($hSpatialRef);
-        $this->assertEquals(
-            $expected,
+        $this->assertStringEqualsFile(
+            $strStandardFile,
             $actual,
             "Problem with OGR_L_GetSpatialRef: Unexpected result"
         );
@@ -185,8 +185,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
     public function testOGR_L_ResetReading0()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
-        ;
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $nFeatureId = 12;
 

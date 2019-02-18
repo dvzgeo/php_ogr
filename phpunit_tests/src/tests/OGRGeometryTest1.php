@@ -100,7 +100,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_GetGeometryRef()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $nRingCount = OGR_G_GetGeometryCount($this->hContainer);
         $expected = 2;
@@ -176,7 +176,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_RemoveGeometry1()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $bDelete = true;
 
         $eType = wkbPolygon;
@@ -282,7 +282,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_Empty()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         OGR_G_Empty($this->hRing2);
 

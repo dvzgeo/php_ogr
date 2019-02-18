@@ -190,7 +190,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_DS_ExecuteSQL0()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
 
         $hSrcDataSource = OGROpen(
@@ -280,7 +280,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL1()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
@@ -357,7 +357,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL2()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
@@ -433,7 +433,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL3()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,

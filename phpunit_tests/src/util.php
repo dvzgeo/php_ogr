@@ -388,3 +388,48 @@ function test_data_path($what = null)
     }
     return implode(DIRECTORY_SEPARATOR, $components);
 }
+
+/************************************************************************/
+/*                                reference_data_path                   */
+/************************************************************************/
+/**
+ * Get path to (possibly OGR-version-specific) reference data
+ *
+ * @param mixed $what Array of path components, or individual path components
+ *                    as individual arguments
+ *
+ * @return string
+ */
+function reference_data_path($what = null)
+{
+    $referenceFolder = 'reference';
+    if (is_array($what)) {
+        $args = $what;
+    } elseif (func_num_args() > 0) {
+        $args = func_get_args();
+    }
+    // try to find a version-specific reference file
+    if (defined('OGR_VERSION_NUM')) {
+        $major = (int) floor(OGR_VERSION_NUM / 1000000);
+        $minor = (int) floor((OGR_VERSION_NUM % 1000000) / 10000);
+        $bugfix = (int) floor((OGR_VERSION_NUM % 10000) / 100);
+        $candidates = array(
+            sprintf('%02d.%02d.%02d', $major, $minor, $bugfix),
+            sprintf('%02d.%02d.xx', $major, $minor),
+            sprintf('%02d.xx.xx', $major)
+        );
+        foreach($candidates as $candidate) {
+            $candidateArgs = $args;
+            array_unshift($candidateArgs, $candidate);
+            array_unshift($candidateArgs, $referenceFolder);
+            $candidatePath = test_data_path($candidateArgs);
+            if (file_exists($candidatePath)) {
+                return $candidatePath;
+            }
+        }
+    }
+    // no version-spr
+    array_unshift($args, 'default');
+    array_unshift($args, $referenceFolder);
+    return test_data_path($args);
+}

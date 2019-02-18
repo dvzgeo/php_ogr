@@ -1,11 +1,11 @@
 
 ===================
-Layer 0: 'gis_osm_places_free_1'
+Layer: 'gis_osm_places_free_1'
 
  Field 0: osm_id (String)
  Field 1: code (Integer)
  Field 2: fclass (String)
- Field 3: population (Integer)
+ Field 3: population (Integer64)
  Field 4: name (String)
 
 
@@ -13,12 +13,12 @@ Layer 0: 'gis_osm_places_free_1'
 ----- EOF -----
 
 ===================
-Layer 0: 'gis_osm_places_free_1'
+Layer: 'gis_osm_places_free_1'
 
  Field 0: osm_id (String)
  Field 1: code (Integer)
  Field 2: fclass (String)
- Field 3: population (Integer)
+ Field 3: population (Integer64)
  Field 4: name (String)
 
 

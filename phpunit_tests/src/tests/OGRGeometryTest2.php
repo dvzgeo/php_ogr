@@ -105,7 +105,7 @@ class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
 
     public function testOGR_G_AssignSpatialReference()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".prj");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".prj");
 
         $hSrcDS = OGROpen($this->strPathToData, $this->bUpdate, $hSrcDriver);
         $this->assertNotNull($hSrcDS, "Could not open source dataset");

@@ -81,7 +81,7 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_L_SetGetSpatialFilter0()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSpatialFilter = OGR_G_CreateGeometry(wkbLinearRing);
 
@@ -163,7 +163,7 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_L_SetAttributeFilter0()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSpatialFilter = null;
 

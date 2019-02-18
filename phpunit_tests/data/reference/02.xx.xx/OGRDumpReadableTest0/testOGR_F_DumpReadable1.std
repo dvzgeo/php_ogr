@@ -1,0 +1,8 @@
+OGRFeature(test):-1
+  name (String) = foo
+  POINT Z (123.45 456.78 0)
+
+OGRFeature(test):-1
+  name (String) = bar
+  POINT Z (456.78 123.45 0)
+
