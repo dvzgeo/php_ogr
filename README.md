@@ -41,3 +41,13 @@ php vendor/bin/phpunit
 Note that some test results will differ depending on the installed GDAL/OGR version - alternative results for specific versions are stored under `phpunit_tests/data/reference` (`default` when no difference is expeced).
 
 For the PHPUnit tests, OpenStreetMap data are used. See file `phpunit_tests/data/andorra/README` for full details and license information.
+
+## Using
+
+The file `stubs/ogr.php` contains automatically generated function stubs for all functions defined in the extension, which may assist users of IDEs.
+In general, the function signatures match those as described in the [OGR C API](https://www.gdal.org/ogr__api_8h.html) or the [OGR SRS API](https://www.gdal.org/ogr__srs__api_8h.html) for `OSR_*`.-functions, to which users are referred for detailed information on function parameters and return values.
+Note that not all functions from the C APIs are exposed: This may be due to the memory management performed by PHP which conflict with the manaual management required in C (e.g. for `OGR_F_SetGeometryDirectly()`), or simply because the wrapper hasn't been written yet ;-)
+
+Additionally, the PHPUnit tests show some examples of how the exposed functions may be used.
+
+Finally, under `examples` there are some examples from the original OGR/PHP, which may or may not work but are retained for information.
