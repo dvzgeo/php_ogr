@@ -1029,12 +1029,12 @@ ZEND_END_ARG_INFO()
 
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_osr_getauthoritycode, 0, 2, IS_STRING, NULL, 1)
     _ZEND_ARG_TYPE_INFO(0, srs, IS_RESOURCE, 1)
-    _ZEND_ARG_TYPE_INFO(0, targetkey, IS_STRING, 0)
+    _ZEND_ARG_TYPE_INFO(0, targetkey, IS_STRING, 1)
 ZEND_END_ARG_INFO()
 
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_osr_getauthorityname, 0, 2, IS_STRING, NULL, 1)
     _ZEND_ARG_TYPE_INFO(0, srs, IS_RESOURCE, 1)
-    _ZEND_ARG_TYPE_INFO(0, targetkey, IS_STRING, 0)
+    _ZEND_ARG_TYPE_INFO(0, targetkey, IS_STRING, 1)
 ZEND_END_ARG_INFO()
 
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_osr_getprojparm, 0, 2, IS_DOUBLE, NULL, 1)
@@ -6869,13 +6869,13 @@ PHP_FUNCTION(osr_getauthoritycode)
 {
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
-    strsize_t refTargetKey_len;
+    strsize_t refTargetKey_len = 0;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     const char *res = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r!s", &hsrs, &refTargetKey,
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!s!", &hsrs, &refTargetKey,
     		                  &refTargetKey_len) == FAILURE)
         return;
 
@@ -6899,13 +6899,13 @@ PHP_FUNCTION(osr_getauthorityname)
 {
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
-    strsize_t refTargetKey_len;
+    strsize_t refTargetKey_len = 0;
 	int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     const char *res = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "r!s", &hsrs, &refTargetKey,
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!s!", &hsrs, &refTargetKey,
     		                  &refTargetKey_len) == FAILURE)
         return;
 
