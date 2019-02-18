@@ -175,6 +175,12 @@ typedef int strsize_t;
 typedef size_t strsize_t;
 #endif
 
+#if PHP_MAJOR_VERSION < 7
+#define _ZVAL_PTR_DTOR(__zval) zval_dtor(__zval)
+#else
+#define _ZVAL_PTR_DTOR(__zval) zval_ptr_dtor(__zval)
+#endif
+
 /* define a macro for returning a (duplicated) CPLString */
 #define RETURN_CPL_STRING(str) \
     _ZVAL_STRING(return_value, estrdup(str)); \
@@ -1910,7 +1916,7 @@ PHP_FUNCTION(ogr_g_createfromwkb)
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z", &strbydata,
+    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z/", &strbydata,
                               &strbydata_len,  &hsrs, &refhnewgeom)
                               == FAILURE)
         return;
@@ -1927,7 +1933,7 @@ PHP_FUNCTION(ogr_g_createfromwkb)
         php_report_ogr_error(E_WARNING);
     }
     if (hNewGeom) {
-        zval_dtor(refhnewgeom);
+        _ZVAL_PTR_DTOR(refhnewgeom);
         ZEND_REGISTER_RESOURCE(refhnewgeom, hNewGeom, le_Geometry);
     }
     RETURN_LONG(eErr);
@@ -1951,7 +1957,7 @@ PHP_FUNCTION(ogr_g_createfromwkt)
     OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z", &refstrdata,
+    if (zend_parse_parameters(argc TSRMLS_CC, "sr!z/", &refstrdata,
                               &refstrdata_len,  &hsrs, &refhnewgeom)
         == FAILURE)
         return;
@@ -1967,7 +1973,7 @@ PHP_FUNCTION(ogr_g_createfromwkt)
         php_report_ogr_error(E_WARNING);
     }
     if (hNewGeom) {
-		zval_dtor(refhnewgeom);
+        _ZVAL_PTR_DTOR(refhnewgeom);
         ZEND_REGISTER_RESOURCE(refhnewgeom, hNewGeom, le_Geometry);
     }
     RETURN_LONG(eErr);
@@ -2101,7 +2107,7 @@ PHP_FUNCTION(ogr_g_getenvelope)
     OGREnvelope oEnvelope;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rz", &hgeom, &oenvel) ==
+    if (zend_parse_parameters(argc TSRMLS_CC, "rz/", &hgeom, &oenvel) ==
                               FAILURE)
         return;
 
@@ -2113,7 +2119,7 @@ PHP_FUNCTION(ogr_g_getenvelope)
     if (hGeometry)
         OGR_G_GetEnvelope(hGeometry, &oEnvelope);
 
-    zval_dtor(oenvel);
+    _ZVAL_PTR_DTOR(oenvel);
 
     if (object_init(oenvel)==FAILURE) {
         php_report_ogr_error(E_WARNING);
@@ -2176,7 +2182,7 @@ PHP_FUNCTION(ogr_g_exporttowkb)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hgeom, &ibyteorder,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz/", &hgeom, &ibyteorder,
         &strdata) == FAILURE)
         return;
 
@@ -2194,7 +2200,7 @@ PHP_FUNCTION(ogr_g_exporttowkb)
         php_report_ogr_error(E_WARNING);
     }
 
-    convert_to_null(strdata);
+    _ZVAL_PTR_DTOR(strdata);
     if (strwkb) {
         _ZVAL_STRINGL(strdata, strwkb, isize);
     }
@@ -2275,7 +2281,7 @@ PHP_FUNCTION(ogr_g_exporttowkt)
     OGRGeometryH hGeometry = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-  if (zend_parse_parameters(argc TSRMLS_CC, "rz", &hgeom, &strtext) == FAILURE)
+  if (zend_parse_parameters(argc TSRMLS_CC, "rz/", &hgeom, &strtext) == FAILURE)
         return;
 
     if (hgeom) {
@@ -2289,7 +2295,7 @@ PHP_FUNCTION(ogr_g_exporttowkt)
         php_report_ogr_error(E_WARNING);
     }
 
-    convert_to_null(strtext);
+    _ZVAL_PTR_DTOR(strtext);
     if (strwkt) {
         _ZVAL_STRING(strtext, strwkt);
     }
@@ -2761,7 +2767,7 @@ PHP_FUNCTION(ogr_g_getpoint)
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlzzz", &hgeom, &ipoint,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz/z/z/", &hgeom, &ipoint,
                               &refdfx, &refdfy, &refdfz) == FAILURE)
         return;
 
@@ -2776,12 +2782,14 @@ PHP_FUNCTION(ogr_g_getpoint)
 
     OGR_G_GetPoint(hGeometry, ipoint, &dfx, &dfy, &dfz);
 
-    zval_dtor(refdfx);
-    zval_dtor(refdfy);
-    zval_dtor(refdfz);
+    _ZVAL_PTR_DTOR(refdfx);
+    _ZVAL_PTR_DTOR(refdfy);
+    _ZVAL_PTR_DTOR(refdfz);
     ZVAL_DOUBLE(refdfx, dfx);
     ZVAL_DOUBLE(refdfy, dfy);
     ZVAL_DOUBLE(refdfz, dfz);
+
+    RETURN_NULL();
 }
 
 /* }}} */
@@ -2978,7 +2986,7 @@ PHP_FUNCTION(ogrbuildpolygonfromedges)
     zval *hlinesascollection = NULL;
     OGRGeometryH hLines = NULL, hNewGeometry =NULL;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rbbdz", &hlinesascollection,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rbbdz/", &hlinesascollection,
                               &bbesteffort, &bautoclose, &dftolerance,
                               &referr) == FAILURE)
         return;
@@ -2998,7 +3006,7 @@ PHP_FUNCTION(ogrbuildpolygonfromedges)
         RETURN_NULL();
     }
     ZEND_REGISTER_RESOURCE(return_value, hNewGeometry, le_Geometry);
-    zval_dtor(referr);
+    _ZVAL_PTR_DTOR(referr);
     ZVAL_LONG(referr, eErr);
 }
 
@@ -4162,7 +4170,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
     int *panList = NULL;
     int ncount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz/", &hfeature, &ifield,
                               &refncount) == FAILURE)
         return;
 
@@ -4183,12 +4191,13 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
 		RETURN_NULL();
 	}
 
+    _ZVAL_PTR_DTOR(refncount);
+    ZVAL_LONG(refncount, ncount);
+
 	while (numelements < ncount) {
         add_next_index_long(return_value, panList[numelements]);
         numelements++;
 	}
-    zval_dtor(refncount);
-    ZVAL_LONG(refncount, ncount);
 }
 
 /* }}} */
@@ -4208,7 +4217,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
     double *padfList = NULL;
     int ncount = 0;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rlz", &hfeature, &ifield,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz/", &hfeature, &ifield,
                               &refncount) == FAILURE)
         return;
 
@@ -4230,12 +4239,13 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
 		RETURN_NULL();
 	}
 
+    _ZVAL_PTR_DTOR(refncount);
+    ZVAL_DOUBLE(refncount, ncount);
+
 	while (numelements < ncount) {
         add_next_index_double(return_value, padfList[numelements]);
         numelements++;
 	}
-    zval_dtor(refncount);
-    ZVAL_DOUBLE(refncount, ncount);
 
 }
 
@@ -5135,7 +5145,7 @@ PHP_FUNCTION(ogr_l_getextent)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rzb", &hlayer, &oextent,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rz/b", &hlayer, &oextent,
                               &bforce) == FAILURE)
         return;
 
@@ -5152,7 +5162,7 @@ PHP_FUNCTION(ogr_l_getextent)
         RETURN_LONG(eErr);
     }
 
-    zval_dtor(oextent);
+    _ZVAL_PTR_DTOR(oextent);
 
     if (object_init(oextent)==FAILURE) {
         php_report_ogr_error(E_WARNING);
@@ -5163,6 +5173,8 @@ PHP_FUNCTION(ogr_l_getextent)
     add_property_double(oextent, "maxx", oEnvelope.MaxX);
     add_property_double(oextent, "miny", oEnvelope.MinY);
     add_property_double(oextent, "maxy", oEnvelope.MaxY);
+
+    RETURN_LONG(OGRERR_NONE);
 }
 
 /* }}} */
@@ -5781,7 +5793,7 @@ PHP_FUNCTION(ogropen)
 
     /* workaround for problems with optional parameters by reference */
     if (argc > 2) {
-        if (zend_parse_parameters(argc TSRMLS_CC, "sb|z", &strName,
+        if (zend_parse_parameters(argc TSRMLS_CC, "sb|z/", &strName,
                                   &strName_len, &bUpdate, &refhSFDriver)
                                   == FAILURE)
             return;
@@ -5814,7 +5826,7 @@ PHP_FUNCTION(ogropen)
     if (argc > 2) {
         if (refhSFDriver) {
             /* first free any existing value */
-            zval_dtor(refhSFDriver);
+            _ZVAL_PTR_DTOR(refhSFDriver);
         }
         if (hDriver) {
             ZEND_REGISTER_RESOURCE(refhSFDriver, hDriver, le_SFDriver);
