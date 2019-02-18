@@ -148,6 +148,12 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
             $this->strPathToOutputData . $this->strTmpDumpFile,
             "Problem with OGR_L_SetSpatialFilter() or OGR_L_GetSpatialFilter(): Files comparison did not matched."
         );
+
+        OGR_L_SetSpatialFilter($this->hLayer, null);
+
+        $hSpatialOut = OGR_L_GetSpatialFilter($this->hLayer);
+
+        $this->assertNull($hSpatialOut, "Problem with OGR_L_SetSpatialFilter(): Spatial filter is supposed to be NULL.");
     }
 
     /***********************************************************************
@@ -176,6 +182,16 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
             "w"
         );
         $this->assertNotFalse($fpOut, "Dump file creation error");
+
+        OGRDumpSingleLayer($fpOut, $this->hLayer, true /*bForce*/);
+
+        $eErr = OGR_L_SetAttributeFilter($this->hLayer, NULL);
+
+        $this->assertEquals(
+            OGRERR_NONE,
+            $eErr,
+            "Attribute filter is not supposed to returned an error."
+        );
 
         OGRDumpSingleLayer($fpOut, $this->hLayer, true /*bForce*/);
 

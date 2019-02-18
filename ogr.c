@@ -702,12 +702,12 @@ ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_ogr_l_setspatialfilter, 0, 0, 2)
     _ZEND_ARG_TYPE_INFO(0, layer, IS_RESOURCE, 0)
-    _ZEND_ARG_TYPE_INFO(0, filtergeom, IS_RESOURCE, 0)
+    _ZEND_ARG_TYPE_INFO(0, filtergeom, IS_RESOURCE, 1)
 ZEND_END_ARG_INFO()
 
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_ogr_l_setattributefilter, 0, 2, IS_LONG, NULL, 0)
     _ZEND_ARG_TYPE_INFO(0, layer, IS_RESOURCE, 0)
-    _ZEND_ARG_TYPE_INFO(0, query, IS_STRING, 0)
+    _ZEND_ARG_TYPE_INFO(0, query, IS_STRING, 1)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_ogr_l_resetreading, 0, 0, 1)
@@ -4821,7 +4821,7 @@ PHP_FUNCTION(ogr_l_setspatialfilter)
                              hspatialfilter_id, "OGRGeometry", le_Geometry,
                              le_GeometryRef);
     }
-    if (hLayerResource && hGeom)
+    if (hLayerResource)
         OGR_L_SetSpatialFilter(hLayerResource, hGeom);
 }
 /* }}} */
