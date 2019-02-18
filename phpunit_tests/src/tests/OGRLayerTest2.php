@@ -256,7 +256,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             $expected,
             $hEnvelope,
-            "Problem with OGR_L_GetExten():  Extent is not corresponding.",
+            "Problem with OGR_L_GetExtent():  Extent is not corresponding.",
             0 /*Delta*/
         );
     }
