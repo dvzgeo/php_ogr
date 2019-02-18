@@ -6,7 +6,7 @@ The original source code (with history!) was retrieved from the CVS repository a
 
 The original webpage/documentation for OGR/PHP is still available at http://dl.maptools.org/dl/php_ogr/php_ogr_documentation.html - this is the same as the file php_ogr_documentation.html
 
-The code is available under a MIT-style license - see LICENSE, which is the original license file from DM Solutions (originally README.TXT).
+The code is available under a MIT-style license - see LICENSE, which is the same license as the original license file from DM Solutions (originally README.TXT).
 
 ## Supported PHP version
 
