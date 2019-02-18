@@ -82,7 +82,7 @@ zend_module_entry ogr_module_entry = {
                            request end */
     PHP_MINFO(ogr),
 #if ZEND_MODULE_API_NO >= 20010901
-    "1.1.0", /* Replace with version number for your extension */
+    "1.5.0", /* Replace with version number for your extension */
 #endif
     STANDARD_MODULE_PROPERTIES
 };

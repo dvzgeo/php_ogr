@@ -10,7 +10,7 @@ The code is available under a MIT-style license - see LICENSE, which is the same
 
 ## Supported PHP version
 
-Currently PHP5 >= 5.4 is supported. The last version known to support PHP 5 <= 5.3 is tagged as php53 for reference.
+Currently PHP 5 >= 5.4 and PHP 7 are supported. The last version known to support PHP 5 <= 5.3 is tagged as php53 for reference.
 
 ## Why here?
 
