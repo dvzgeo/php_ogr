@@ -4,7 +4,7 @@ This repository contains the OGR/PHP Extension, originally developed by DM Solut
 
 The original source code (with history!) was retrieved from the CVS repository at cvs.maptools.org:/cvs/maptools/cvsroot using cvssuck, then imported into Git using cvs2git. The imported version is tagged as cvsimport for posterity.
 
-The original webpage/documentation for OGR/PHP is still available at http://dl.maptools.org/dl/php_ogr/php_ogr_documentation.html - this is the same as the file php_ogr_documentation.html
+The original webpage/documentation for OGR/PHP is still available at http://dl.maptools.org/dl/php_ogr/php_ogr_documentation.html
 
 The code is available under a MIT-style license - see LICENSE, which is the same license as the original license file from DM Solutions (originally README.TXT).
 
