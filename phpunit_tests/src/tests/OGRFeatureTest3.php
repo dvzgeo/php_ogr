@@ -304,7 +304,7 @@ class OGRFeatureTest3 extends PHPUnit_Framework_TestCase
 
     public function testOGR_F_SetFrom()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hFieldDefn = OGR_Fld_Create("osm_id", OFTString);
         $eErr = OGR_L_CreateField(

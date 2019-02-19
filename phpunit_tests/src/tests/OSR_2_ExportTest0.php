@@ -25,7 +25,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
             $wkt,
             "Successful WKT export for EPSG:4326 should be a string"
         );
-        $expected = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $expected = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $this->assertStringEqualsFile(
             $expected,
             $wkt,
@@ -65,7 +65,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
             $wkt,
             "Successful pretty WKT export for EPSG:4326 should be a string"
         );
-        $expected = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $expected = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $this->assertStringEqualsFile(
             $expected,
             $wkt,
@@ -89,7 +89,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
             $wkt,
             "Successful pretty WKT export for EPSG:4326 should be a string"
         );
-        $expected = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $expected = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $this->assertStringEqualsFile(
             $expected,
             $wkt,
@@ -128,7 +128,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
             $proj,
             "Successful Proj4 export for EPSG:4326 should be a string"
         );
-        $expected = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $expected = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $this->assertStringEqualsFile(
             $expected,
             $proj,

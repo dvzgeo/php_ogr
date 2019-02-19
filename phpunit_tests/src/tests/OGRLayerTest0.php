@@ -3,6 +3,7 @@
 class OGRLayerTest0 extends PHPUnit_Framework_TestCase
 {
     public $strPathToData;
+    public $strPathToOutputData;
     public $bUpdate;
     public $hOGRSFDriver;
     public $strCapability;
@@ -140,9 +141,6 @@ class OGRLayerTest0 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_L_TestCapability3()
     {
-        OGR_L_SetSpatialFilter($this->hLayer, null);
-        OGR_L_SetAttributeFilter($this->hLayer, null);
-
         $bCapability = OGR_L_TestCapability(
             $this->hLayer,
             $this->strCapability[3]

@@ -233,6 +233,7 @@ class OGRGeometryTest3 extends PHPUnit_Framework_TestCase
                 $ogrFn . " should return OGRERR_NONE on success"
             );
         }
+        $this->assertNotNull($hGeometry, "Created geometry should not be NULL");
         $type = OGR_G_GetGeometryType($hGeometry);
         $this->assertSame(
             wkbPoint25D,

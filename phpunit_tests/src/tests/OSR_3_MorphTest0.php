@@ -28,7 +28,7 @@ class OSR_3_MorphTest0 extends PHPUnit_Framework_TestCase
             "OSR_MorphToESRI should return OGRERR_NONE"
         );
         $esri = OSR_ExportToWKT($hRef);
-        $expected = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $expected = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $this->assertStringEqualsFile(
             $expected,
             $esri,
@@ -54,7 +54,7 @@ class OSR_3_MorphTest0 extends PHPUnit_Framework_TestCase
             "OSR_MorphFromESRI should return OGRERR_NONE"
         );
         $wkt = OSR_ExportToWKT($hRef);
-        $expected = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $expected = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
         $this->assertStringEqualsFile(
             $expected,
             $wkt,

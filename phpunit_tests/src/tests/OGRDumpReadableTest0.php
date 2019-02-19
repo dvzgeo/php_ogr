@@ -61,7 +61,7 @@ class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
      */
     public function testOGR_G_DumpReadable0()
     {
-        $refFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $refFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $fpOut = fopen($this->outFile, "w");
         $this->assertNotFalse($fpOut, "Dump file creation error");
@@ -86,7 +86,7 @@ class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
      */
     public function testOGR_G_DumpReadable1()
     {
-        $refFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $refFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $fpOut = fopen($this->outFile, "w");
         $this->assertNotFalse($fpOut, "Dump file creation error");
@@ -107,7 +107,7 @@ class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
      */
     public function testOGR_G_DumpReadable2()
     {
-        $refFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $refFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $fpOut = fopen($this->outFile, "w");
         $this->assertNotFalse($fpOut, "Dump file creation error");
@@ -132,7 +132,7 @@ class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
      */
     public function testOGR_F_DumpReadable0()
     {
-        $refFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $refFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $fpOut = fopen($this->outFile, "w");
         $this->assertNotFalse($fpOut, "Dump file creation error");
@@ -153,7 +153,7 @@ class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
      */
     public function testOGR_F_DumpReadable1()
     {
-        $refFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $refFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $fpOut = fopen($this->outFile, "w");
         $this->assertNotFalse($fpOut, "Dump file creation error");

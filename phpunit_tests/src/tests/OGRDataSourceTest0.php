@@ -44,7 +44,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
         $this->nLayerCount = 18;
         $this->hOGRSFDriver = null;
         $this->iDriver = "ESRI Shapefile";
-        $this->astrOptions[] = array();
+        $this->astrOptions = array();
     }
     // called after the test functions are executed
     // this function is defined in PHPUnit_Framework_TestCase and overwritten
@@ -190,7 +190,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
      ************************************************************************/
     public function testOGR_DS_ExecuteSQL0()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
 
         $hSrcDataSource = OGROpen(
@@ -198,9 +198,6 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
 
         $hSpatialFilter = null;
 
@@ -231,7 +228,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 
@@ -280,17 +277,13 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL1()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
 
         $hSpatialFilter = null;
 
@@ -321,7 +314,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 
@@ -357,16 +350,13 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL2()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
 
         $hSpatialFilter = null;
 
@@ -397,7 +387,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 
@@ -433,16 +423,13 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
 
     public function testOGR_DS_ExecuteSQL3()
     {
-        $strStandardFile = test_data_path("reference", __CLASS__, __FUNCTION__ . ".std");
+        $strStandardFile = reference_data_path(__CLASS__, __FUNCTION__ . ".std");
 
         $hSrcDataSource = OGROpen(
             $this->strPathToData,
             $this->bUpdate,
             $this->hOGRSFDriver
         );
-        /*Temporary access to driver, bug with OGROpen() not
-          returning driver.*/
-        $this->hOGRSFDriver = OGRGetDriver($this->idriver);
 
         $hSpatialFilter = null;
 
@@ -473,7 +460,7 @@ class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
             "Problem with OGR_DS_ExecuteSQL():  Data source layer is not supposed to be NULL."
         );
 
-        if (!hLayer) {
+        if (!$hLayer) {
             return false;
         }
 
