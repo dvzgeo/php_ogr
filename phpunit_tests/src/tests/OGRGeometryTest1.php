@@ -131,7 +131,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_G_DumpReadable($fpOut, $hGeometry);
+        OGR_G_DumpReadable($hGeometry, $fpOut);
 
         fclose($fpOut);
 
@@ -234,7 +234,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_G_DumpReadable($fpOut, $hMultiPolygon);
+        OGR_G_DumpReadable($hMultiPolygon, $fpOut);
 
         fclose($fpOut);
 
@@ -293,7 +293,7 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_G_DumpReadable($fpOut, $this->hRing2);
+        OGR_G_DumpReadable($this->hRing2, $fpOut);
 
         fclose($fpOut);
 

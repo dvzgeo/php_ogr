@@ -3,7 +3,5 @@ OGRFeature(OutputDS):-1
   code (Integer) = 6107
   fclass (Integer) = 0
   name (Integer) = 0
-LINESTRING:
-1.502 42.442
-1.502 42.441
+  LINESTRING (1.5015877 42.44156,1.5017968 42.4414801)
 

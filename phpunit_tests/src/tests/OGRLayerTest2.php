@@ -101,7 +101,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_F_DumpReadable($fpOut, $hFeature);
+        OGR_F_DumpReadable($hFeature, $fpOut);
 
         fclose($fpOut);
 
@@ -143,7 +143,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_F_DumpReadable($fpOut, $hFeature);
+        OGR_F_DumpReadable($hFeature, $fpOut);
 
         fclose($fpOut);
 
@@ -203,7 +203,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
         $hFeature = OGR_L_GetNextFeature($hSrcLayer);
 
-        OGR_F_DumpReadable($fpOut, $hFeature);
+        OGR_F_DumpReadable($hFeature, $fpOut);
 
         for ($i = 0; $i < $nFeatureId; $i++) {
             $hFeature = OGR_L_GetNextFeature($hSrcLayer);
@@ -213,7 +213,7 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
 
         $hFeature = OGR_L_GetNextFeature($hSrcLayer);
 
-        OGR_F_DumpReadable($fpOut, $hFeature);
+        OGR_F_DumpReadable($hFeature, $fpOut);
 
         fclose($fpOut);
 

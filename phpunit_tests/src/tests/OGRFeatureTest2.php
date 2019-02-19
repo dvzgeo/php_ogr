@@ -137,12 +137,12 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
             "w"
         );
         $this->assertNotFalse($fpOut, "Dump file creation error");
-        OGR_F_DumpReadable($fpOut, $hF);
+        OGR_F_DumpReadable($hF, $fpOut);
 
         OGR_F_UnsetField($hF, $iField);
         $bFieldSet = OGR_F_IsFieldSet($hF, $iField);
 
-        OGR_F_DumpReadable($fpOut, $hF);
+        OGR_F_DumpReadable($hF, $fpOut);
 
         OGR_F_Destroy($hF);
 
@@ -207,7 +207,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
         );
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
-        OGR_F_DumpReadable($fpOut, $hDestF);
+        OGR_F_DumpReadable($hDestF, $fpOut);
 
         OGR_F_Destroy($hSrcF);
         OGR_F_Destroy($hDestF);

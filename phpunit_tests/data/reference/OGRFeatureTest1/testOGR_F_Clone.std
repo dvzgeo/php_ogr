@@ -4,5 +4,5 @@ OGRFeature(gis_osm_places_free_1):2
   fclass (String) = hamlet
   population (Integer) = 0
   name (String) = Aixàs
-1.464 42.483 0.000
+  POINT (1.4641485 42.4826042)
 

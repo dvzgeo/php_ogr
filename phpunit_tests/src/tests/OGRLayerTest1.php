@@ -139,7 +139,7 @@ class OGRLayerTest1 extends PHPUnit_Framework_TestCase
 
         $this->assertNotFalse($fpOut, "Dump file creation error");
 
-        OGR_G_DumpReadable($fpOut, $hSpatialOut);
+        OGR_G_DumpReadable($hSpatialOut, $fpOut);
 
         fclose($fpOut);
 

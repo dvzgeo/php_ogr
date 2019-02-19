@@ -1,0 +1,4 @@
+OGRFeature(test):-1
+  name (String) = foo
+  POINT (123.45 456.78 0)
+
