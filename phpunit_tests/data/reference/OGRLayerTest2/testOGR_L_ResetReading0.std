@@ -1,0 +1,18 @@
+OGRFeature(gis_osm_places_free_1):1
+  osm_id (String) = 58957648
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 24678
+  name (String) = Andorra la Vella
+  Style = SYMBOL(a:0,c:#000000,s:12pt,id:"mapinfo-sym-35,ogr-sym-10")
+1.521 42.507 0.000
+
+OGRFeature(gis_osm_places_free_1):1
+  osm_id (String) = 58957648
+  code (Integer) = 1002
+  fclass (String) = town
+  population (Integer) = 24678
+  name (String) = Andorra la Vella
+  Style = SYMBOL(a:0,c:#000000,s:12pt,id:"mapinfo-sym-35,ogr-sym-10")
+1.521 42.507 0.000
+

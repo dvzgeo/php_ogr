@@ -1,0 +1,14 @@
+
+===================
+Layer 0: 'gis_osm_places_free_1'
+
+ Field 0: COUNT_fclass (Integer)
+
+Feature(s) count= 1
+
+OGRFeature(gis_osm_places_free_1):0
+  COUNT_fclass (Integer) = 4
+
+
+
+----- EOF -----

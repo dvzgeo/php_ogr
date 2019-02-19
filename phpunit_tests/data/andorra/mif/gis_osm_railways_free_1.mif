@@ -1,0 +1,15 @@
+Version 300
+Charset "Neutral"
+Delimiter ","
+CoordSys Earth Projection 1, 104
+Columns 4
+  osm_id Char(10)
+  code Integer(4)
+  fclass Char(28)
+  name Char(100)
+Data
+
+Line 1.5015877 42.44156 1.5017968 42.4414801
+    Pen (1,2,0)
+Line 1.501506 42.4415427 1.5017497 42.44146
+    Pen (1,2,0)
