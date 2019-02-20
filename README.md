@@ -51,3 +51,7 @@ Note that not all functions from the C APIs are exposed: This may be due to the 
 Additionally, the PHPUnit tests show some examples of how the exposed functions may be used.
 
 Finally, under `examples` there are some examples from the original OGR/PHP, which may or may not work but are retained for information.
+
+## Memory management
+
+Most of the memory management is performed automatically using the PHP reference counting and GC. In almost all cases any memory allocated by OGR and no longer referenced will be automatically freed when a variable is reassigned, unset or goes out of scope (or at the next subsequent garbage collection).
