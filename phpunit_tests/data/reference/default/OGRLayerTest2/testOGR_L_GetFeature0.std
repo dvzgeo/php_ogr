@@ -1,0 +1,9 @@
+OGRFeature(gis_osm_places_free_1):12
+  osm_id (String) = 64954415
+  code (Integer) = 1004
+  fclass (String) = hamlet
+  population (Integer) = 0
+  name (String) = Sispony
+  Style = SYMBOL(a:0,c:#000000,s:12pt,id:"mapinfo-sym-35,ogr-sym-10")
+  POINT (1.515627 42.5338717)
+

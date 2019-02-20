@@ -1,0 +1,8 @@
+OGRFeature(gis_osm_places_free_1):2
+  osm_id (String) = 64954372
+  code (Integer) = 1004
+  fclass (String) = hamlet
+  population (Integer) = 0
+  name (String) = Aixàs
+  POINT (1.4641485 42.4826042)
+

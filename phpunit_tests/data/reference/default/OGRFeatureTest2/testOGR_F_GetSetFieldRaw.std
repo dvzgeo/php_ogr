@@ -1,0 +1,3 @@
+OGRFeature(OutputLayer):-1
+  LPOLY_ (Integer) = 42
+
