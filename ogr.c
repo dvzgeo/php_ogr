@@ -2980,10 +2980,7 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
         RETURN_NULL();
     }
 
-	if (array_init(return_value) == FAILURE)
-	{
-		RETURN_NULL();
-	}
+	array_init(return_value);
 
     _ZVAL_PTR_DTOR(refncount);
     ZVAL_LONG(refncount, ncount);
@@ -3028,10 +3025,7 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
         RETURN_NULL();
     }
 
-	if (array_init(return_value) == FAILURE)
-	{
-		RETURN_NULL();
-	}
+	array_init(return_value);
 
     _ZVAL_PTR_DTOR(refncount);
     ZVAL_DOUBLE(refncount, ncount);
@@ -3083,10 +3077,7 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
         RETURN_NULL();
     }
 
-	if (array_init(return_value) == FAILURE)
-	{
-		RETURN_NULL();
-	}
+	array_init(return_value);
 
 	while (numelements < ncount) {
         _ADD_NEXT_INDEX_STRING(return_value, (char *)
