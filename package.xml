@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<package packagerversion="1.10.5" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>ogr</name>
+ <channel>pecl.php.net</channel>
+ <summary>PHP extension for interfacing with the OGR library</summary>
+ <description>This extension provides a PECL package for the OGR library.</description>
+ <lead>
+  <name>E Nash</name>
+  <user>ejn</user>
+  <email>e.nash@dvz-mv.de</email>
+  <active>yes</active>
+ </lead>
+ <developer>
+  <name>Normand Savard</name>
+  <user />
+  <email>nsavard@dmsolutions.ca</email>
+  <active>no</active>
+ </developer>
+ <date>2019-04-01</date>
+ <time>13:39:41</time>
+ <version>
+  <release>1.5.0</release>
+  <api>1.5.0</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="https://opensource.org/licenses/MIT">MIT</license>
+ <notes>
+- First release PECL package
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="58a6dc8da7e91829633f8fe2a3a7ddd3" name="examples/ogr2ogr.php" role="doc" />
+   <file baseinstalldir="/" md5sum="155241ed4f1bf1c7455ea96b690628a3" name="examples/ogr2tab.php" role="doc" />
+   <file baseinstalldir="/" md5sum="edf544dd7ca8f49adfbc786c070f17ca" name="examples/ogr2tab_copy_srs.php" role="doc" />
+   <file baseinstalldir="/" md5sum="9570f28a04b95c2851fc905f7df6fe43" name="examples/ogr2tab_spatialfilter.php" role="doc" />
+   <file baseinstalldir="/" md5sum="440f9cd18d1d38882bd6be47cfcc1fec" name="examples/ogr2tab_sql.php" role="doc" />
+   <file baseinstalldir="/" md5sum="136618be0e48ef27b4817fc8752ab36c" name="examples/ogr2tab_update.php" role="doc" />
+   <file baseinstalldir="/" md5sum="1b65722a0f9655e9d09a794d11a99ce5" name="examples/ogr_dump.php" role="doc" />
+   <file baseinstalldir="/" md5sum="4a99153c7e52f6dad06c5e48292fbf91" name="examples/ogr_setgetfield.php" role="doc" />
+   <file baseinstalldir="/" md5sum="fe3d32a1b2e16645a79da5549919d01a" name="examples/ogr_spatialfilter.php" role="doc" />
+   <file baseinstalldir="/" md5sum="c83bc69680b82511f18a75a640fbf48d" name="examples/ogr_sql.php" role="doc" />
+   <file baseinstalldir="/" md5sum="158442338768dab65a8136be9750667e" name="examples/ogr_update.php" role="doc" />
+   <file baseinstalldir="/" md5sum="a9390159faa7e272fee2d22fd006c03d" name="examples/ogr_write.php" role="doc" />
+   <file baseinstalldir="/" md5sum="f1d6134ab5deacc8cf93ac7020854115" name="examples/README_EXAMPLES.TXT" role="doc" />
+   <file baseinstalldir="/" md5sum="929b9166c064e1384b785fe33683dd91" name="phpunit_tests/composer.json" role="data" />
+   <file baseinstalldir="/" md5sum="5361d39add81a9ddceacaf43212320d6" name="phpunit_tests/phpunit.xml" role="data" />
+   <file baseinstalldir="/" md5sum="798d4f8f4c3177fbc370a14bead560bc" name="phpunit_tests/data/andorra/LICENSE" role="data" />
+   <file baseinstalldir="/" md5sum="7ca9dac0d12ee657de1e483a16f86702" name="phpunit_tests/data/andorra/README" role="data" />
+   <file baseinstalldir="/" md5sum="3fe0b70d8008150a1baefdcc9319bc8c" name="phpunit_tests/data/andorra/mif/gis_osm_buildings_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="4c312f3106224512223006b23998c893" name="phpunit_tests/data/andorra/mif/gis_osm_buildings_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="d8db5b6773a592ad924ee37fbf21974d" name="phpunit_tests/data/andorra/mif/gis_osm_landuse_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="15c5479edace8479edae3ca776e1b46e" name="phpunit_tests/data/andorra/mif/gis_osm_landuse_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="phpunit_tests/data/andorra/mif/gis_osm_natural_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="195c2d99313e740f5a942a33b0666e36" name="phpunit_tests/data/andorra/mif/gis_osm_natural_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="10a93ecb7ec95bc02ac627bccffee357" name="phpunit_tests/data/andorra/mif/gis_osm_natural_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="fa530863a85a7cf9e73146cf44216783" name="phpunit_tests/data/andorra/mif/gis_osm_natural_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="90187e631f0e9f62b4cf36bcea0c1d97" name="phpunit_tests/data/andorra/mif/gis_osm_places_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="41a1224741ac29783906f7476a299a0e" name="phpunit_tests/data/andorra/mif/gis_osm_places_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="bef363beec611c484a69a1abb4b29009" name="phpunit_tests/data/andorra/mif/gis_osm_places_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="c617a94a6558e4422ce397e49880f57b" name="phpunit_tests/data/andorra/mif/gis_osm_places_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="a1d1376de1dca42bbe5f1351232e9be5" name="phpunit_tests/data/andorra/mif/gis_osm_pofw_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="2e31eb9f8b7e634fe4288a4b76716ff6" name="phpunit_tests/data/andorra/mif/gis_osm_pofw_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="f9316bf47135184ddf85940f96e72906" name="phpunit_tests/data/andorra/mif/gis_osm_pofw_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="e0e7d58a44eb8e996676e238cc0a9488" name="phpunit_tests/data/andorra/mif/gis_osm_pofw_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="aa3fb4d840d2b916763e2fa80d6ca90c" name="phpunit_tests/data/andorra/mif/gis_osm_pois_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="93ca72945c1f0713855b3038fa0a4c37" name="phpunit_tests/data/andorra/mif/gis_osm_pois_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="c21749ba8a74ef0ae955fd50c6fc891b" name="phpunit_tests/data/andorra/mif/gis_osm_pois_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="7fad487fd0282528029fcd2de557609b" name="phpunit_tests/data/andorra/mif/gis_osm_pois_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="5a0c200f22dfbdd97a62a81b77047072" name="phpunit_tests/data/andorra/mif/gis_osm_railways_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="7aed17fefff89ea51af0133f5421ad36" name="phpunit_tests/data/andorra/mif/gis_osm_railways_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="08bead887b1176a88f8f17a6d8838f37" name="phpunit_tests/data/andorra/mif/gis_osm_roads_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="d347f8c6d2adfda7129266b97d96cf81" name="phpunit_tests/data/andorra/mif/gis_osm_roads_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="58fb834248910905442b17e700ee47fa" name="phpunit_tests/data/andorra/mif/gis_osm_traffic_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="9814bcca39a653d9e932fc4d364eb328" name="phpunit_tests/data/andorra/mif/gis_osm_traffic_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="5512c3a4ed34432d189ed7e54c86f871" name="phpunit_tests/data/andorra/mif/gis_osm_traffic_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="f484afaca00fff739b4b1c16a82e46f3" name="phpunit_tests/data/andorra/mif/gis_osm_traffic_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="phpunit_tests/data/andorra/mif/gis_osm_transport_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="195c2d99313e740f5a942a33b0666e36" name="phpunit_tests/data/andorra/mif/gis_osm_transport_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="c63691ebace94f37e3fba06448b1b7ac" name="phpunit_tests/data/andorra/mif/gis_osm_transport_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="09b2c52edf4f94c43d4bef892a222144" name="phpunit_tests/data/andorra/mif/gis_osm_transport_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="61c6b310cecbae1503ddd4295ccaec78" name="phpunit_tests/data/andorra/mif/gis_osm_waterways_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="ddfc4922133a335257cc83578d6cb2c3" name="phpunit_tests/data/andorra/mif/gis_osm_waterways_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="b0231500628d4dd6242807995ebc37ac" name="phpunit_tests/data/andorra/mif/gis_osm_water_a_free_1.mid" role="data" />
+   <file baseinstalldir="/" md5sum="a5befe3aef161a06a7253d75ef0b41a4" name="phpunit_tests/data/andorra/mif/gis_osm_water_a_free_1.mif" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_buildings_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="086a13a1c12822c17278acb45d174d97" name="phpunit_tests/data/andorra/shp/gis_osm_buildings_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_buildings_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="82206c51d32217bc113c733e779db74e" name="phpunit_tests/data/andorra/shp/gis_osm_buildings_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="3ee38c28169bcb3b92dd62095de909bb" name="phpunit_tests/data/andorra/shp/gis_osm_buildings_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_landuse_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="07af7a4e534370a5680e57e65599fb7b" name="phpunit_tests/data/andorra/shp/gis_osm_landuse_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_landuse_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="5a3fdd8af6056a1419670b278995e3b9" name="phpunit_tests/data/andorra/shp/gis_osm_landuse_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="6b0d28c86f14534dd75532f5f63dfdfe" name="phpunit_tests/data/andorra/shp/gis_osm_landuse_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_natural_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="aea992a05c34ffeeee72847c576e0d08" name="phpunit_tests/data/andorra/shp/gis_osm_natural_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_natural_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="9834e1423b91be613511d6b576429d6b" name="phpunit_tests/data/andorra/shp/gis_osm_natural_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="9834e1423b91be613511d6b576429d6b" name="phpunit_tests/data/andorra/shp/gis_osm_natural_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_natural_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="dbbd7fc81a1230b2edba0de812f08e67" name="phpunit_tests/data/andorra/shp/gis_osm_natural_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_natural_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="fba13a7935595d23b9ccee1bde1d0e9b" name="phpunit_tests/data/andorra/shp/gis_osm_natural_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="2b5f655efd09db4c478684a413771156" name="phpunit_tests/data/andorra/shp/gis_osm_natural_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_places_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="f010b7e6329b2924a62d33540d2d5149" name="phpunit_tests/data/andorra/shp/gis_osm_places_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_places_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="6c6c660bffe5cad0a735258164faa4d9" name="phpunit_tests/data/andorra/shp/gis_osm_places_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="24b0f3c4a77ee8546f794e11680c6a8c" name="phpunit_tests/data/andorra/shp/gis_osm_places_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_places_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="ffbe52b5c18062ef6e04dda9a006d816" name="phpunit_tests/data/andorra/shp/gis_osm_places_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_places_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="b9efc23585560bf66a5f43a89d80dd2e" name="phpunit_tests/data/andorra/shp/gis_osm_places_free_1.qix" role="data" />
+   <file baseinstalldir="/" md5sum="16f2e9a843c504f8a9a14c440aa98b41" name="phpunit_tests/data/andorra/shp/gis_osm_places_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="edf16afa9c980565a79514efb3d6bc55" name="phpunit_tests/data/andorra/shp/gis_osm_places_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="e58d5b11e520089adf21b7b6a2790b64" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="29250e89a3e0cd10d65f2e609d9eb203" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="7a5d8eb8d5ae80e4ac95010de273e4a8" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="d983c107876882aa387350151377061f" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="7016c1175623e8996b4f91555b1a00b7" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="1297be7abacc9f2841de4cd36a2cf543" name="phpunit_tests/data/andorra/shp/gis_osm_pofw_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_pois_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="9d4afc7da3c51c742b10ee10397bcadc" name="phpunit_tests/data/andorra/shp/gis_osm_pois_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_pois_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="3550ec919a8afab1ab7e51ce20b1b3b6" name="phpunit_tests/data/andorra/shp/gis_osm_pois_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="369ac40237cd3527ae67ba6e8e370b3f" name="phpunit_tests/data/andorra/shp/gis_osm_pois_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_pois_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="7f44ea1941c3719589723c449279a68c" name="phpunit_tests/data/andorra/shp/gis_osm_pois_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_pois_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="9fabbd7c61c470e623abbc2e2ab5450b" name="phpunit_tests/data/andorra/shp/gis_osm_pois_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="5e187fbb8728264fc3dd87896ca2742b" name="phpunit_tests/data/andorra/shp/gis_osm_pois_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_railways_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="76d39519034bd50f9b0632ede7fd930f" name="phpunit_tests/data/andorra/shp/gis_osm_railways_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_railways_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="ccd0f14f2a73767eaf06216591a213c1" name="phpunit_tests/data/andorra/shp/gis_osm_railways_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="3366d15b3ee191e4cedf84bb1328981e" name="phpunit_tests/data/andorra/shp/gis_osm_railways_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_roads_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="ff8c233b0cff456cc05bc96746db87ca" name="phpunit_tests/data/andorra/shp/gis_osm_roads_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_roads_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="93e956466d1b243624a44d2a27ae8536" name="phpunit_tests/data/andorra/shp/gis_osm_roads_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="12f0615037a784f067d063f24d7ed878" name="phpunit_tests/data/andorra/shp/gis_osm_roads_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="ca741d3c8d73489deb26f2b38a408347" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="b7ed3a2f1066bf7b26d62a5ce64c764d" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="6bf6e1bd7db02e24cf45702f2fa3a25c" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="65620c11007b997a290c79ab1e7d0fbe" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="9b71ebc7e25110f7e464455a5b54c2c8" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="1b9b6d71829fb84066d247f398741116" name="phpunit_tests/data/andorra/shp/gis_osm_traffic_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_transport_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="aea992a05c34ffeeee72847c576e0d08" name="phpunit_tests/data/andorra/shp/gis_osm_transport_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_transport_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="9834e1423b91be613511d6b576429d6b" name="phpunit_tests/data/andorra/shp/gis_osm_transport_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="9834e1423b91be613511d6b576429d6b" name="phpunit_tests/data/andorra/shp/gis_osm_transport_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_transport_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="f1c657a37ba0c44eaa419696bd1eb696" name="phpunit_tests/data/andorra/shp/gis_osm_transport_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_transport_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="cd7d4539810fa6f1482efa13a8230052" name="phpunit_tests/data/andorra/shp/gis_osm_transport_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="a4ba6177fe162318c296951991246cc9" name="phpunit_tests/data/andorra/shp/gis_osm_transport_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_waterways_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="91087cb35d3572fc0a3c820c6aa25a53" name="phpunit_tests/data/andorra/shp/gis_osm_waterways_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_waterways_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="78ab52772705ad30b7b654e08fba1efe" name="phpunit_tests/data/andorra/shp/gis_osm_waterways_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="9b43a2b250289796a689622ed4e15062" name="phpunit_tests/data/andorra/shp/gis_osm_waterways_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="1ca15bf75755838f3db6aa559b6db2d3" name="phpunit_tests/data/andorra/shp/gis_osm_water_a_free_1.cpg" role="data" />
+   <file baseinstalldir="/" md5sum="cda2401dd800e6761ca377af0b0a71b1" name="phpunit_tests/data/andorra/shp/gis_osm_water_a_free_1.dbf" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/andorra/shp/gis_osm_water_a_free_1.prj" role="data" />
+   <file baseinstalldir="/" md5sum="cb26b4dbd02e527403d7987583bcc7d7" name="phpunit_tests/data/andorra/shp/gis_osm_water_a_free_1.shp" role="data" />
+   <file baseinstalldir="/" md5sum="8f48fc9910156a345448dffaa5ad32b9" name="phpunit_tests/data/andorra/shp/gis_osm_water_a_free_1.shx" role="data" />
+   <file baseinstalldir="/" md5sum="5c5e80ddc8425b13dc218d571407e041" name="phpunit_tests/data/andorra/shp/README" role="data" />
+   <file baseinstalldir="/" md5sum="f34dee5ac9bad1bc567ccb2246dc228e" name="phpunit_tests/data/osr/epsg4326.wkt" role="data" />
+   <file baseinstalldir="/" md5sum="0943006d4ad5a92125ee19f6f49898c9" name="phpunit_tests/data/osr/epsg5678.wkt" role="data" />
+   <file baseinstalldir="/" md5sum="af0fd86345a969a061dceb33cff6f15a" name="phpunit_tests/data/osr/epsg5867.wkt" role="data" />
+   <file baseinstalldir="/" md5sum="dec21ff12713a7efb68aaf50ab3dbefe" name="phpunit_tests/data/osr/epsg25833.wkt" role="data" />
+   <file baseinstalldir="/" md5sum="06f529d7387b987c263929f0612ef57b" name="phpunit_tests/data/osr/epsg31468.wkt" role="data" />
+   <file baseinstalldir="/" md5sum="65fd99a028b8311b3777028f6e657304" name="phpunit_tests/data/osr/epsg32733.wkt" role="data" />
+   <file baseinstalldir="/" md5sum="4ff15a974612bb962c1d12c3ee0d1dad" name="phpunit_tests/data/osr/local.wkt" role="data" />
+   <file baseinstalldir="/" md5sum="4aed6d03a6f3dc069565e358219b11b3" name="phpunit_tests/data/osr/wgs84.prj" role="data" />
+   <file baseinstalldir="/" md5sum="6a2510bb379a55b41fcc825e6fadfc1d" name="phpunit_tests/data/osr/wgs84.proj" role="data" />
+   <file baseinstalldir="/" md5sum="9845c5e1d9a5a00615480f10f6f74947" name="phpunit_tests/data/reference/01.xx.xx/OGRDataSourceTest0/testOGR_DS_ExecuteSQL0.std" role="data" />
+   <file baseinstalldir="/" md5sum="efbb97aca8a568afb43fd6b59604e2b7" name="phpunit_tests/data/reference/01.xx.xx/OGRDataSourceTest0/testOGR_DS_ExecuteSQL2.std" role="data" />
+   <file baseinstalldir="/" md5sum="bf2739b09a1b128df85d801eec46671f" name="phpunit_tests/data/reference/01.xx.xx/OGRDumpReadableTest0/testOGR_F_DumpReadable0.std" role="data" />
+   <file baseinstalldir="/" md5sum="ebdcbd6429800d7750f309dcd93dfda8" name="phpunit_tests/data/reference/01.xx.xx/OGRDumpReadableTest0/testOGR_F_DumpReadable1.std" role="data" />
+   <file baseinstalldir="/" md5sum="7bff46bc20b8c96f8483f68aaacb4990" name="phpunit_tests/data/reference/01.xx.xx/OGRDumpReadableTest0/testOGR_G_DumpReadable0.std" role="data" />
+   <file baseinstalldir="/" md5sum="10c7eda8f0186bf1d47ce5e48ba58c71" name="phpunit_tests/data/reference/01.xx.xx/OGRDumpReadableTest0/testOGR_G_DumpReadable1.std" role="data" />
+   <file baseinstalldir="/" md5sum="126c30bf85d75385f7e125687d5b6c87" name="phpunit_tests/data/reference/01.xx.xx/OGRDumpReadableTest0/testOGR_G_DumpReadable2.std" role="data" />
+   <file baseinstalldir="/" md5sum="2b5954b45fff90b5ee8a7312dcd80ea1" name="phpunit_tests/data/reference/01.xx.xx/OGRFeatureTest0/testOGR_F_GetDefnRef0.std" role="data" />
+   <file baseinstalldir="/" md5sum="f348f87bd894d3e5179c26804ac78967" name="phpunit_tests/data/reference/01.xx.xx/OGRFeatureTest1/testOGR_F_Clone.std" role="data" />
+   <file baseinstalldir="/" md5sum="94fab25f3ef24c683a666b3c83a4efaf" name="phpunit_tests/data/reference/01.xx.xx/OGRGeometryTest1/testOGR_G_Empty.std" role="data" />
+   <file baseinstalldir="/" md5sum="88f9f781f1fef8b5273428a0dbcd4909" name="phpunit_tests/data/reference/01.xx.xx/OGRGeometryTest1/testOGR_G_GetGeometryRef.std" role="data" />
+   <file baseinstalldir="/" md5sum="39d33e38cffe42eb13c6f2bd37e1b063" name="phpunit_tests/data/reference/01.xx.xx/OGRGeometryTest1/testOGR_G_RemoveGeometry1.std" role="data" />
+   <file baseinstalldir="/" md5sum="60b74b1645ed514154e1300ea11f08b1" name="phpunit_tests/data/reference/01.xx.xx/OGRLayerTest1/testOGR_L_SetGetSpatialFilter0.std" role="data" />
+   <file baseinstalldir="/" md5sum="bafdd06eb790268aa76fddf4b4e24a05" name="phpunit_tests/data/reference/01.xx.xx/OGRLayerTest2/testOGR_L_GetSpatialRef0.std" role="data" />
+   <file baseinstalldir="/" md5sum="654a2d4a4fd4496bc7038b808153f745" name="phpunit_tests/data/reference/01.xx.xx/OGRLayerTest3/testOGR_L_CreateFeature0.std" role="data" />
+   <file baseinstalldir="/" md5sum="04bf0346e43f06d14f4c64ef0bb5c910" name="phpunit_tests/data/reference/02.xx.xx/OGRDataSourceTest0/testOGR_DS_ExecuteSQL0.std" role="data" />
+   <file baseinstalldir="/" md5sum="c2e4cae5416f28f44596beeb9a212d59" name="phpunit_tests/data/reference/02.xx.xx/OGRDataSourceTest0/testOGR_DS_ExecuteSQL2.std" role="data" />
+   <file baseinstalldir="/" md5sum="ca4790a121837e2bf0840e7eee3b3db3" name="phpunit_tests/data/reference/02.xx.xx/OGRDumpReadableTest0/testOGR_F_DumpReadable0.std" role="data" />
+   <file baseinstalldir="/" md5sum="6630290f10005c8d0d6cd8064e774b5c" name="phpunit_tests/data/reference/02.xx.xx/OGRDumpReadableTest0/testOGR_F_DumpReadable1.std" role="data" />
+   <file baseinstalldir="/" md5sum="815ce0123ad193409195446ff6b7f234" name="phpunit_tests/data/reference/02.xx.xx/OGRDumpReadableTest0/testOGR_G_DumpReadable0.std" role="data" />
+   <file baseinstalldir="/" md5sum="0e4ec9ae7036662ee5d0956c69a5078e" name="phpunit_tests/data/reference/02.xx.xx/OGRDumpReadableTest0/testOGR_G_DumpReadable1.std" role="data" />
+   <file baseinstalldir="/" md5sum="2cd14f35d826dc18983a23d5f64c95f5" name="phpunit_tests/data/reference/02.xx.xx/OGRDumpReadableTest0/testOGR_G_DumpReadable2.std" role="data" />
+   <file baseinstalldir="/" md5sum="de96ec497f3abee5a278aab700b1d491" name="phpunit_tests/data/reference/02.xx.xx/OGRFeatureTest0/testOGR_F_GetDefnRef0.std" role="data" />
+   <file baseinstalldir="/" md5sum="d32ce4689e2de0027dfb9e1af7c4fcc9" name="phpunit_tests/data/reference/02.xx.xx/OGRFeatureTest1/testOGR_F_Clone.std" role="data" />
+   <file baseinstalldir="/" md5sum="fb9c75fe7bc49f8aed4e4cb35819539e" name="phpunit_tests/data/reference/02.xx.xx/OGRGeometryTest1/testOGR_G_Empty.std" role="data" />
+   <file baseinstalldir="/" md5sum="0507c71dd4a0cf2b0cfc263dd9833895" name="phpunit_tests/data/reference/02.xx.xx/OGRGeometryTest1/testOGR_G_GetGeometryRef.std" role="data" />
+   <file baseinstalldir="/" md5sum="b0639622a6bb21f7823e96844ed6f774" name="phpunit_tests/data/reference/02.xx.xx/OGRGeometryTest1/testOGR_G_RemoveGeometry1.std" role="data" />
+   <file baseinstalldir="/" md5sum="6084fd82cac50cd447f60ddd1c40cce7" name="phpunit_tests/data/reference/02.xx.xx/OGRLayerTest1/testOGR_L_SetGetSpatialFilter0.std" role="data" />
+   <file baseinstalldir="/" md5sum="ccfcd4a90e52034302f76671cbec3c87" name="phpunit_tests/data/reference/02.xx.xx/OGRLayerTest2/testOGR_L_GetSpatialRef0.std" role="data" />
+   <file baseinstalldir="/" md5sum="dcfdc4e025dba60bc777d467adf18a86" name="phpunit_tests/data/reference/02.xx.xx/OGRLayerTest3/testOGR_L_CreateFeature0.std" role="data" />
+   <file baseinstalldir="/" md5sum="fd7e6cc30ca364ccb6b937600b56a690" name="phpunit_tests/data/reference/default/OGRDataSourceTest0/testOGR_DS_ExecuteSQL1.std" role="data" />
+   <file baseinstalldir="/" md5sum="868bb2016b3a9701e6f4b15ff8a1eee3" name="phpunit_tests/data/reference/default/OGRDataSourceTest0/testOGR_DS_ExecuteSQL3.std" role="data" />
+   <file baseinstalldir="/" md5sum="a5ecc5f1d73a40d6dd1c9b5850fccf8d" name="phpunit_tests/data/reference/default/OGRFeatureTest1/testOGR_F_GetFieldDefnRef.std" role="data" />
+   <file baseinstalldir="/" md5sum="1ebacb5f8a938f729054698799409e81" name="phpunit_tests/data/reference/default/OGRFeatureTest1/testOGR_F_SetGetGeometry.std" role="data" />
+   <file baseinstalldir="/" md5sum="f9f717b89e57639d1ac85d5251117d25" name="phpunit_tests/data/reference/default/OGRFeatureTest2/testOGR_F_GetSetFieldRaw.std" role="data" />
+   <file baseinstalldir="/" md5sum="e81f23296a0b9992460f19970ba0a979" name="phpunit_tests/data/reference/default/OGRFeatureTest2/testOGR_F_GetUnsetField1.std" role="data" />
+   <file baseinstalldir="/" md5sum="ef5ac99f88d7b26556199a219d5ffa4c" name="phpunit_tests/data/reference/default/OGRFeatureTest3/testOGR_F_SetFrom.std" role="data" />
+   <file baseinstalldir="/" md5sum="e729936bf5360b37a15365fc295a1901" name="phpunit_tests/data/reference/default/OGRGeometryTest2/testOGR_G_AssignSpatialReference.prj" role="data" />
+   <file baseinstalldir="/" md5sum="80f93253afc7112f7faaee62ee0a76c8" name="phpunit_tests/data/reference/default/OGRLayerTest1/testOGR_L_SetAttributeFilter0.std" role="data" />
+   <file baseinstalldir="/" md5sum="860a46168518e6fe06d36df5ee8df5f6" name="phpunit_tests/data/reference/default/OGRLayerTest2/testOGR_L_GetFeature0.std" role="data" />
+   <file baseinstalldir="/" md5sum="860a46168518e6fe06d36df5ee8df5f6" name="phpunit_tests/data/reference/default/OGRLayerTest2/testOGR_L_GetNextFeature0.std" role="data" />
+   <file baseinstalldir="/" md5sum="3893ed47912b7de958af9f4735d0d379" name="phpunit_tests/data/reference/default/OGRLayerTest2/testOGR_L_ResetReading0.std" role="data" />
+   <file baseinstalldir="/" md5sum="0e5da4cf35e74783537ed9d863f88f5f" name="phpunit_tests/data/reference/default/OSR_2_ExportTest0/testOSR_ExportToPrettyWKT0.std" role="data" />
+   <file baseinstalldir="/" md5sum="1f1303f80eada15a6a25e67b708cc02a" name="phpunit_tests/data/reference/default/OSR_2_ExportTest0/testOSR_ExportToPrettyWKT1.std" role="data" />
+   <file baseinstalldir="/" md5sum="723f5f14abf4ef619865a2c068974932" name="phpunit_tests/data/reference/default/OSR_2_ExportTest0/testOSR_ExportToProj40.std" role="data" />
+   <file baseinstalldir="/" md5sum="b15bafbdc1d2d38b9f1e31bd95f3082e" name="phpunit_tests/data/reference/default/OSR_2_ExportTest0/testOSR_ExportToWKT0.std" role="data" />
+   <file baseinstalldir="/" md5sum="68209203f7deaa0f35efb5b7815c03a6" name="phpunit_tests/data/reference/default/OSR_3_MorphTest0/testOSR_MorphFromESRI0.std" role="data" />
+   <file baseinstalldir="/" md5sum="e729936bf5360b37a15365fc295a1901" name="phpunit_tests/data/reference/default/OSR_3_MorphTest0/testOSR_MorphToESRI0.std" role="data" />
+   <file baseinstalldir="/" md5sum="172d75a5a0e5587a18d2c62a9142e094" name="phpunit_tests/src/util.php" role="test" />
+   <file baseinstalldir="/" md5sum="c53020af3c06b1122c94a3333babc96c" name="phpunit_tests/src/tests/CPLErrorTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="c9c3596cccd320dc42950406a64d4c92" name="phpunit_tests/src/tests/OGRDataSourceTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="b505ad00289b7514adfaee17c26b84b9" name="phpunit_tests/src/tests/OGRDumpReadableTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="2f62f4866ee30f1ed2c66e81a00dda4a" name="phpunit_tests/src/tests/OGRFeatureDefnTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="adc24920b23f032fb350795b8461ebe4" name="phpunit_tests/src/tests/OGRFeatureDefnTest1.php" role="test" />
+   <file baseinstalldir="/" md5sum="7a57afd885a26cafa954fcd12b0c3d09" name="phpunit_tests/src/tests/OGRFeatureTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="9bbc2673b02173a3a8ccb0f496c80472" name="phpunit_tests/src/tests/OGRFeatureTest1.php" role="test" />
+   <file baseinstalldir="/" md5sum="6568a8384cc85c9f8b360f277b30d41f" name="phpunit_tests/src/tests/OGRFeatureTest2.php" role="test" />
+   <file baseinstalldir="/" md5sum="fcac8c781d3ed15cd5fe9e580fa6c960" name="phpunit_tests/src/tests/OGRFeatureTest3.php" role="test" />
+   <file baseinstalldir="/" md5sum="ab1625d4cb2f51c7383917f82d82ac88" name="phpunit_tests/src/tests/OGRFeatureTest4.php" role="test" />
+   <file baseinstalldir="/" md5sum="ab1749b4a2d41c4b1fff70dff0ce9a76" name="phpunit_tests/src/tests/OGRFeatureTest6.php" role="test" />
+   <file baseinstalldir="/" md5sum="2bfdfe7e2896e89dea64c6c4f2de7e1f" name="phpunit_tests/src/tests/OGRFieldDefnTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="b411246e716d1b03037df92027afaff4" name="phpunit_tests/src/tests/OGRGeometryTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="6c6d3d3bdb2dde6737c00518132c563b" name="phpunit_tests/src/tests/OGRGeometryTest1.php" role="test" />
+   <file baseinstalldir="/" md5sum="997fe4dbdc77e1cfd431200b4f1dbbf3" name="phpunit_tests/src/tests/OGRGeometryTest2.php" role="test" />
+   <file baseinstalldir="/" md5sum="3dab5aa77f90582ca5102fa7036d29fe" name="phpunit_tests/src/tests/OGRGeometryTest3.php" role="test" />
+   <file baseinstalldir="/" md5sum="a492cc22b19935ed0b9a39f78fe4ebcb" name="phpunit_tests/src/tests/OGRLayerTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="c019cf74feeaad926b30b6e5ddc759ed" name="phpunit_tests/src/tests/OGRLayerTest1.php" role="test" />
+   <file baseinstalldir="/" md5sum="4f74770536ee421e7460371746e471a0" name="phpunit_tests/src/tests/OGRLayerTest2.php" role="test" />
+   <file baseinstalldir="/" md5sum="e53a48bdcfa54cbf091096b3f13b3d9b" name="phpunit_tests/src/tests/OGRLayerTest3.php" role="test" />
+   <file baseinstalldir="/" md5sum="44d4037efca0441826dbc968a16c3aa1" name="phpunit_tests/src/tests/OGRSFDriverRegistrarTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="17baa36c88717deec81ac856f41a1b80" name="phpunit_tests/src/tests/OGRSFDriverRegistrarTest1.php" role="test" />
+   <file baseinstalldir="/" md5sum="aa081a4b104648084432c40dd143e19a" name="phpunit_tests/src/tests/OGRSFDriverRegistrarTest2.php" role="test" />
+   <file baseinstalldir="/" md5sum="180815e7cbd7d8837516d94720b1d687" name="phpunit_tests/src/tests/OGRSFDriverRegistrarTest3.php" role="test" />
+   <file baseinstalldir="/" md5sum="59e5b2510ae3396c4d40d9809ef9163d" name="phpunit_tests/src/tests/OGRSFDriverTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="bf37eee6ca072ca1abbacaa70b0033b6" name="phpunit_tests/src/tests/OSR_0_MemoryManagementTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="30b2f853d0f54687fbecdcd35c1f5bdc" name="phpunit_tests/src/tests/OSR_0_ValidationTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="b1ce720aadc173a6246f68d957f1f891" name="phpunit_tests/src/tests/OSR_1_ImportTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="422043b7f22909aab18672d96ff1818e" name="phpunit_tests/src/tests/OSR_2_ExportTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="af1e3ce10317f27506b722539f12964d" name="phpunit_tests/src/tests/OSR_2_ValidationTest1.php" role="test" />
+   <file baseinstalldir="/" md5sum="e834bf945dd287cb8ec7f050e0ed3449" name="phpunit_tests/src/tests/OSR_3_AccessTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="e25ae381de3c6aab42179058ff39831d" name="phpunit_tests/src/tests/OSR_3_EPSGTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="a28e4e61b22bbce4b9f7f4fe68708025" name="phpunit_tests/src/tests/OSR_3_IsTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="a0cfaa59383ec1fbfca9c834796c6fc8" name="phpunit_tests/src/tests/OSR_3_MorphTest0.php" role="test" />
+   <file baseinstalldir="/" md5sum="80a784303bfa429900d0a1b8e0b8f41f" name="stubs/ogr.php" role="doc" />
+   <file baseinstalldir="/" md5sum="2ae711844103cd1ed952c376246a95a0" name="stubs/_generator.php" role="doc" />
+   <file baseinstalldir="/" md5sum="3dee609f2ac9b1e8e072a4a102cfb9f8" name="config.m4" role="src" />
+   <file baseinstalldir="/" md5sum="889ec83eff36a765b42841a073bb53d5" name="config.w32" role="src" />
+   <file baseinstalldir="/" md5sum="0ba86b568d93468d9bbb2ffa916be674" name="LICENSE" role="doc" />
+   <file baseinstalldir="/" md5sum="bbd18f0178fbb3daf2e1d7ddcf966b5a" name="Makefile.in" role="src" />
+   <file baseinstalldir="/" md5sum="cc0320ec8f7de22457b88621e8148606" name="makefile.vc" role="src" />
+   <file baseinstalldir="/" md5sum="0fc952f383e9bab9f6f56dff930f168f" name="ogr.c" role="src" />
+   <file baseinstalldir="/" md5sum="a5f4b60283198bed941758cd195959e2" name="php_ogr.h" role="src" />
+   <file baseinstalldir="/" md5sum="f420339f2213fddd39c7366f0b11a38e" name="php_ogr_api.h" role="src" />
+   <file baseinstalldir="/" md5sum="a48c5c5ad09afa656f752671eac25d88" name="php_ogr_shims.h" role="src" />
+   <file baseinstalldir="/" md5sum="c28aa1929b06e4fda83ba7b3ec7ad837" name="README.md" role="doc" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.6.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>ogr</providesextension>
+ <extsrcrelease>
+  <configureoption default="no" name="with-ogr-config" prompt="ogr-config directory" />
+ </extsrcrelease>
+ <changelog>
+  <release>
+   <version>
+    <release>1.5.0</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2019-04-01</date>
+   <license uri="https://opensource.org/licenses/MIT">MIT</license>
+   <notes>
+- First release PECL package
+   </notes>
+  </release>
+ </changelog>
+</package>
