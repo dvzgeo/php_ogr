@@ -614,7 +614,7 @@ PHP_MINFO_FUNCTION(ogr)
 static void php_report_ogr_error(int nErrLevel)
 {
     if (CPLGetLastErrorMsg() && (CPLGetLastErrorNo() != OGRERR_NONE))
-        php_error(nErrLevel, CPLGetLastErrorMsg());
+        php_error(nErrLevel, "%s", CPLGetLastErrorMsg());
 
 }
 
