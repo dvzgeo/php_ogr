@@ -65,7 +65,7 @@
 #define _ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null) \
     ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null)
 /* class_name argument was removed in PHP 7.2 */
-#if PHP_MINOR_VERSION < 2
+#if PHP_MAJOR_VERSION < 8 && PHP_MINOR_VERSION < 2
 #define _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, arginfo_required_num, type, class_name, allow_null) \
     ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, arginfo_required_num, type, class_name, allow_null)
 #else
