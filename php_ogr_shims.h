@@ -1,6 +1,6 @@
 /******************************************************************************
  * Project:  PHP Interface for OGR C API
- * Purpose:  Shims for PHP5 and PHP7 compatibility
+ * Purpose:  Shims for PHP5 and PHP7+ compatibility
  * Author:   Edward Nash, e.nash@dvz-mv.de
  *
  ******************************************************************************
@@ -27,7 +27,7 @@
  */
 
 
-/* Shim macros ZEND_FETCH_RESOURCE and ZEND_FETCH_RESOURCE2 for PHP7 */
+/* Shim macros ZEND_FETCH_RESOURCE and ZEND_FETCH_RESOURCE2 for PHP7+ */
 #if PHP_MAJOR_VERSION < 7
 #define _ZEND_FETCH_RESOURCE(rsrc, rsrc_type, passed_id, default_id, resource_type_name, resource_type) \
     ZEND_FETCH_RESOURCE(rsrc, rsrc_type, &passed_id, default_id, resource_type_name, resource_type)
@@ -42,13 +42,13 @@
    if (rsrc == NULL) RETURN_FALSE;
 #endif
 
-/* Define macro ZEND_REGISTER_RESOURCE for PHP7 */
+/* Define macro ZEND_REGISTER_RESOURCE for PHP7+ */
 #if PHP_MAJOR_VERSION >= 7
 #define ZEND_REGISTER_RESOURCE(zval, rsrc, resource_type) \
     ZVAL_RES(zval, zend_register_resource(rsrc, resource_type));
 #endif
 
-/* Shim function zend_list_delete for PHP7 */
+/* Shim function zend_list_delete for PHP7+ */
 #if PHP_MAJOR_VERSION < 7
 #define _ZEND_FREE_RESOURCE(zv) zend_list_delete(Z_LVAL_P(zv))
 #else
@@ -74,7 +74,7 @@
 #endif
 #endif
 
-/* shim zend_rsrc_list_entry (PHP5) and zend_resource (PHP7) */
+/* shim zend_rsrc_list_entry (PHP5) and zend_resource (PHP7+) */
 #if PHP_MAJOR_VERSION < 7
 typedef zend_rsrc_list_entry zend_resource_t;
 #else
