@@ -156,3 +156,20 @@ typedef size_t strsize_t;
 #else
 #define _ZVAL_PTR_DTOR(__zval) zval_ptr_dtor(__zval)
 #endif
+
+/* shim all thread-safety macros deprecated in PHP7 and removed in PHP8 */
+#ifndef TSRMLS_D
+#define TSRMLS_D void
+#endif
+#ifndef TSRMLS_DC
+#define TSRMLS_DC
+#endif
+#ifndef TSRMLS_C
+#define TSRMLS_C
+#endif
+#ifndef TSRMLS_CC
+#define TSRMLS_CC
+#endif
+#ifndef TSRMLS_FETCH
+#define TSRMLS_FETCH()
+#endif
