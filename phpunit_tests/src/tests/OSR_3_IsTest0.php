@@ -9,6 +9,13 @@
  */
 class OSR_3_IsTest0 extends PHPUnit_Framework_TestCase
 {
+        /**
+     * Test candidate EPSG:31467
+     *
+     * @var resource
+     */
+    protected static $srs31467;
+
     /**
      * Test candidate EPSG:31468
      *
@@ -35,7 +42,7 @@ class OSR_3_IsTest0 extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        foreach (array(4326, 31468, 4328) as $epsg) {
+        foreach (array(4326, 31467, 31468, 4328) as $epsg) {
             $var = sprintf('srs%d', $epsg);
             static::$$var = OSR_NewSpatialReference();
             OSR_ImportFromEPSG(static::$$var, $epsg);
@@ -242,10 +249,10 @@ class OSR_3_IsTest0 extends PHPUnit_Framework_TestCase
      */
     public function testOSR_IsSameGeogCS0()
     {
-        $actual = OSR_IsSameGeogCS(static::$srs4328, static::$srs4326);
+        $actual = OSR_IsSameGeogCS(static::$srs31467, static::$srs31468);
         $this->assertTrue(
             $actual,
-            "OSR_IsSameGeogCS should be TRUE for EPSG:4328 und EPSG:4326"
+            "OSR_IsSameGeogCS should be TRUE for EPSG:31467 und EPSG:31468"
         );
     }
 
