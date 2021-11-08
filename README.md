@@ -29,7 +29,7 @@ make
 
 This will leave the `ogr.so` file under `modules`. This may be installed and/or made available to PHP by adding the line `extension=path/to/ogr.so` to `php.ini`
 
-PHPUnit (5.7) tests are provided for the API functions. These may be run as
+PHPUnit (9.x) tests are provided for the API functions. These may be run as
 follows:
 
 ```bash
