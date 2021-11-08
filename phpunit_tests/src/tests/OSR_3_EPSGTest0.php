@@ -86,10 +86,17 @@ class OSR_3_EPSGTest0 extends PHPUnit_Framework_TestCase
         $hRef = OSR_NewSpatialReference();
         OSR_ImportFromEPSG($hRef, 4326);
         $actual = OSR_EPSGTreatsAsLatLong($hRef);
-        $this->assertFalse(
-            $actual,
-            "OSR_EPSGTreatsAsLatLong should be FALSE for non-strict EPSG:4326"
-        );
+        if (OGR_VERSION_NUM >= 3000000) {
+            $this->assertTrue(
+                $actual,
+                "OSR_EPSGTreatsAsLatLong should be TRUE for EPSG:4326 with GDAL 3+"
+            );
+        } else {
+            $this->assertFalse(
+                $actual,
+                "OSR_EPSGTreatsAsLatLong should be FALSE for non-strict EPSG:4326 with GDAL <3"
+            );
+        }
     }
 
     /**
