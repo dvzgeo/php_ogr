@@ -400,15 +400,27 @@ class OSR_3_AccessTest0 extends PHPUnit_Framework_TestCase
     public function testOSR_GetAxis1()
     {
         $actual = OSR_GetAxis(static::$srs31468, "PROJCS", 0);
-        $this->assertNull(
-            $actual,
-            "Result of OSR_GetAxis should be NULL when no explicit definition in PROJCS"
-        );
+        if (OGR_VERSION_NUM >= 3000000) {
+            $this->assertSame(
+                ["name" => "Easting", "orientation" => "EAST"],
+                $actual,
+                "Result of OSR_GetAxis should be automatically set when no explicit definition in PROJCS"
+            );
+        } else {
+            $this->assertNull(
+                $actual,
+                "Result of OSR_GetAxis should be NULL when no explicit definition in PROJCS"
+            );
+        }
         $actual = OSR_GetAxis(static::$srs31468, "GEOGCS", 0);
-        $this->assertNull(
-            $actual,
-            "Result of OSR_GetAxis should be NULL when no explicit definition in GEOGCS"
-        );
+        if (OGR_VERSION_NUM >= 3000000) {
+        } else {
+            $this->assertSame(
+                ["name" => "Easting", "orientation" => "EAST"],
+                $actual,
+                "Result of OSR_GetAxis should be NULL when no explicit definition in GEOGCS"
+            );
+        }
     }
 
     /**
