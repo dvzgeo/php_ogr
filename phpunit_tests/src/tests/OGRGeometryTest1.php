@@ -15,12 +15,12 @@ class OGRGeometryTest1 extends TestCase
     public $hRing1;
     public $hRing2;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
 
         /*Prepare to write temporary data for comparison.*/
@@ -74,7 +74,7 @@ class OGRGeometryTest1 extends TestCase
         $this->assertEquals($eErr, OGRERR_NONE, "Could not add inner ring to polygon");
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         OGR_G_DestroyGeometry($this->hRing1);
         OGR_G_DestroyGeometry($this->hRing2);

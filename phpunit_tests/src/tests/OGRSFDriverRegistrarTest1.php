@@ -12,18 +12,18 @@ class OGRSFDriverRegistrarTest1 extends TestCase
     public $hOGRSFDriver;
 
     // called before the test functions will be executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToData = create_temp_directory(__CLASS__);
         $this->bUpdate = false;
         $this->hOGRSFDriver = null;
     }
     // called after the test functions are executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function tearDown()
+    public function tearDown() : void
     {
         // delete your instance
         unset($this->strPathToData);

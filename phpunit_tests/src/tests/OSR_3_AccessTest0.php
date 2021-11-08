@@ -28,7 +28,7 @@ class OSR_3_AccessTest0 extends TestCase
     /**
      * @depends OSR_1_ImportTest0::testOSR_SetFromUserInput2
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         foreach (array(4326, 31468) as $epsg) {
             $var = sprintf('srs%d', $epsg);

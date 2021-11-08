@@ -17,7 +17,7 @@ class CPLErrorTest0 extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp() : void
     {
         $this->hGeometry = OGR_G_CreateGeometry(wkbPolygon);
         $hRing = OGR_G_CreateGeometry(wkbLinearRing);
@@ -32,7 +32,7 @@ class CPLErrorTest0 extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->hGeometry = null;
     }

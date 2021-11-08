@@ -16,13 +16,13 @@ class OGRFeatureTest1 extends TestCase
     public $eGeometryType;
     public $strDestDataSource;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
@@ -50,7 +50,7 @@ class OGRFeatureTest1 extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         OGR_DS_Destroy($this->hDS);
 

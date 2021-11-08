@@ -6,11 +6,11 @@ class OGRFeatureDefnTest0 extends TestCase
 {
     public $hContainer;
 
-    public function setUp()
+    public function setUp() : void
     {
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         unset($this->hContainer);
     }

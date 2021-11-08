@@ -12,12 +12,12 @@ class OGRFeatureTest4 extends TestCase
     public $hLayer;
     public $strDestDataSource;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToData = test_data_path("andorra", "mif", "gis_osm_buildings_a_free_1.mif");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
@@ -26,7 +26,7 @@ class OGRFeatureTest4 extends TestCase
         $this->strDestDataSource = "OutputDS";
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         delete_directory($this->strPathToOutputData);
         unset($this->strPathToData);

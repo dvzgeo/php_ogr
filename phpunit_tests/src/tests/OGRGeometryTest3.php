@@ -37,7 +37,7 @@ class OGRGeometryTest3 extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         static::$hRefGeometry = OGR_G_CreateGeometry(wkbPoint25D);
         OGR_G_AddPoint(static::$hRefGeometry, 10, 20, 0.0);

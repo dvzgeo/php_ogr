@@ -4,11 +4,11 @@ use \PHPUnit\Framework\TestCase;
 
 class OGRFieldDefnTest0 extends TestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
     }
 

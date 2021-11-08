@@ -35,7 +35,7 @@ class OSR_3_IsTest0 extends TestCase
     /**
      * @depends OSR_1_ImportTest0::testOSR_ImportFromEPSG0
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         foreach (array(4326, 31468, 4328) as $epsg) {
             $var = sprintf('srs%d', $epsg);

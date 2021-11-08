@@ -16,12 +16,12 @@ class OGRGeometryTest2 extends TestCase
     public $strOutputLayer;
     public $eGeometryType;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         /*Create a polygon.*/
         $eType = wkbPolygon;
@@ -60,7 +60,7 @@ class OGRGeometryTest2 extends TestCase
         $this->eGeometryType = wkbPolygon;
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         OGR_G_DestroyGeometry($this->hRing1);
         OGR_G_DestroyGeometry($this->hRing2);
