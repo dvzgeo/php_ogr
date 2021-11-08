@@ -1,6 +1,8 @@
 <?php
 
-class OGRLayerTest2 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRLayerTest2 extends TestCase
 {
     public $strPathToOutputData;
     public $strTmpDumpFile;

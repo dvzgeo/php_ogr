@@ -1,6 +1,8 @@
 <?php
 
-class OGRFeatureTest1 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRFeatureTest1 extends TestCase
 {
     public $strPathToDumpData;
     public $strTmpDumpFile;

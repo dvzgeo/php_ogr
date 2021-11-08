@@ -1,5 +1,7 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for is*-functions in OSR
  *
@@ -7,7 +9,7 @@
  *
  * @copyright ©2019 DVZ Datenverarbeitungszentrum M-V GmbH
  */
-class OSR_3_IsTest0 extends PHPUnit_Framework_TestCase
+class OSR_3_IsTest0 extends TestCase
 {
     /**
      * Test candidate EPSG:31468

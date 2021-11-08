@@ -1,9 +1,11 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * @runTestsInSeparateProcesses
  */
-class OGRSFDriverRegistrarTest3 extends PHPUnit_Framework_TestCase
+class OGRSFDriverRegistrarTest3 extends TestCase
 {
 
     /***********************************************************************

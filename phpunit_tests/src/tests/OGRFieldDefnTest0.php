@@ -1,6 +1,8 @@
 <?php
 
-class OGRFieldDefnTest0 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRFieldDefnTest0 extends TestCase
 {
     public function setUp()
     {

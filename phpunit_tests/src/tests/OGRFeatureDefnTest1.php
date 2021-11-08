@@ -1,6 +1,8 @@
 <?php
 
-class OGRFeatureDefnTest1 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRFeatureDefnTest1 extends TestCase
 {
     public $hFieldDefn;
     public $hFeatureDefn;

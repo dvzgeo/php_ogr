@@ -1,6 +1,8 @@
 <?php
 
-class OGRFeatureDefnTest0 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRFeatureDefnTest0 extends TestCase
 {
     public $hContainer;
 

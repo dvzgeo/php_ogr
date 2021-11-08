@@ -1,6 +1,8 @@
 <?php
 
-class OGRSFDriverTest0 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRSFDriverTest0 extends TestCase
 {
     public $strPathToData;
     public $strPathToOutputData;

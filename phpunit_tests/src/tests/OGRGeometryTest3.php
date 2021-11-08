@@ -1,11 +1,13 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for WKB and WKT import/export functions
  *
  * @author Edward Nash
  */
-class OGRGeometryTest3 extends PHPUnit_Framework_TestCase
+class OGRGeometryTest3 extends TestCase
 {
     /**
      * WKT representation of test geometry

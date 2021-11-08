@@ -1,6 +1,8 @@
 <?php
 
-class OGRDataSourceTest0 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRDataSourceTest0 extends TestCase
 {
     public $strPathToData;
     public $strPathToOutputData;

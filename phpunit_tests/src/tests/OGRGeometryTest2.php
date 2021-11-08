@@ -1,6 +1,8 @@
 <?php
 
-class OGRGeometryTest2 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRGeometryTest2 extends TestCase
 {
     public $hContainer;
     public $hRing1;

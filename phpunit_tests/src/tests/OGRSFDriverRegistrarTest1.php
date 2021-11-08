@@ -1,9 +1,11 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * @runTestsInSeparateProcesses
  */
-class OGRSFDriverRegistrarTest1 extends PHPUnit_Framework_TestCase
+class OGRSFDriverRegistrarTest1 extends TestCase
 {
     public $strPathToData;
     public $bUpdate;

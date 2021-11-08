@@ -1,11 +1,13 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for CPL error handling functions
  *
  * @author Edward Nash
  */
-class CPLErrorTest0 extends PHPUnit_Framework_TestCase
+class CPLErrorTest0 extends TestCase
 {
     /**
      * @var resource

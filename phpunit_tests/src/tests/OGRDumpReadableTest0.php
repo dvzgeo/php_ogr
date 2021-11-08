@@ -1,11 +1,13 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for OGR_?_DumpReadable() functions
  *
  * @author Edward Nash
  */
-class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
+class OGRDumpReadableTest0 extends TestCase
 {
 
     /**
