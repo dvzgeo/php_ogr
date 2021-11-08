@@ -86,49 +86,33 @@ class OGRFeatureDefnTest1 extends PHPUnit_Framework_TestCase
 
     public function testOGR_FD_GetReferenceCount()
     {
-        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
-        $expected = 0;
-        $this->AssertEquals(
-            $expected,
-            $nFeatureCount,
-            "Problem with OGR_FD_GetReferenceCount(), expected no element."
-        );
+        $nFeatureCount0 = OGR_FD_GetReferenceCount($this->hFeatureDefn);
 
         $hFeature1 = OGR_F_Create($this->hFeatureDefn);
-        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
-        $expected = 1;
+        $nFeatureCount1 = OGR_FD_GetReferenceCount($this->hFeatureDefn);
+        $expected = $nFeatureCount0 + 1;
         $this->AssertEquals(
             $expected,
-            $nFeatureCount,
-            "Problem with OGR_FD_GetReferenceCount(), expected one element."
+            $nFeatureCount1,
+            "Problem with OGR_FD_GetReferenceCount(), expected one more element."
         );
 
-
         $hFeature2 = OGR_F_Create($this->hFeatureDefn);
-        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
-        $expected = 2;
+        $nFeatureCount2 = OGR_FD_GetReferenceCount($this->hFeatureDefn);
+        $expected = $nFeatureCount0 + 2;
         $this->AssertEquals(
             $expected,
-            $nFeatureCount,
-            "Problem with OGR_FD_GetReferenceCount(), expected two elements."
+            $nFeatureCount2,
+            "Problem with OGR_FD_GetReferenceCount(), expected two more elements."
         );
 
         OGR_F_Destroy($hFeature1);
-        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
-        $expected = 1;
+        $nFeatureCount3 = OGR_FD_GetReferenceCount($this->hFeatureDefn);
+        $expected = $nFeatureCount0 + 1;
         $this->AssertEquals(
             $expected,
-            $nFeatureCount,
-            "Problem with OGR_FD_GetReferenceCount(), expected one element."
-        );
-
-        OGR_F_Destroy($hFeature2);
-        $nFeatureCount = OGR_FD_GetReferenceCount($this->hFeatureDefn);
-        $expected = 0;
-        $this->AssertEquals(
-            $expected,
-            $nFeatureCount,
-            "Problem with OGR_FD_GetReferenceCount(), expected no element."
+            $nFeatureCount3,
+            "Problem with OGR_FD_GetReferenceCount(), expected one more element."
         );
     }
 
