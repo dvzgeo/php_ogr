@@ -40,8 +40,8 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
      */
     public function testCPLErrorResetGetLastErrorNo()
     {
-        if (OGR_VERSION_NUM >= 3000000) {
-            $this->markTestSkipped('CPL errors cannot easily be provoked in GDAL 3+');
+        if (OGR_VERSION_NUM >= 2030000) {
+            $this->markTestSkipped('CPL errors cannot easily be provoked in GDAL 2.3+');
             return;
         }
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
@@ -86,8 +86,8 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
      */
     public function testCPLGetLastErrorType1()
     {
-        if (OGR_VERSION_NUM >= 3000000) {
-            $this->markTestSkipped('CPL errors cannot easily be provoked in GDAL 3+');
+        if (OGR_VERSION_NUM >= 2030000) {
+            $this->markTestSkipped('CPL errors cannot easily be provoked in GDAL 2.3+');
             return;
         }
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
@@ -125,8 +125,8 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
      */
     public function testCPLGetLastErrorMsg1()
     {
-        if (OGR_VERSION_NUM >= 3000000) {
-            $this->markTestSkipped('CPL errors cannot easily be provoked in GDAL 3+');
+        if (OGR_VERSION_NUM >= 2030000) {
+            $this->markTestSkipped('CPL errors cannot easily be provoked in GDAL 2.3+');
             return;
         }
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);

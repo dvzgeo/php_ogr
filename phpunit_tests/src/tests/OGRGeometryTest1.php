@@ -162,19 +162,19 @@ class OGRGeometryTest1 extends PHPUnit_Framework_TestCase
         $iGeometry = 1;
 
         $eErr = @OGR_G_RemoveGeometry($this->hContainer, $iGeometry, $bDelete);
-        if (OGR_VERSION_NUM < 3000000) {
+        if (OGR_VERSION_NUM < 2030000) {
             $expected = OGRERR_UNSUPPORTED_OPERATION;
             $this->AssertEquals(
                 $expected,
                 $eErr,
-                "Problem with OGR_G_RemoveGeometry():  not supposed to be supported on polygon for GDAL < 3."
+                "Problem with OGR_G_RemoveGeometry():  not supposed to be supported on polygon for GDAL < 2.3."
             );
         } else {
             $expected = OGRERR_NONE;
             $this->AssertEquals(
                 $expected,
                 $eErr,
-                "Problem with OGR_G_RemoveGeometry():  supposed to be supported on polygon for GDAL >= 3."
+                "Problem with OGR_G_RemoveGeometry():  supposed to be supported on polygon for GDAL >= 2.3."
             );
         }
     }
