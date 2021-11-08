@@ -6,7 +6,7 @@
  *
  ******************************************************************************
  * Copyright (c) 2003, DM Solutions Group Inc
- * Copyright (c) 2019, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
+ * Copyright (c) 2019-2021, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
