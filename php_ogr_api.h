@@ -179,9 +179,11 @@ PHP_FUNCTION(osr_reference);
 PHP_FUNCTION(osr_dereference);
 PHP_FUNCTION(osr_release);
 PHP_FUNCTION(osr_validate);
+#if (GDAL_VERSION_MAJOR < 3)
 PHP_FUNCTION(osr_fixupordering);
 PHP_FUNCTION(osr_fixup);
 PHP_FUNCTION(osr_stripctparms);
+#endif
 PHP_FUNCTION(osr_importfromepsg);
 PHP_FUNCTION(osr_importfromepsga);
 PHP_FUNCTION(osr_importfromwkt);
@@ -921,6 +923,8 @@ _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_osr_validate, 0, 1, IS_LONG, NU
     _ZEND_ARG_TYPE_INFO(0, srs, IS_RESOURCE, 1)
 ZEND_END_ARG_INFO()
 
+#if (GDAL_VERSION_MAJOR < 3)
+
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_osr_fixupordering, 0, 1, IS_LONG, NULL, 1)
     _ZEND_ARG_TYPE_INFO(0, srs, IS_RESOURCE, 1)
 ZEND_END_ARG_INFO()
@@ -932,6 +936,8 @@ ZEND_END_ARG_INFO()
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_osr_stripctparms, 0, 1, IS_LONG, NULL, 1)
     _ZEND_ARG_TYPE_INFO(0, srs, IS_RESOURCE, 1)
 ZEND_END_ARG_INFO()
+
+#endif
 
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_osr_importfromepsg, 0, 2, IS_LONG, NULL, 1)
     _ZEND_ARG_TYPE_INFO(0, srs, IS_RESOURCE, 1)
@@ -1240,9 +1246,11 @@ static const zend_function_entry ogr_functions[] = {
     PHP_FE(osr_dereference, arginfo_osr_dereference)
     PHP_FE(osr_release, arginfo_osr_release)
     PHP_FE(osr_validate, arginfo_osr_validate)
+#if (GDAL_VERSION_MAJOR < 3)
     PHP_FE(osr_fixupordering, arginfo_osr_fixupordering)
     PHP_FE(osr_fixup, arginfo_osr_fixup)
     PHP_FE(osr_stripctparms, arginfo_osr_stripctparms)
+#endif
     PHP_FE(osr_importfromepsg, arginfo_osr_importfromepsg)
     PHP_FE(osr_importfromepsga, arginfo_osr_importfromepsga)
     PHP_FE(osr_importfromwkt, arginfo_osr_importfromwkt)

@@ -4864,6 +4864,8 @@ PHP_FUNCTION(osr_validate)
 
 /* }}} */
 
+#if (GDAL_VERSION_MAJOR < 3)
+
 /* {{{ proto int osr_fixupordering(reference hsrs)
     */
 PHP_FUNCTION(osr_fixupordering)
@@ -4932,6 +4934,8 @@ PHP_FUNCTION(osr_stripctparms)
 }
 
 /* }}} */
+
+#endif
 
 /* {{{ proto int osr_importfromepsg(reference hsrs, int nCode)
    */
