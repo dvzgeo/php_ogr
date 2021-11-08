@@ -44,8 +44,7 @@ class CPLErrorTest0 extends TestCase
     {
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
         $actual = CPLGetLastErrorNo();
-        $this->assertInternalType(
-            "integer",
+        $this->assertIsInt(
             $actual,
             "CPLGetLastErrorNo should return an integer when there was an error"
         );
@@ -86,8 +85,7 @@ class CPLErrorTest0 extends TestCase
     {
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
         $actual = CPLGetLastErrorType();
-        $this->assertInternalType(
-            "integer",
+        $this->assertIsInt(
             $actual,
             "CPLGetLastErrorType should return an integer when there was an error"
         );
@@ -121,8 +119,7 @@ class CPLErrorTest0 extends TestCase
     {
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
         $actual = CPLGetLastErrorMsg();
-        $this->assertInternalType(
-            "string",
+        $this->assertIsString(
             $actual,
             "CPLGetLastErrorMsg should return a string when there was an error"
         );
