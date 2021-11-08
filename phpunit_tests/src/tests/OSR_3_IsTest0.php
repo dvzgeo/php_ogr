@@ -203,7 +203,7 @@ class OSR_3_IsTest0 extends PHPUnit_Framework_TestCase
         $actual = OSR_IsGeocentric(static::$srs4328);
         $this->assertTrue(
             $actual,
-            "Result of OSR_IsGeocentric should be FALSE for EPSG:31468"
+            "Result of OSR_IsGeocentric should be TRUE for EPSG:4328"
         );
     }
 
