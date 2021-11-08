@@ -44,7 +44,7 @@ class OGRFeatureTest6 extends PHPUnit_Framework_TestCase
             $this->strDestDataSource,
             null,
             wkbPoint,
-            array("XSISCHEMA=OFF")
+            null
         );
         $this->assertNotNull($this->hDestLayer, "Unable to create layer");
     }
