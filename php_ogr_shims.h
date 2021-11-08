@@ -173,3 +173,13 @@ typedef size_t strsize_t;
 #ifndef TSRMLS_FETCH
 #define TSRMLS_FETCH()
 #endif
+
+/* shim return check on object_init (void in PHP 8) */
+#if PHP_MAJOR_VERSION < 8
+#define OBJECT_INIT(_zval) if (object_init(_zval)==FAILURE) { \
+    php_report_ogr_error(E_WARNING); \
+    RETURN_FALSE; \
+}
+#else
+#define OBJECT_INIT(_zval) object_init(_zval);
+#endif
