@@ -6,7 +6,7 @@
  *
  ******************************************************************************
  * Copyright (c) 2003, DM Solutions Group Inc
- * Copyright (c) 2019, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
+ * Copyright (c) 2019-2021, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -915,10 +915,8 @@ PHP_FUNCTION(ogr_g_getenvelope)
 
     _ZVAL_PTR_DTOR(oenvel);
 
-    if (object_init(oenvel)==FAILURE) {
-        php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
-    }
+    OBJECT_INIT(oenvel)
+
 
     add_property_double(oenvel, "minx", oEnvelope.MinX);
     add_property_double(oenvel, "maxx", oEnvelope.MaxX);
@@ -3949,10 +3947,8 @@ PHP_FUNCTION(ogr_l_getextent)
 
     _ZVAL_PTR_DTOR(oextent);
 
-    if (object_init(oextent)==FAILURE) {
-        php_report_ogr_error(E_WARNING);
-        RETURN_FALSE;
-    }
+    OBJECT_INIT(oextent)
+
 
     add_property_double(oextent, "minx", oEnvelope.MinX);
     add_property_double(oextent, "maxx", oEnvelope.MaxX);

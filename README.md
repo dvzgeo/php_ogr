@@ -10,7 +10,11 @@ The code is available under a MIT-style license - see LICENSE. The original lice
 
 ## Supported PHP version
 
-Currently PHP 5 >= 5.4 and PHP 7 are supported. The last version known to support PHP 5 <= 5.3 is tagged as php53 for reference.
+Currently PHP 7 >= 7.3 and PHP 8.0 are supported. It is assumed that the extension will compile and work with older versions, but these are no longer tested.
+
+The last version known to support PHP 5 <= 5.3 is tagged as php53 for reference.
+
+The last version known to support PHP 5.6 and PHP 7 <= 7.2 is tagged as 1.5.1.
 
 ## Why here?
 

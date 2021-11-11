@@ -62,5 +62,4 @@ if test "$PHP_OGR" != "no"; then
   PHP_SUBST(OGR_SHARED_LIBADD)
 
   PHP_NEW_EXTENSION(ogr, ogr.c, $ext_shared)
-  PHP_EXTENSION(ogr, $ext_shared)
 fi

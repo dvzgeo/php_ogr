@@ -1,10 +1,10 @@
 /******************************************************************************
  * Project:  PHP Interface for OGR C API
- * Purpose:  Shims for PHP5 and PHP7 compatibility
+ * Purpose:  Shims for PHP5 and PHP7+ compatibility
  * Author:   Edward Nash, e.nash@dvz-mv.de
  *
  ******************************************************************************
- * Copyright (c) 2019, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
+ * Copyright (c) 2019-2021, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
  */
 
 
-/* Shim macros ZEND_FETCH_RESOURCE and ZEND_FETCH_RESOURCE2 for PHP7 */
+/* Shim macros ZEND_FETCH_RESOURCE and ZEND_FETCH_RESOURCE2 for PHP7+ */
 #if PHP_MAJOR_VERSION < 7
 #define _ZEND_FETCH_RESOURCE(rsrc, rsrc_type, passed_id, default_id, resource_type_name, resource_type) \
     ZEND_FETCH_RESOURCE(rsrc, rsrc_type, &passed_id, default_id, resource_type_name, resource_type)
@@ -42,13 +42,13 @@
    if (rsrc == NULL) RETURN_FALSE;
 #endif
 
-/* Define macro ZEND_REGISTER_RESOURCE for PHP7 */
+/* Define macro ZEND_REGISTER_RESOURCE for PHP7+ */
 #if PHP_MAJOR_VERSION >= 7
 #define ZEND_REGISTER_RESOURCE(zval, rsrc, resource_type) \
     ZVAL_RES(zval, zend_register_resource(rsrc, resource_type));
 #endif
 
-/* Shim function zend_list_delete for PHP7 */
+/* Shim function zend_list_delete for PHP7+ */
 #if PHP_MAJOR_VERSION < 7
 #define _ZEND_FREE_RESOURCE(zv) zend_list_delete(Z_LVAL_P(zv))
 #else
@@ -65,7 +65,7 @@
 #define _ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null) \
     ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null)
 /* class_name argument was removed in PHP 7.2 */
-#if PHP_MINOR_VERSION < 2
+#if PHP_MAJOR_VERSION < 8 && PHP_MINOR_VERSION < 2
 #define _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, arginfo_required_num, type, class_name, allow_null) \
     ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, arginfo_required_num, type, class_name, allow_null)
 #else
@@ -74,7 +74,7 @@
 #endif
 #endif
 
-/* shim zend_rsrc_list_entry (PHP5) and zend_resource (PHP7) */
+/* shim zend_rsrc_list_entry (PHP5) and zend_resource (PHP7+) */
 #if PHP_MAJOR_VERSION < 7
 typedef zend_rsrc_list_entry zend_resource_t;
 #else
@@ -155,4 +155,31 @@ typedef size_t strsize_t;
 #define _ZVAL_PTR_DTOR(__zval) zval_dtor(__zval)
 #else
 #define _ZVAL_PTR_DTOR(__zval) zval_ptr_dtor(__zval)
+#endif
+
+/* shim all thread-safety macros deprecated in PHP7 and removed in PHP8 */
+#ifndef TSRMLS_D
+#define TSRMLS_D void
+#endif
+#ifndef TSRMLS_DC
+#define TSRMLS_DC
+#endif
+#ifndef TSRMLS_C
+#define TSRMLS_C
+#endif
+#ifndef TSRMLS_CC
+#define TSRMLS_CC
+#endif
+#ifndef TSRMLS_FETCH
+#define TSRMLS_FETCH()
+#endif
+
+/* shim return check on object_init (void in PHP 8) */
+#if PHP_MAJOR_VERSION < 8
+#define OBJECT_INIT(_zval) if (object_init(_zval)==FAILURE) { \
+    php_report_ogr_error(E_WARNING); \
+    RETURN_FALSE; \
+}
+#else
+#define OBJECT_INIT(_zval) object_init(_zval);
 #endif
