@@ -8,6 +8,12 @@ The original webpage/documentation for OGR/PHP is still available at http://dl.m
 
 The code is available under a MIT-style license - see LICENSE. The original license file from DM Solutions was called README.TXT and contained the same text.
 
+## Supported GDAL/OGR version
+
+Currently both GDAL 2.x and 3.x have been successfully tested.
+
+Note that there is also some variation in the functions exposed depending on the underlying GDAL/OGR version: In case of problems then it is recommended that `function_exists` should be used in PHP to test.
+
 ## Supported PHP version
 
 Currently PHP 7 >= 7.3 and PHP 8.0 are supported. It is assumed that the extension will compile and work with older versions, but these are no longer tested.
