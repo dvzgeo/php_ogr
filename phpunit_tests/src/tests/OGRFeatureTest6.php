@@ -46,7 +46,7 @@ class OGRFeatureTest6 extends TestCase
             $this->strDestDataSource,
             null,
             wkbPoint,
-            array("XSISCHEMA=OFF")
+            null
         );
         $this->assertNotNull($this->hDestLayer, "Unable to create layer");
     }

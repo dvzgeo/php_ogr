@@ -42,7 +42,7 @@ class OGRGeometryTest1 extends TestCase
             $this->strDestDataSource,
             null,
             wkbPolygon,
-            array("XSISCHEMA=OFF")
+            null
         );
         $this->assertNotNull($this->hDestLayer, "Unable to create layer");
 
