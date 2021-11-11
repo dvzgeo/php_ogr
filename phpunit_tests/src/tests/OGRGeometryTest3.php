@@ -1,11 +1,13 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for WKB and WKT import/export functions
  *
  * @author Edward Nash
  */
-class OGRGeometryTest3 extends PHPUnit_Framework_TestCase
+class OGRGeometryTest3 extends TestCase
 {
     /**
      * WKT representation of test geometry
@@ -35,7 +37,7 @@ class OGRGeometryTest3 extends PHPUnit_Framework_TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         static::$hRefGeometry = OGR_G_CreateGeometry(wkbPoint25D);
         OGR_G_AddPoint(static::$hRefGeometry, 10, 20, 0.0);

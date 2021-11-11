@@ -1,5 +1,7 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for export in OSR
  *
@@ -7,7 +9,7 @@
  *
  * @copyright ©2019 DVZ Datenverarbeitungszentrum M-V GmbH
  */
-class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
+class OSR_2_ExportTest0 extends TestCase
 {
 
     /**
@@ -20,8 +22,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
         $hRef = OSR_NewSpatialReference();
         OSR_ImportFromEPSG($hRef, 4326);
         $wkt = OSR_ExportToWKT($hRef);
-        $this->assertInternalType(
-            "string",
+        $this->assertIsString(
             $wkt,
             "Successful WKT export for EPSG:4326 should be a string"
         );
@@ -60,8 +61,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
         $testFile = test_data_path('osr', 'epsg4326.wkt');
         OSR_SetFromUserInput($hRef, $testFile);
         $wkt = OSR_ExportToPrettyWKT($hRef, false);
-        $this->assertInternalType(
-            "string",
+        $this->assertIsString(
             $wkt,
             "Successful pretty WKT export for EPSG:4326 should be a string"
         );
@@ -84,8 +84,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
         $testFile = test_data_path('osr', 'epsg4326.wkt');
         OSR_SetFromUserInput($hRef, $testFile);
         $wkt = OSR_ExportToPrettyWKT($hRef, true);
-        $this->assertInternalType(
-            "string",
+        $this->assertIsString(
             $wkt,
             "Successful pretty WKT export for EPSG:4326 should be a string"
         );
@@ -123,8 +122,7 @@ class OSR_2_ExportTest0 extends PHPUnit_Framework_TestCase
         $hRef = OSR_NewSpatialReference();
         OSR_ImportFromEPSG($hRef, 4326);
         $proj = OSR_ExportToProj4($hRef);
-        $this->assertInternalType(
-            "string",
+        $this->assertIsString(
             $proj,
             "Successful Proj4 export for EPSG:4326 should be a string"
         );

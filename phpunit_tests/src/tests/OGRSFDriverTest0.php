@@ -1,6 +1,8 @@
 <?php
 
-class OGRSFDriverTest0 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRSFDriverTest0 extends TestCase
 {
     public $strPathToData;
     public $strPathToOutputData;
@@ -9,15 +11,15 @@ class OGRSFDriverTest0 extends PHPUnit_Framework_TestCase
     public $hOGRSFDriver;
     public $strCapability;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
     // called before the test functions will be executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
@@ -26,9 +28,9 @@ class OGRSFDriverTest0 extends PHPUnit_Framework_TestCase
         $this->strCapability = ODrCCreateDataSource;
     }
     // called after the test functions are executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function tearDown()
+    public function tearDown() : void
     {
         // delete your instance
         delete_directory($this->strPathToOutputData);

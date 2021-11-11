@@ -1,6 +1,8 @@
 <?php
 
-class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRFeatureTest2 extends TestCase
 {
     public $strPathToOutputData;
     public $strTmpDumpFile;
@@ -13,13 +15,13 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
     public $strOutputLayer;
     public $eGeometryType;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
@@ -46,7 +48,7 @@ class OGRFeatureTest2 extends PHPUnit_Framework_TestCase
         $this->eGeometryType = wkbPoint;
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         OGR_DS_Destroy($this->hDS);
 

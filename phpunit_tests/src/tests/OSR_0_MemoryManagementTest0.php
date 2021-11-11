@@ -1,5 +1,7 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for basic memory management in OSR
  *
@@ -7,7 +9,7 @@
  *
  * @copyright ©2019 DVZ Datenverarbeitungszentrum M-V GmbH
  */
-class OSR_0_MemoryManagementTest0 extends PHPUnit_Framework_TestCase
+class OSR_0_MemoryManagementTest0 extends TestCase
 {
 
     /**
@@ -17,8 +19,7 @@ class OSR_0_MemoryManagementTest0 extends PHPUnit_Framework_TestCase
     {
         $hRef = OSR_NewSpatialReference();
         $this->assertNotNull($hRef, "New spatial reference should not be NULL");
-        $this->assertInternalType(
-            "resource",
+        $this->assertIsResource(
             $hRef,
             "New spatial reference should be a resource"
         );
@@ -38,8 +39,7 @@ class OSR_0_MemoryManagementTest0 extends PHPUnit_Framework_TestCase
     {
         $hRef = OSR_NewSpatialReference();
         OSR_DestroySpatialReference($hRef);
-        $this->assertInternalType(
-            "resource",
+        $this->assertIsResource(
             $hRef,
             "Destroyed spatial reference is still a resource"
         );

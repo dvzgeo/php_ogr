@@ -1,5 +1,7 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for is*-functions in OSR
  *
@@ -7,7 +9,7 @@
  *
  * @copyright ©2019 DVZ Datenverarbeitungszentrum M-V GmbH
  */
-class OSR_3_IsTest0 extends PHPUnit_Framework_TestCase
+class OSR_3_IsTest0 extends TestCase
 {
         /**
      * Test candidate EPSG:31467
@@ -40,7 +42,7 @@ class OSR_3_IsTest0 extends PHPUnit_Framework_TestCase
     /**
      * @depends OSR_1_ImportTest0::testOSR_ImportFromEPSG0
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         foreach (array(4326, 31467, 31468, 4328) as $epsg) {
             $var = sprintf('srs%d', $epsg);

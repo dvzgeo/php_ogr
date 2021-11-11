@@ -1,4 +1,6 @@
 <?php
+
+use \PHPUnit\Framework\TestCase;
 /**
  * A set of utility functions.
  *

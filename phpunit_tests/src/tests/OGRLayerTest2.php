@@ -1,6 +1,8 @@
 <?php
 
-class OGRLayerTest2 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRLayerTest2 extends TestCase
 {
     public $strPathToOutputData;
     public $strTmpDumpFile;
@@ -13,15 +15,15 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
     public $strOutputLayer;
     public $strDestDataSource;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
     // called before the test functions will be executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->strTmpDumpFile = "DumpFile.tmp";
@@ -51,9 +53,9 @@ class OGRLayerTest2 extends PHPUnit_Framework_TestCase
         );
     }
     // called after the test functions are executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function tearDown()
+    public function tearDown() : void
     {
         // delete your instance
         OGR_DS_Destroy($this->hSrcDataSource);

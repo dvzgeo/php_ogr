@@ -1,11 +1,13 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for OGR_?_DumpReadable() functions
  *
  * @author Edward Nash
  */
-class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
+class OGRDumpReadableTest0 extends TestCase
 {
 
     /**
@@ -33,7 +35,7 @@ class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
      */
     protected $outFile;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
         $this->outFile = $this->strPathToOutputData . "dump";
@@ -50,7 +52,7 @@ class OGRDumpReadableTest0 extends PHPUnit_Framework_TestCase
         OGR_F_SetFieldString($this->hFeature, 0, "foo");
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         delete_directory($this->strPathToOutputData);
         OGR_G_DestroyGeometry($this->hGeometry);

@@ -1,11 +1,13 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for CPL error handling functions
  *
  * @author Edward Nash
  */
-class CPLErrorTest0 extends PHPUnit_Framework_TestCase
+class CPLErrorTest0 extends TestCase
 {
     /**
      * @var resource
@@ -15,7 +17,7 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp() : void
     {
         $this->hGeometry = OGR_G_CreateGeometry(wkbPolygon);
         $hRing = OGR_G_CreateGeometry(wkbLinearRing);
@@ -30,7 +32,7 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->hGeometry = null;
     }
@@ -46,8 +48,7 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
         }
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
         $actual = CPLGetLastErrorNo();
-        $this->assertInternalType(
-            "integer",
+        $this->assertIsInt(
             $actual,
             "CPLGetLastErrorNo should return an integer when there was an error"
         );
@@ -92,8 +93,7 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
         }
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
         $actual = CPLGetLastErrorType();
-        $this->assertInternalType(
-            "integer",
+        $this->assertIsInt(
             $actual,
             "CPLGetLastErrorType should return an integer when there was an error"
         );
@@ -131,8 +131,7 @@ class CPLErrorTest0 extends PHPUnit_Framework_TestCase
         }
         @OGR_G_RemoveGeometry($this->hGeometry, 0, true);
         $actual = CPLGetLastErrorMsg();
-        $this->assertInternalType(
-            "string",
+        $this->assertIsString(
             $actual,
             "CPLGetLastErrorMsg should return a string when there was an error"
         );

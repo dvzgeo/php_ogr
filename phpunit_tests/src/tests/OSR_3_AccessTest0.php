@@ -1,5 +1,7 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for accessor functions in OSR
  *
@@ -7,7 +9,7 @@
  *
  * @copyright ©2019 DVZ Datenverarbeitungszentrum M-V GmbH
  */
-class OSR_3_AccessTest0 extends PHPUnit_Framework_TestCase
+class OSR_3_AccessTest0 extends TestCase
 {
     /**
      * Test candidate EPSG:31468
@@ -26,7 +28,7 @@ class OSR_3_AccessTest0 extends PHPUnit_Framework_TestCase
     /**
      * @depends OSR_1_ImportTest0::testOSR_SetFromUserInput2
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         foreach (array(4326, 31468) as $epsg) {
             $var = sprintf('srs%d', $epsg);

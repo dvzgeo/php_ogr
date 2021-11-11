@@ -1,6 +1,8 @@
 <?php
 
-class OGRFeatureTest6 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRFeatureTest6 extends TestCase
 {
     public $strPathToOutputData;
     public $strTmpDumpFile;
@@ -12,12 +14,12 @@ class OGRFeatureTest6 extends PHPUnit_Framework_TestCase
     public $hOGRSFDriver;
     public $astrOptions;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         OGRRegisterAll();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToData = test_data_path("andorra", "shp");
         $this->strPathToOutputData = create_temp_directory(__CLASS__);
@@ -49,7 +51,7 @@ class OGRFeatureTest6 extends PHPUnit_Framework_TestCase
         $this->assertNotNull($this->hDestLayer, "Unable to create layer");
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         delete_directory($this->strPathToOutputData);
         OGR_DS_Destroy($this->hDestDS);

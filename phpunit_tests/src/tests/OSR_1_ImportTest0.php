@@ -1,5 +1,7 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * Tests for import functions in OSR
  *
@@ -7,7 +9,7 @@
  *
  * @copyright ©2019 DVZ Datenverarbeitungszentrum M-V GmbH
  */
-class OSR_1_ImportTest0 extends PHPUnit_Framework_TestCase
+class OSR_1_ImportTest0 extends TestCase
 {
 
     /**

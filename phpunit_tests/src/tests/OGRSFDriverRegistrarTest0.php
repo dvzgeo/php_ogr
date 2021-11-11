@@ -1,9 +1,11 @@
 <?php
 
+use \PHPUnit\Framework\TestCase;
+
 /**
  * @runTestsInSeparateProcesses
  */
-class OGRSFDriverRegistrarTest0 extends PHPUnit_Framework_TestCase
+class OGRSFDriverRegistrarTest0 extends TestCase
 {
     public $strPathToData;
     public $bUpdate;
@@ -11,17 +13,17 @@ class OGRSFDriverRegistrarTest0 extends PHPUnit_Framework_TestCase
     public $strFilename;
 
     // called before the test functions will be executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function setUp()
+    public function setUp() : void
     {
         $this->strPathToData = test_data_path("andorra", "shp");
         $this->bUpdate = false;
     }
     // called after the test functions are executed
-    // this function is defined in PHPUnit_Framework_TestCase and overwritten
+    // this function is defined in TestCase and overwritten
     // here
-    public function tearDown()
+    public function tearDown() : void
     {
         // delete your instance
         unset($this->strPathToData);

@@ -1,11 +1,13 @@
 <?php
 
-class OGRFeatureDefnTest1 extends PHPUnit_Framework_TestCase
+use \PHPUnit\Framework\TestCase;
+
+class OGRFeatureDefnTest1 extends TestCase
 {
     public $hFieldDefn;
     public $hFeatureDefn;
 
-    public function setUp()
+    public function setUp() : void
     {
         $strName = "Lake";
         $this->hFeatureDefn = OGR_FD_Create($strName);
@@ -21,7 +23,7 @@ class OGRFeatureDefnTest1 extends PHPUnit_Framework_TestCase
         OGR_FD_AddFieldDefn($this->hFeatureDefn, $this->hFieldDefn);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         OGR_Fld_Destroy($this->hFieldDefn);
         OGR_FD_Destroy($this->hFeatureDefn);
