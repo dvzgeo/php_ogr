@@ -16,7 +16,7 @@ Note that there is also some variation in the functions exposed depending on the
 
 ## Supported PHP version
 
-Currently PHP 7 >= 7.3 and PHP 8.0 are supported. It is assumed that the extension will compile and work with older versions, but these are no longer tested.
+Currently PHP 7 >= 7.3 and PHP 8 are supported. It is assumed that the extension will compile and work with older versions, but these are no longer tested.
 
 The last version known to support PHP 5 <= 5.3 is tagged as php53 for reference.
 
