@@ -597,6 +597,8 @@ PHP_MINFO_FUNCTION(ogr)
 {
     php_info_print_table_start();
     php_info_print_table_header(2, "ogr support", "enabled");
+    php_info_print_table_row(2, "PHP_OGR Version", PHP_OGR_VERSION);
+    php_info_print_table_row(2, "GDAL/OGR Version", GDAL_RELEASE_NAME);
     php_info_print_table_end();
 
     /* Remove comments if you have entries in php.ini
