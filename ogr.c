@@ -82,7 +82,7 @@ zend_module_entry ogr_module_entry = {
                            request end */
     PHP_MINFO(ogr),
 #if ZEND_MODULE_API_NO >= 20010901
-    "1.5.0", /* Replace with version number for your extension */
+    PHP_OGR_VERSION, /* Replace with version number for your extension */
 #endif
     STANDARD_MODULE_PROPERTIES
 };
@@ -597,6 +597,8 @@ PHP_MINFO_FUNCTION(ogr)
 {
     php_info_print_table_start();
     php_info_print_table_header(2, "ogr support", "enabled");
+    php_info_print_table_row(2, "PHP_OGR Version", PHP_OGR_VERSION);
+    php_info_print_table_row(2, "GDAL/OGR Version", GDAL_RELEASE_NAME);
     php_info_print_table_end();
 
     /* Remove comments if you have entries in php.ini
