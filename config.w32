@@ -1,7 +1,20 @@
+// vim:ft=javascript
+
 ARG_WITH("ogr", "OGR support", "no");
 if (PHP_OGR != "no") {
-  if(CHECK_LIB("gdal_i.lib", "ogr", PHP_OGR) && CHECK_HEADER_ADD_INCLUDE("ogr_srs_api.h", "CFLAGS_OGR", PHP_OGR+"\\include")
+  if(
+    CHECK_LIB("gdal.lib;gdal_i.lib", "ogr", PHP_OGR) && 
+    CHECK_HEADER_ADD_INCLUDE("ogr_srs_api.h", "CFLAGS_OGR", PHP_OGR + "\\include") &&
+    CHECK_HEADER_ADD_INCLUDE("gdal.h", "CFLAGS_OGR", PHP_OGR + "\\include")
   ) {
-    EXTENSION("ogr", "ogr.c", true);
+    if (get_define('PHPDLL').match(/^php[78]/) != null) {
+      EXTENSION("ogr", "ogr.c", true);
+      AC_DEFINE('HAVE_OGR', 1, 'Have ogr module');
+      PHP_INSTALL_HEADERS("ext/ogr/", "php_ogr.h");
+    } else {
+      WARNING("gdal support can't be enabled: " + dll + " unsupported")
+    }
+  } else {
+    WARNING("ogr support can't be enabled: libraries or headers are missing")
   }
 }
