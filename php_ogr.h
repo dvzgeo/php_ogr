@@ -30,9 +30,10 @@
 
 
 #ifndef PHP_OGR_H
-#define PHP_OGR_H
+#define PHP_OGR_H 1
 
 #define PHP_OGR_VERSION "1.6.1"
+#define PHP_OGR_EXTNAME "ogr"
 
 extern zend_module_entry ogr_module_entry;
 #define phpext_ogr_ptr &ogr_module_entry
