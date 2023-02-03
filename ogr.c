@@ -748,7 +748,7 @@ PHP_FUNCTION(gdal_open_dataset) {
 
     hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER | GDAL_OF_VERBOSE_ERROR, NULL, NULL, NULL);
     if (hSrcDS == NULL){
-        char error[128];
+		char error[128];
         sprintf(error, "Can not open dataset '%s'", ZSTR_VAL(pszSrcFilename));
         zend_throw_exception(NULL, error,0);
     }
@@ -763,18 +763,22 @@ PHP_FUNCTION(gdal_open_dataset) {
  * @return array with dataset infos & required band value
  */
 PHP_FUNCTION(gdal_locationinfo) {
-    double lonX, latY = 0;
+    double lonX, latY;
+    zend_long epsgIn;
     zend_string *pszSrcFilename;
     GDALDatasetH *hSrcDS;
     GDALRasterBandH hBand;
     zval *zgdal;
-
-    ZEND_PARSE_PARAMETERS_START(3, 3)
+    
+    ZEND_PARSE_PARAMETERS_START(3, 4)
         Z_PARAM_RESOURCE(zgdal)
         Z_PARAM_DOUBLE(lonX)
         Z_PARAM_DOUBLE(latY)
+        Z_PARAM_OPTIONAL
+        Z_PARAM_LONG(epsgIn)
     ZEND_PARSE_PARAMETERS_END();
 
+    array_init(return_value);
     hSrcDS = (GDALDatasetH*) zend_fetch_resource_ex(zgdal, "GDALDataset", le_Dataset);
     if (hSrcDS == NULL) 
         zend_throw_exception(NULL, "Gdal is null",0);
@@ -790,6 +794,28 @@ PHP_FUNCTION(gdal_locationinfo) {
         zend_throw_exception(NULL, "Cannot invert geotransform",0);
     int rasterXSize = GDALGetRasterXSize(hSrcDS);
     int rasterYSize = GDALGetRasterYSize(hSrcDS);
+
+        // !! must be casted
+    if((int)epsgIn > 1){
+        OGRSpatialReferenceH hTrgSRS = OSRNewSpatialReference(GDALGetProjectionRef(hSrcDS));
+        add_assoc_string(return_value, "rasterSRS", OSRGetName(hTrgSRS));
+        // !! must be up of if
+        OGRSpatialReferenceH hSrcSRS = OSRNewSpatialReference(NULL);
+        OSRImportFromEPSG(hSrcSRS, (int)epsgIn);
+        OSRSetAxisMappingStrategy(hSrcSRS, OAMS_TRADITIONAL_GIS_ORDER);
+        OGRCoordinateTransformationH hCT = OCTNewCoordinateTransformation(hSrcSRS,hTrgSRS);
+        double inX = lonX;
+        double inY = latY;
+        add_assoc_double(return_value, "inEpsg", (int)epsgIn);
+        add_assoc_double(return_value, "inX", inX);
+        add_assoc_double(return_value, "inY", inY);
+        OCTTransform(hCT,1,&lonX,&latY,NULL);
+        add_assoc_string(return_value, "inSRS", OSRGetName(hSrcSRS));
+        OCTDestroyCoordinateTransformation(hCT);
+        OSRDestroySpatialReference(hSrcSRS);
+        OSRDestroySpatialReference(hTrgSRS);
+    }
+
     int iPixel = floor(adfInvGeoTransform[0] +
         adfInvGeoTransform[1] * lonX +
         adfInvGeoTransform[2] * latY);
@@ -813,8 +839,6 @@ PHP_FUNCTION(gdal_locationinfo) {
     } else {
         zend_throw_exception(NULL, "Cannot get GDALRasterIO",0);
     }
-    array_init(return_value);
-    
     // LocationInfo for vrt
     char osItem[32];
     sprintf(osItem,"Pixel_%d_%d", iPixel, iLine);
@@ -839,18 +863,17 @@ PHP_FUNCTION(gdal_locationinfo) {
     }
 
     add_assoc_string(return_value, "value", iovalue);
-    add_assoc_double(return_value, "iPixel", iPixel);
-    add_assoc_double(return_value, "iLine", iLine);
     add_assoc_double(return_value, "lonX", lonX);
     add_assoc_double(return_value, "latY", latY);
-    //add_assoc_string(return_value, "raster",        ZSTR_VAL(pszSrcFilename));
-    //add_assoc_string(return_value, "spatialRef",    OSRGetName(GDALGetSpatialRef(hSrcDS)));
+    add_assoc_double(return_value, "rasterPixel", iPixel);
+    add_assoc_double(return_value, "rasterLine", iLine);
+
     char *projectionRef = GDALGetProjectionRef(hSrcDS); 
     if(*projectionRef)
-        add_assoc_string(return_value, "projectionRef", projectionRef);
-    add_assoc_double(return_value, "xSize",   rasterXSize);
-    add_assoc_double(return_value, "ySize",   rasterYSize);
-    add_assoc_double(return_value, "bandCount",   GDALGetRasterCount(hSrcDS));
+        add_assoc_string(return_value, "rasterProjectionRef", projectionRef);
+    add_assoc_double(return_value, "rasterXSize",   rasterXSize);
+    add_assoc_double(return_value, "rasterYSize",   rasterYSize);
+    add_assoc_double(return_value, "rasterBandCount",   GDALGetRasterCount(hSrcDS));
 }
 
 /**********************************************************************
