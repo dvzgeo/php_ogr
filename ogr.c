@@ -133,8 +133,8 @@ static void
 ogr_free_Datasource(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRDataSourceH hds = (OGRDataSourceH)rsrc->ptr;
-
-    OGR_DS_Destroy( hds );
+    if(hds != NULL)
+        OGR_DS_Destroy( hds );
 
 }
 
@@ -301,6 +301,13 @@ ogr_free_Feature(zend_resource_t *rsrc TSRMLS_DC)
 
 }
 
+// https://github.com/shuhblam/simple-tiles/blob/master/src/error.c
+static void ogr_error_handler(CPLErr eclass, int err_no, const char *msg)
+{
+  // (void)eclass, (void)err_no, (void)msg;
+   zend_throw_exception(NULL, msg,err_no);
+   return;
+}
 
 /* }}} */
 
@@ -310,6 +317,8 @@ PHP_MINIT_FUNCTION(ogr)
 {
     // register GDAL Drivers
     GDALAllRegister();
+    // Install custom error handler
+    CPLSetErrorHandler(ogr_error_handler);
     /* If you have INI entries, uncomment these lines
     ZEND_INIT_MODULE_GLOBALS(ogr, php_ogr_init_globals, NULL);
     REGISTER_INI_ENTRIES();
@@ -652,6 +661,30 @@ static char **  php_array2string(char **papszStrList, zval *refastrvalues)
     return papszStrList;
 }
 
+static char* get_ogr_error_string(int ogrerrid)
+{
+    switch ( ogrerrid ){
+        case OGRERR_NONE:
+            return "Success"; 
+        case OGRERR_NOT_ENOUGH_DATA:
+            return "Not enough data to deserialize";
+        case OGRERR_NOT_ENOUGH_MEMORY:
+            return "Not enough memory"; 
+        case OGRERR_UNSUPPORTED_GEOMETRY_TYPE:
+            return "Unsupported geometry type"; 
+        case OGRERR_UNSUPPORTED_OPERATION:
+            return "Unsupported operation";
+        case OGRERR_CORRUPT_DATA:
+            return "Corrupt data";
+        case OGRERR_FAILURE:
+            return "Failure";
+        case OGRERR_UNSUPPORTED_SRS:
+            return "Unsupported SRS";
+        case OGRERR_INVALID_HANDLE:
+            return "Invalid handle";
+    }
+}
+
 /**********************************************************************
  * Error handling functions
  **********************************************************************/
@@ -745,14 +778,15 @@ PHP_FUNCTION(gdal_open_dataset) {
     ZEND_PARSE_PARAMETERS_START(1, 1)
         Z_PARAM_STR(pszSrcFilename)
     ZEND_PARSE_PARAMETERS_END();
-
-    hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER | GDAL_OF_VERBOSE_ERROR, NULL, NULL, NULL);
-    if (hSrcDS == NULL){
-		char error[128];
+    //  | GDAL_OF_VERBOSE_ERROR
+    hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER, NULL, NULL, NULL);
+    if (hSrcDS != NULL){
+        RETURN_RES(zend_register_resource(hSrcDS, le_Dataset));
+    } else {
+        char error[128];
         sprintf(error, "Can not open dataset '%s'", ZSTR_VAL(pszSrcFilename));
         zend_throw_exception(NULL, error,0);
     }
-    RETURN_RES(zend_register_resource(hSrcDS, le_Dataset));
 }
 
 /**
@@ -763,11 +797,11 @@ PHP_FUNCTION(gdal_open_dataset) {
  * @return array with dataset infos & required band value
  */
 PHP_FUNCTION(gdal_locationinfo) {
-    double lonX, latY;
-    zend_long epsgIn;
+    double lonX, latY = 0;
+    int epsg = 0;
     zend_string *pszSrcFilename;
     GDALDatasetH *hSrcDS;
-    GDALRasterBandH hBand;
+    GDALRasterBandH *hBand;
     zval *zgdal;
     
     ZEND_PARSE_PARAMETERS_START(3, 4)
@@ -775,7 +809,7 @@ PHP_FUNCTION(gdal_locationinfo) {
         Z_PARAM_DOUBLE(lonX)
         Z_PARAM_DOUBLE(latY)
         Z_PARAM_OPTIONAL
-        Z_PARAM_LONG(epsgIn)
+        Z_PARAM_LONG(epsg)
     ZEND_PARSE_PARAMETERS_END();
 
     array_init(return_value);
@@ -794,27 +828,37 @@ PHP_FUNCTION(gdal_locationinfo) {
         zend_throw_exception(NULL, "Cannot invert geotransform",0);
     int rasterXSize = GDALGetRasterXSize(hSrcDS);
     int rasterYSize = GDALGetRasterYSize(hSrcDS);
-
-        // !! must be casted
-    if((int)epsgIn > 1){
-        OGRSpatialReferenceH hTrgSRS = OSRNewSpatialReference(GDALGetProjectionRef(hSrcDS));
-        add_assoc_string(return_value, "rasterSRS", OSRGetName(hTrgSRS));
-        // !! must be up of if
-        OGRSpatialReferenceH hSrcSRS = OSRNewSpatialReference(NULL);
-        OSRImportFromEPSG(hSrcSRS, (int)epsgIn);
+    OGRSpatialReferenceH *hTrgSRS = OSRNewSpatialReference(GDALGetProjectionRef(hSrcDS));
+    char *hTrgSRSName = OSRGetName(hTrgSRS);
+    if(hTrgSRSName != NULL)
+        add_assoc_string(return_value, "rasterSRS", hTrgSRS);
+    // printf("epsgIn: %d\n",epsg);
+    if(epsg != 0){
+        OGRSpatialReferenceH *hSrcSRS = OSRNewSpatialReference(NULL);
+        int *reterr = OSRImportFromEPSG(hSrcSRS, epsg);
+        if(reterr != OGRERR_NONE){
+            char error[64];
+            sprintf(error, "%s: Unknown espg '%u'", get_ogr_error_string(reterr),epsg);
+            zend_throw_exception(NULL, error,reterr);
+            return;
+        }
         OSRSetAxisMappingStrategy(hSrcSRS, OAMS_TRADITIONAL_GIS_ORDER);
-        OGRCoordinateTransformationH hCT = OCTNewCoordinateTransformation(hSrcSRS,hTrgSRS);
+        OGRCoordinateTransformationH *hCT = OCTNewCoordinateTransformation(hSrcSRS,hTrgSRS);
         double inX = lonX;
         double inY = latY;
-        add_assoc_double(return_value, "inEpsg", (int)epsgIn);
+        add_assoc_double(return_value, "inEpsg", epsg);
         add_assoc_double(return_value, "inX", inX);
         add_assoc_double(return_value, "inY", inY);
         OCTTransform(hCT,1,&lonX,&latY,NULL);
-        add_assoc_string(return_value, "inSRS", OSRGetName(hSrcSRS));
+        char *hSrcSRSName = OSRGetName(hSrcSRS);
+        if(hSrcSRSName != NULL)
+            add_assoc_string(return_value, "inSRS", hSrcSRSName);
         OCTDestroyCoordinateTransformation(hCT);
         OSRDestroySpatialReference(hSrcSRS);
-        OSRDestroySpatialReference(hTrgSRS);
     }
+    OSRDestroySpatialReference(hTrgSRS);
+    add_assoc_double(return_value, "lonX", lonX);
+    add_assoc_double(return_value, "latY", latY);
 
     int iPixel = floor(adfInvGeoTransform[0] +
         adfInvGeoTransform[1] * lonX +
@@ -822,11 +866,6 @@ PHP_FUNCTION(gdal_locationinfo) {
     int iLine = floor(adfInvGeoTransform[3] +
         adfInvGeoTransform[4] * lonX +
         adfInvGeoTransform[5] * latY);
-    if (iPixel < 0 || iLine < 0 || iPixel >= rasterXSize || iLine >= rasterYSize){
-        char error[64];
-        sprintf(error, "Pixel [%u,%u] is off this file [%ux%u]", iPixel, iLine, rasterXSize, rasterYSize);
-        zend_throw_exception(NULL, error,0);
-    }
     double adfPixel[2];
     char iovalue[30];
     if (GDALRasterIO(hBand, GF_Read, iPixel, iLine, 1, 1, adfPixel, 1, 1, GDT_CFloat64, 0, 0) == CE_None){
@@ -835,14 +874,11 @@ PHP_FUNCTION(gdal_locationinfo) {
         } else {
            sprintf(iovalue, "%.15g", adfPixel[0]);
         }
-        
-    } else {
-        zend_throw_exception(NULL, "Cannot get GDALRasterIO",0);
     }
     // LocationInfo for vrt
     char osItem[32];
     sprintf(osItem,"Pixel_%d_%d", iPixel, iLine);
-    const char *pszLI = GDALGetMetadataItem(hBand, osItem, "LocationInfo");
+    char *pszLI = GDALGetMetadataItem(hBand, osItem, "LocationInfo");
     if(pszLI != NULL){
         CPLXMLNode *psRoot = CPLParseXMLString(pszLI);
         if (psRoot != NULL && psRoot->psChild != NULL &&
@@ -861,19 +897,15 @@ PHP_FUNCTION(gdal_locationinfo) {
             }
         }
     }
-
     add_assoc_string(return_value, "value", iovalue);
-    add_assoc_double(return_value, "lonX", lonX);
-    add_assoc_double(return_value, "latY", latY);
     add_assoc_double(return_value, "rasterPixel", iPixel);
     add_assoc_double(return_value, "rasterLine", iLine);
-
-    char *projectionRef = GDALGetProjectionRef(hSrcDS); 
-    if(*projectionRef)
-        add_assoc_string(return_value, "rasterProjectionRef", projectionRef);
     add_assoc_double(return_value, "rasterXSize",   rasterXSize);
     add_assoc_double(return_value, "rasterYSize",   rasterYSize);
     add_assoc_double(return_value, "rasterBandCount",   GDALGetRasterCount(hSrcDS));
+    char *projectionRef = GDALGetProjectionRef(hSrcDS); 
+    if(*projectionRef)
+        add_assoc_string(return_value, "rasterProjectionRef", projectionRef);
 }
 
 /**********************************************************************

@@ -1115,7 +1115,7 @@ _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_gdal_locationinfo, 0, 3, IS_ARR
     _ZEND_ARG_TYPE_INFO(0, zgdal, IS_RESOURCE, 1)
     _ZEND_ARG_TYPE_INFO(0, lonX, IS_DOUBLE, 0)
     _ZEND_ARG_TYPE_INFO(0, latY, IS_DOUBLE, 0)
-    ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, epsgIn, IS_LONG, 0, 0)
+    ZEND_ARG_TYPE_INFO(0, epsgIn, IS_LONG, 0)
 ZEND_END_ARG_INFO()
 
 static const zend_function_entry ogr_functions[] = {
