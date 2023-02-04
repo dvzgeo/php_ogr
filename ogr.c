@@ -315,8 +315,6 @@ static void ogr_error_handler(CPLErr eclass, int err_no, const char *msg)
  */
 PHP_MINIT_FUNCTION(ogr)
 {
-    // register GDAL Drivers
-    GDALAllRegister();
     // Install custom error handler
     CPLSetErrorHandler(ogr_error_handler);
     /* If you have INI entries, uncomment these lines
@@ -749,6 +747,18 @@ PHP_FUNCTION(cplgetlasterrormsg)
  * GDAL functions
  **********************************************************************/
 
+ /* }}} */
+
+/* {{{ proto void gdalregisterall()
+    */
+PHP_FUNCTION(gdalregisterall)
+{
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+    GDALAllRegister();
+}
+
 /**
  * 
  * @param string gdal dataset filename
@@ -763,8 +773,8 @@ PHP_FUNCTION(gdal_open_dataset) {
     ZEND_PARSE_PARAMETERS_END();
 
 	if (GDALGetDriverCount() == 0)   {
-		zend_throw_exception(NULL, "GDAL drivers not registered",0);
-		RETURN_NULL();
+        zend_throw_exception(NULL, "GDAL drivers not registered, make sure you call gdalregisterall() before gdalopen()",0);
+        RETURN_NULL();
     }
     //  | GDAL_OF_VERBOSE_ERROR
     hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER, NULL, NULL, NULL);
@@ -4795,7 +4805,7 @@ PHP_FUNCTION(ogropen)
     if (OGRGetDriverCount() == 0)
     {
         php_error(E_WARNING, "OGR drivers not registered, make sure you call \
-                              OGRRegisterAll() before OGROpen()");
+                              ogrregisterall() before ogropen()");
         RETURN_NULL();
     }
 
