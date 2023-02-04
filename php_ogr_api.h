@@ -36,7 +36,7 @@ PHP_FUNCTION(cplgetlasterrorno);
 PHP_FUNCTION(cplgetlasterrortype);
 PHP_FUNCTION(cplgetlasterrormsg);
 PHP_FUNCTION(gdalregisterall);
-PHP_FUNCTION(gdal_open_dataset);
+PHP_FUNCTION(gdalopen);
 PHP_FUNCTION(gdal_locationinfo);
 PHP_FUNCTION(ogr_ds_destroy);
 PHP_FUNCTION(ogropen);
@@ -1104,7 +1104,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_gdalregisterall, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
-_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_gdal_open_dataset, 0, 1, IS_RESOURCE, NULL, 0)
+_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_gdalopen, 0, 1, IS_RESOURCE, NULL, 0)
     _ZEND_ARG_TYPE_INFO(0, pszSrcFilename, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
@@ -1124,7 +1124,7 @@ static const zend_function_entry ogr_functions[] = {
     PHP_FE(cplgetlasterrortype, arginfo_cplgetlasterrortype)
     PHP_FE(cplgetlasterrormsg, arginfo_cplgetlasterrormsg)
     PHP_FE(gdalregisterall, arginfo_gdalregisterall)
-    PHP_FE(gdal_open_dataset, arginfo_gdal_open_dataset)
+    PHP_FE(gdalopen, arginfo_gdalopen)
     PHP_FE(gdal_locationinfo, arginfo_gdal_locationinfo)
     PHP_FE(ogr_g_createfromwkb, arginfo_ogr_g_createfromwkb)
     PHP_FE(ogr_g_createfromwkt, arginfo_ogr_g_createfromwkt)

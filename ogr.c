@@ -764,7 +764,7 @@ PHP_FUNCTION(gdalregisterall)
  * @param string gdal dataset filename
  * @return resource
  */
-PHP_FUNCTION(gdal_open_dataset) {
+PHP_FUNCTION(gdalopen) {
     GDALDatasetH hSrcDS = NULL;
     zend_string *pszSrcFilename;
 
