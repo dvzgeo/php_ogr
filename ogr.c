@@ -120,7 +120,7 @@ static int le_Feature;
 static void 
 gdal_free_Dataset(zend_resource *resource) 
 {
-    GDALDatasetH *hSrcDS = (GDALDatasetH*) resource;
+    GDALDatasetH hSrcDS = (GDALDatasetH)resource->ptr;
     if (hSrcDS != NULL) 
         GDALClose(hSrcDS);
 }
@@ -749,35 +749,23 @@ PHP_FUNCTION(cplgetlasterrormsg)
  * GDAL functions
  **********************************************************************/
 
- /**
- * @param resource Proj
- * @return void
- */
-PHP_FUNCTION(gdal_free) {
-    GDALDatasetH *hSrcDS;
-    zval *zgdal;
-
-    ZEND_PARSE_PARAMETERS_START(1, 1)
-        Z_PARAM_RESOURCE(zgdal)
-    ZEND_PARSE_PARAMETERS_END();
-
-    hSrcDS = (GDALDatasetH*) zend_fetch_resource_ex(zgdal, "GDALDataset", le_Dataset);
-    if (hSrcDS != NULL)
-        GDALClose(hSrcDS);
-}
-
 /**
  * 
  * @param string gdal dataset filename
  * @return resource
  */
 PHP_FUNCTION(gdal_open_dataset) {
-    GDALDatasetH *hSrcDS;
+    GDALDatasetH hSrcDS = NULL;
     zend_string *pszSrcFilename;
 
     ZEND_PARSE_PARAMETERS_START(1, 1)
         Z_PARAM_STR(pszSrcFilename)
     ZEND_PARSE_PARAMETERS_END();
+
+	if (GDALGetDriverCount() == 0)   {
+		zend_throw_exception(NULL, "GDAL drivers not registered",0);
+		RETURN_NULL();
+    }
     //  | GDAL_OF_VERBOSE_ERROR
     hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER, NULL, NULL, NULL);
     if (hSrcDS != NULL){
@@ -831,7 +819,7 @@ PHP_FUNCTION(gdal_locationinfo) {
     OGRSpatialReferenceH *hTrgSRS = OSRNewSpatialReference(GDALGetProjectionRef(hSrcDS));
     char *hTrgSRSName = OSRGetName(hTrgSRS);
     if(hTrgSRSName != NULL)
-        add_assoc_string(return_value, "rasterSRS", hTrgSRS);
+        add_assoc_string(return_value, "rasterSRS", hTrgSRSName);
     // printf("epsgIn: %d\n",epsg);
     if(epsg != 0){
         OGRSpatialReferenceH *hSrcSRS = OSRNewSpatialReference(NULL);
@@ -891,7 +879,7 @@ PHP_FUNCTION(gdal_locationinfo) {
                     psNode->psChild != NULL) {
                     char *pszUnescaped =
                         CPLUnescapeString(psNode->psChild->pszValue, NULL, CPLES_XML);
-                    add_assoc_string(return_value, "locationInfo", pszUnescaped);
+                    add_assoc_string(return_value, "fileLocation", pszUnescaped);
                     CPLFree(pszUnescaped);
                 }
             }
