@@ -301,22 +301,82 @@ ogr_free_Feature(zend_resource_t *rsrc TSRMLS_DC)
 
 }
 
-// https://github.com/shuhblam/simple-tiles/blob/master/src/error.c
-static void ogr_error_handler(CPLErr eclass, int err_no, const char *msg)
+/* }}} */
+
+/**********************************************************************
+ * Error handling functions
+ **********************************************************************/
+
+/* }}} */
+/* The previous line is meant for vim and emacs, so it can correctly fold and
+   unfold functions in source code. See the corresponding marks just before
+   function definition, where the functions purpose is also documented. Please
+   follow this convention for the convenience of others editing your code.
+*/
+
+// from https://github.com/shuhblam/simple-tiles/blob/master/src/error.c
+static void handle_error_to_zend_exception(CPLErr eclass, int err_no, const char *msg)
 {
   // (void)eclass, (void)err_no, (void)msg;
-   zend_throw_exception(NULL, msg,err_no);
+   zend_throw_exception(NULL, msg, err_no);
    return;
 }
 
+/* {{{ proto void cplerrorreset()
+    */
+PHP_FUNCTION(cplerrorreset)
+{
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+
+    CPLErrorReset();
+}
+
 /* }}} */
+/* {{{ proto int cplgetlasterrorno()
+    */
+PHP_FUNCTION(cplgetlasterrorno)
+{
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+
+    RETURN_LONG(CPLGetLastErrorNo());
+}
+
+/* }}} */
+/* {{{ proto CPLErr cplgetlasterrortype()
+    */
+PHP_FUNCTION(cplgetlasterrortype)
+{
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+    RETURN_LONG(CPLGetLastErrorType());
+}
+
+/* }}} */
+/* {{{ proto int cplgetlasterrormsg()
+    */
+PHP_FUNCTION(cplgetlasterrormsg)
+{
+    const char *pszMsg;
+
+    if (ZEND_NUM_ARGS() != 0) {
+        WRONG_PARAM_COUNT;
+    }
+
+    if ((pszMsg = CPLGetLastErrorMsg()) != NULL)
+            _RETURN_DUPLICATED_STRING((char *)pszMsg);
+}
 
 /* {{{ PHP_MINIT_FUNCTION
  */
 PHP_MINIT_FUNCTION(ogr)
 {
     // Install custom error handler
-    CPLSetErrorHandler(ogr_error_handler);
+    CPLSetErrorHandler(handle_error_to_zend_exception);
     /* If you have INI entries, uncomment these lines
     ZEND_INIT_MODULE_GLOBALS(ogr, php_ogr_init_globals, NULL);
     REGISTER_INI_ENTRIES();
@@ -681,66 +741,6 @@ static char* get_ogr_error_string(int ogrerrid)
         case OGRERR_INVALID_HANDLE:
             return "Invalid handle";
     }
-}
-
-/**********************************************************************
- * Error handling functions
- **********************************************************************/
-
-/* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and
-   unfold functions in source code. See the corresponding marks just before
-   function definition, where the functions purpose is also documented. Please
-   follow this convention for the convenience of others editing your code.
-*/
-
-/* {{{ proto void cplerrorreset()
-    */
-PHP_FUNCTION(cplerrorreset)
-{
-    if (ZEND_NUM_ARGS() != 0) {
-        WRONG_PARAM_COUNT;
-    }
-
-    CPLErrorReset();
-}
-
-/* }}} */
-/* {{{ proto int cplgetlasterrorno()
-    */
-PHP_FUNCTION(cplgetlasterrorno)
-{
-    if (ZEND_NUM_ARGS() != 0) {
-        WRONG_PARAM_COUNT;
-    }
-
-    RETURN_LONG(CPLGetLastErrorNo());
-}
-
-/* }}} */
-/* {{{ proto CPLErr cplgetlasterrortype()
-    */
-PHP_FUNCTION(cplgetlasterrortype)
-{
-    if (ZEND_NUM_ARGS() != 0) {
-        WRONG_PARAM_COUNT;
-    }
-    RETURN_LONG(CPLGetLastErrorType());
-}
-
-/* }}} */
-/* {{{ proto int cplgetlasterrormsg()
-    */
-PHP_FUNCTION(cplgetlasterrormsg)
-{
-    const char *pszMsg;
-
-    if (ZEND_NUM_ARGS() != 0) {
-        WRONG_PARAM_COUNT;
-    }
-
-    if ((pszMsg = CPLGetLastErrorMsg()) != NULL)
-            _RETURN_DUPLICATED_STRING((char *)pszMsg);
 }
 
 /**********************************************************************
