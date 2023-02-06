@@ -871,10 +871,14 @@ PHP_FUNCTION(gdal_locationinfo) {
     int iLine = floor(adfInvGeoTransform[3] +
         adfInvGeoTransform[4] * lonX +
         adfInvGeoTransform[5] * latY);
-    double adfPixel[2];
+    double adfPixel[2] = {0, 0};
+    const bool bIsComplex = GDALDataTypeIsComplex(GDALGetRasterDataType(hBand));
     char iovalue[30];
-    if (GDALRasterIO(hBand, GF_Read, iPixel, iLine, 1, 1, adfPixel, 1, 1, GDT_CFloat64, 0, 0) == CE_None){
-        if (GDALDataTypeIsComplex(GDALGetRasterDataType(hBand))){
+    if (GDALRasterIO(hBand, GF_Read, iPixel, iLine, 1, 1, 
+                             adfPixel, 1, 1,
+                             bIsComplex ? GDT_CFloat64 : GDT_Float64, 0,
+                             0) == CE_None) {
+        if (bIsComplex){
             sprintf(iovalue, "%.15g+%.15gi", adfPixel[0], adfPixel[1]);
         } else {
            sprintf(iovalue, "%.15g", adfPixel[0]);
