@@ -811,10 +811,10 @@ PHP_FUNCTION(gdal_locationinfo) {
     ZEND_PARSE_PARAMETERS_END();
 
     array_init(return_value);
-	zval return_in;
-	array_init(&return_in);
-	zval return_raster;
-	array_init(&return_raster);
+    zval return_in;
+    array_init(&return_in);
+    zval return_raster;
+    array_init(&return_raster);
     hSrcDS = (GDALDatasetH*) zend_fetch_resource_ex(zgdal, "GDALDataset", le_Dataset);
     if (hSrcDS == NULL) 
         zend_throw_exception(NULL, "Gdal is null",0);
@@ -831,12 +831,12 @@ PHP_FUNCTION(gdal_locationinfo) {
     int rasterXSize = GDALGetRasterXSize(hSrcDS);
     int rasterYSize = GDALGetRasterYSize(hSrcDS);
     OGRSpatialReferenceH *hTrgSRS = OSRNewSpatialReference(GDALGetProjectionRef(hSrcDS));
-	char *hTrgSRSName = OSRGetName(hTrgSRS);
+    char *hTrgSRSName = OSRGetName(hTrgSRS);
     if(hTrgSRSName != NULL)
         add_assoc_string(&return_raster, "srs", hTrgSRSName);
-	char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,"COMPD_CS");
+    char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,"COMPD_CS");
     if(hTrgSRSCode != NULL)
-		add_assoc_string(&return_raster, "epsg", hTrgSRSCode);
+        add_assoc_string(&return_raster, "epsg", hTrgSRSCode);
     // printf("epsgIn: %d\n",epsg);
     if(epsg != 0){
         OGRSpatialReferenceH *hSrcSRS = OSRNewSpatialReference(NULL);
@@ -861,7 +861,7 @@ PHP_FUNCTION(gdal_locationinfo) {
         OCTDestroyCoordinateTransformation(hCT);
         OSRDestroySpatialReference(hSrcSRS);
     }
-	OSRDestroySpatialReference(hTrgSRS);
+    OSRDestroySpatialReference(hTrgSRS);
     add_assoc_double(&return_raster, "x", lonX);
     add_assoc_double(&return_raster, "y", latY);
 
@@ -873,15 +873,30 @@ PHP_FUNCTION(gdal_locationinfo) {
         adfInvGeoTransform[5] * latY);
     double adfPixel[2] = {0, 0};
     const bool bIsComplex = GDALDataTypeIsComplex(GDALGetRasterDataType(hBand));
-    char iovalue[30];
-    if (GDALRasterIO(hBand, GF_Read, iPixel, iLine, 1, 1, 
-                             adfPixel, 1, 1,
-                             bIsComplex ? GDT_CFloat64 : GDT_Float64, 0,
-                             0) == CE_None) {
+    char osValue[30];
+    if (GDALRasterIO(
+            hBand, GF_Read, iPixel, iLine, 1, 1, 
+            adfPixel, 1, 1,
+            bIsComplex ? GDT_CFloat64 : GDT_Float64, 0, 0
+        ) == CE_None
+    ) {
         if (bIsComplex){
-            sprintf(iovalue, "%.15g+%.15gi", adfPixel[0], adfPixel[1]);
+            sprintf(osValue, "%.15g+%.15gi", adfPixel[0], adfPixel[1]);
         } else {
-           sprintf(iovalue, "%.15g", adfPixel[0]);
+           sprintf(osValue, "%.15g", adfPixel[0]);
+        }
+    }
+    // have we scale/offset values.
+    int bSuccess;
+    double dfOffset = GDALGetRasterOffset(hBand, &bSuccess);
+    double dfScale = GDALGetRasterScale(hBand, &bSuccess);
+    if (dfOffset != 0.0 || dfScale != 1.0) {
+        adfPixel[0] = adfPixel[0] * dfScale + dfOffset;
+        if (bIsComplex) {
+            adfPixel[1] = adfPixel[1] * dfScale + dfOffset;
+            sprintf(osValue, "%.15g+%.15gi", adfPixel[0], adfPixel[1]);
+        } else {
+            sprintf(osValue, "%.15g", adfPixel[0]);
         }
     }
     // LocationInfo for vrt
@@ -893,8 +908,8 @@ PHP_FUNCTION(gdal_locationinfo) {
         if (psRoot != NULL && psRoot->psChild != NULL &&
             psRoot->eType == CXT_Element &&
             EQUAL(psRoot->pszValue, "LocationInfo")) {
-			zval fileLocation;
-			array_init(&fileLocation);
+            zval fileLocation;
+            array_init(&fileLocation);
             for (CPLXMLNode *psNode = psRoot->psChild;
                  psNode != NULL; psNode = psNode->psNext) {
                 if (psNode->eType == CXT_Element &&
@@ -906,7 +921,7 @@ PHP_FUNCTION(gdal_locationinfo) {
                     CPLFree(pszUnescaped);
                 }
             }
-			add_assoc_zval(&return_raster, "files", &fileLocation);
+            add_assoc_zval(&return_raster, "files", &fileLocation);
         }
     }
     add_assoc_double(&return_raster, "pixel", iPixel);
@@ -915,13 +930,13 @@ PHP_FUNCTION(gdal_locationinfo) {
     add_assoc_double(&return_raster, "ySize",   rasterYSize);
     add_assoc_double(&return_raster, "bandCount",   GDALGetRasterCount(hSrcDS));
     /*
-	char *projectionRef = GDALGetProjectionRef(hSrcDS); 
+    char *projectionRef = GDALGetProjectionRef(hSrcDS); 
     if(*projectionRef)
         add_assoc_string(&return_raster, "projectionRef", projectionRef);
-	*/
-	add_assoc_string(return_value, "value", iovalue);
-	add_assoc_zval(return_value, "in", &return_in);
-	add_assoc_zval(return_value, "raster", &return_raster);
+    */
+    add_assoc_string(return_value, "value", osValue);
+    add_assoc_zval(return_value, "in", &return_in);
+    add_assoc_zval(return_value, "raster", &return_raster);
 }
 
 /**********************************************************************
