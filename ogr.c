@@ -167,7 +167,7 @@ static void
 ogr_free_SpatialReference(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRSpatialReferenceH hSRS = (OGRSpatialReferenceH)rsrc->ptr;
-    /* Release rather than Destroy in case OGR still references the object */
+    /* Release rather than Destroy (OSRDestroySpatialReference)in case OGR still references the object */
     OSRRelease( hSRS );
 }
 
@@ -684,9 +684,9 @@ PHP_MINFO_FUNCTION(ogr)
 {
     php_info_print_table_start();
     php_info_print_table_header(2, "ogr support", "enabled");
-    php_info_print_table_row(2, "PHP_OGR Version", PHP_OGR_VERSION);
-    php_info_print_table_row(2, "GDAL/OGR Version", GDAL_RELEASE_NAME);
-    php_info_print_table_row(2, "GDAL Build Info", GDALVersionInfo("BUILD_INFO"));
+    php_info_print_table_row(2,    "PHP_OGR Version", PHP_OGR_VERSION);
+    php_info_print_table_row(2,    "GDAL/OGR Version", GDAL_RELEASE_NAME);
+    php_info_print_table_row(2,    "GDAL Build Info", GDALVersionInfo("BUILD_INFO"));
     php_info_print_table_end();
 
     /* Remove comments if you have entries in php.ini
@@ -759,17 +759,19 @@ PHP_FUNCTION(gdalregisterall)
     GDALAllRegister();
 }
 
-/**
- * 
- * @param string gdal dataset filename
- * @return resource
- */
-PHP_FUNCTION(gdalopen) {
-    GDALDatasetH hSrcDS = NULL;
-    zend_string *pszSrcFilename;
+/* }}} */
 
-    ZEND_PARSE_PARAMETERS_START(1, 1)
+/* {{{ proto ressource gdalopen(string pszSrcFilename, int trgSRS)
+    */
+PHP_FUNCTION(gdalopen)
+{
+    zend_string *pszSrcFilename;
+    zval *trgSRS = NULL;
+
+    ZEND_PARSE_PARAMETERS_START(1, 2)
         Z_PARAM_STR(pszSrcFilename)
+        Z_PARAM_OPTIONAL
+        Z_PARAM_ZVAL(trgSRS)
     ZEND_PARSE_PARAMETERS_END();
 
     if (GDALGetDriverCount() == 0)   {
@@ -777,37 +779,110 @@ PHP_FUNCTION(gdalopen) {
         RETURN_NULL();
     }
     //  | GDAL_OF_VERBOSE_ERROR
-    hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER, NULL, NULL, NULL);
+    GDALDatasetH hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER, NULL, NULL, NULL);
     if (hSrcDS != NULL){
+        if(ZEND_NUM_ARGS() == 2){
+			OGRSpatialReferenceH *hTrgSRS = GDALGetSpatialRef(hSrcDS);
+			char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,NULL);
+			if(hTrgSRSCode != NULL){
+				ZEND_TRY_ASSIGN_REF_STRING(trgSRS, hTrgSRSCode);
+			} else {
+				php_error_docref(NULL, E_WARNING, "'%s' don't have any SRS Authority Code", ZSTR_VAL(pszSrcFilename));
+			}
+		}
         RETURN_RES(zend_register_resource(hSrcDS, le_Dataset));
     } else {
         char error[128];
-        sprintf(error, "Can not open dataset '%s'", ZSTR_VAL(pszSrcFilename));
+        sprintf(error, "Can not open GDALDataset '%s'", ZSTR_VAL(pszSrcFilename));
         zend_throw_exception(NULL, error,0);
+        RETURN_NULL();
     }
 }
 
-/**
- * https://gis.stackexchange.com/a/393550
- * @param float lonX
- * @param float latY
- * @param string file
- * @return array with dataset infos & required band value
- */
-PHP_FUNCTION(gdal_locationinfo) {
+/* }}} */
+
+/* {{{ proto string gdal_ds_getsrscode(resource zgdal)
+    */
+PHP_FUNCTION(gdal_ds_getsrscode)
+{
+    zval *zgdal = NULL;
+
+    ZEND_PARSE_PARAMETERS_START(1, 1)
+        Z_PARAM_RESOURCE(zgdal)
+    ZEND_PARSE_PARAMETERS_END();
+
+    GDALDatasetH *hSrcDS = (GDALDatasetH*) zend_fetch_resource_ex(zgdal, "GDALDataset", le_Dataset);
+    if (hSrcDS == NULL) {
+        zend_throw_exception(NULL, "Param zgdal is null",0);
+        RETURN_NULL();
+    }
+    OGRSpatialReferenceH *hTrgSRS = GDALGetSpatialRef(hSrcDS);
+    char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,NULL);
+    if(hTrgSRSCode != NULL){
+        _RETURN_DUPLICATED_STRING((char *) hTrgSRSCode);
+    } else {
+        zend_throw_exception(NULL, "GDALDataset have no SRS Code",0);
+        RETURN_NULL();
+    }
+}
+
+/* }}} */
+
+/* {{{ proto ressource gdal_ds_getsrscode(int srcSRS, int trgSRS)
+    */
+PHP_FUNCTION(gdal_tr_create)
+{
+    int srcSRS, trgSRS = -1;
+
+    ZEND_PARSE_PARAMETERS_START(2, 2)
+        Z_PARAM_LONG(srcSRS)
+        Z_PARAM_LONG(trgSRS)
+    ZEND_PARSE_PARAMETERS_END();
+
+    OGRSpatialReferenceH *hSrcSRS = OSRNewSpatialReference(NULL);
+    int *srcReterr = OSRImportFromEPSG(hSrcSRS, srcSRS);
+    if(srcReterr != OGRERR_NONE){
+        OSRDestroySpatialReference(hSrcSRS);
+        char error[64];
+        sprintf(error, "%s: Unknown srcSRS '%u'", get_ogr_error_string(srcReterr),srcSRS);
+        zend_throw_exception(NULL, error,srcReterr);
+        RETURN_NULL();
+    }
+    OSRSetAxisMappingStrategy(hSrcSRS, OAMS_TRADITIONAL_GIS_ORDER);
+    // TODO necessary ?
+    zend_register_resource(hSrcSRS, le_SpatialReference);
+
+    OGRSpatialReferenceH *hTrgSRS = OSRNewSpatialReference(NULL);
+    int *trgReterr = OSRImportFromEPSG(hTrgSRS, trgSRS);
+    if(trgReterr != OGRERR_NONE){
+        OSRDestroySpatialReference(hTrgSRS);
+        char error[64];
+        sprintf(error, "%s: Unknown trgSRS '%u'", get_ogr_error_string(trgReterr),trgSRS);
+        zend_throw_exception(NULL, error,trgReterr);
+        RETURN_NULL();
+    }
+    // TODO necessary ?
+    zend_register_resource(hTrgSRS, le_SpatialReference);
+
+    RETURN_RES(zend_register_resource(OCTNewCoordinateTransformation(hSrcSRS,hTrgSRS), le_CoordinateTransformation));
+}
+
+/* }}} */
+
+/* {{{ proto array gdal_locationinfo(resource zgdal, double lonX,
+   double latY, resource zhct)
+    */
+PHP_FUNCTION(gdal_locationinfo)
+{
     double lonX, latY = 0;
-    int epsg = 0;
-    zend_string *pszSrcFilename;
-    GDALDatasetH *hSrcDS;
-    GDALRasterBandH *hBand;
-    zval *zgdal;
+    zval *zgdal, *zhct = NULL;
     
     ZEND_PARSE_PARAMETERS_START(3, 4)
         Z_PARAM_RESOURCE(zgdal)
         Z_PARAM_DOUBLE(lonX)
         Z_PARAM_DOUBLE(latY)
         Z_PARAM_OPTIONAL
-        Z_PARAM_LONG(epsg)
+        Z_PARAM_RESOURCE(zhct)
     ZEND_PARSE_PARAMETERS_END();
 
     array_init(return_value);
@@ -815,56 +890,60 @@ PHP_FUNCTION(gdal_locationinfo) {
     array_init(&return_in);
     zval return_raster;
     array_init(&return_raster);
-    hSrcDS = (GDALDatasetH*) zend_fetch_resource_ex(zgdal, "GDALDataset", le_Dataset);
-    if (hSrcDS == NULL) 
-        zend_throw_exception(NULL, "Gdal is null",0);
-    // Assume there is only one band in the raster source and use that
-    hBand = GDALGetRasterBand(hSrcDS, 1);
-    if (hBand == NULL)
-        zend_throw_exception(NULL, "Gdal has no band",0);
+    GDALDatasetH *hSrcDS = (GDALDatasetH*) zend_fetch_resource_ex(zgdal, "GDALDataset", le_Dataset);
+    if (hSrcDS == NULL) {
+        zend_throw_exception(NULL, "Param zgdal is null",0);
+        RETURN_NULL();
+    }
+    // TODO Assume there is only one band in the raster source and use that
+    GDALRasterBandH *hBand = GDALGetRasterBand(hSrcDS, 1);
+    if (hBand == NULL){
+        zend_throw_exception(NULL, "GDALDataset have no band",0);
+        RETURN_NULL();
+    }
     double adfGeoTransform[6];
-    if (GDALGetGeoTransform(hSrcDS, adfGeoTransform) != CE_None) 
+    if (GDALGetGeoTransform(hSrcDS, adfGeoTransform) != CE_None) { 
         zend_throw_exception(NULL, "Cannot get geotransform",0);
-        double adfInvGeoTransform[6];
-    if (!GDALInvGeoTransform(adfGeoTransform, adfInvGeoTransform)) 
+        RETURN_NULL();
+    }
+    double adfInvGeoTransform[6];
+    if (!GDALInvGeoTransform(adfGeoTransform, adfInvGeoTransform)) {
         zend_throw_exception(NULL, "Cannot invert geotransform",0);
-    int rasterXSize = GDALGetRasterXSize(hSrcDS);
-    int rasterYSize = GDALGetRasterYSize(hSrcDS);
-    OGRSpatialReferenceH *hTrgSRS = OSRNewSpatialReference(GDALGetProjectionRef(hSrcDS));
+        RETURN_NULL();
+    }
+    double rasterXSize = GDALGetRasterXSize(hSrcDS);
+    double rasterYSize = GDALGetRasterYSize(hSrcDS);
+ 
+    OGRSpatialReferenceH *hTrgSRS = GDALGetSpatialRef(hSrcDS);
     char *hTrgSRSName = OSRGetName(hTrgSRS);
     if(hTrgSRSName != NULL)
         add_assoc_string(&return_raster, "srs", hTrgSRSName);
-    char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,"COMPD_CS");
+    char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,NULL);
     if(hTrgSRSCode != NULL)
-        add_assoc_string(&return_raster, "epsg", hTrgSRSCode);
-    // printf("epsgIn: %d\n",epsg);
-    if(epsg != 0){
-        OGRSpatialReferenceH *hSrcSRS = OSRNewSpatialReference(NULL);
-        int *reterr = OSRImportFromEPSG(hSrcSRS, epsg);
-        if(reterr != OGRERR_NONE){
-            char error[64];
-            sprintf(error, "%s: Unknown espg '%u'", get_ogr_error_string(reterr),epsg);
-            zend_throw_exception(NULL, error,reterr);
-            return;
+         add_assoc_string(&return_raster, "epsg", hTrgSRSCode);
+    double inX = lonX;
+    double inY = latY;
+    if (zhct) {
+        int hct_id = -1;
+        OGRCoordinateTransformationH *hCT = (OGRCoordinateTransformationH*) zend_fetch_resource_ex(zhct, "OGRCoordinateTransformation", le_CoordinateTransformation);
+        if(hCT == NULL){
+            zend_throw_exception(NULL, "Param zhct is null",0);
+            RETURN_NULL();
         }
-        OSRSetAxisMappingStrategy(hSrcSRS, OAMS_TRADITIONAL_GIS_ORDER);
-        OGRCoordinateTransformationH *hCT = OCTNewCoordinateTransformation(hSrcSRS,hTrgSRS);
-        double inX = lonX;
-        double inY = latY;
+
+        OGRSpatialReferenceH *hSrcSRS = OCTGetSourceCS(hCT);
         char *hSrcSRSName = OSRGetName(hSrcSRS);
         if(hSrcSRSName != NULL)
             add_assoc_string(&return_in, "srs", hSrcSRSName);
-        add_assoc_double(&return_in, "epsg", epsg);
-        add_assoc_double(&return_in, "x", inX);
-        add_assoc_double(&return_in, "y", inY);
+        char *hSrcSRSCode = OSRGetAuthorityCode(hSrcSRS,NULL);
+        if(hSrcSRSCode != NULL)
+             add_assoc_string(&return_in, "epsg", hSrcSRSCode);
         OCTTransform(hCT,1,&lonX,&latY,NULL);
-        OCTDestroyCoordinateTransformation(hCT);
-        OSRDestroySpatialReference(hSrcSRS);
     }
-    OSRDestroySpatialReference(hTrgSRS);
+    add_assoc_double(&return_in, "x", inX);
+    add_assoc_double(&return_in, "y", inY);
     add_assoc_double(&return_raster, "x", lonX);
     add_assoc_double(&return_raster, "y", latY);
-
     int iPixel = floor(adfInvGeoTransform[0] +
         adfInvGeoTransform[1] * lonX +
         adfInvGeoTransform[2] * latY);
@@ -939,11 +1018,12 @@ PHP_FUNCTION(gdal_locationinfo) {
     add_assoc_zval(return_value, "raster", &return_raster);
 }
 
+/* }}} */
+
 /**********************************************************************
  * OGR functions
  **********************************************************************/
 
-/* }}} */
 /* {{{ proto int ogr_g_createfromwkb(string strbydata, resource hsrs,
    resource refhnewgeom)
     */
