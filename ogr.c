@@ -747,15 +747,12 @@ static char* get_ogr_error_string(int ogrerrid)
  * GDAL functions
  **********************************************************************/
 
- /* }}} */
-
 /* {{{ proto void gdalregisterall()
     */
 PHP_FUNCTION(gdalregisterall)
 {
-    if (ZEND_NUM_ARGS() != 0) {
+    if (ZEND_NUM_ARGS() != 0)
         WRONG_PARAM_COUNT;
-    }
     GDALAllRegister();
 }
 
