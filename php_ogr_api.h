@@ -1103,7 +1103,6 @@ _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_is_osr, 0, 1, _IS_BOOL, NULL, 0
     ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
-// ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, required_num_args, type, class_name, allow_null)
 ZEND_BEGIN_ARG_INFO_EX(arginfo_gdalregisterall, 0, 0, 0)
 ZEND_END_ARG_INFO()
 

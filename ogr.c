@@ -167,7 +167,7 @@ static void
 ogr_free_SpatialReference(zend_resource_t *rsrc TSRMLS_DC)
 {
     OGRSpatialReferenceH hSRS = (OGRSpatialReferenceH)rsrc->ptr;
-    /* Release rather than Destroy (OSRDestroySpatialReference)in case OGR still references the object */
+    /* Release rather than Destroy in case OGR still references the object */
     OSRRelease( hSRS );
 }
 
@@ -684,9 +684,9 @@ PHP_MINFO_FUNCTION(ogr)
 {
     php_info_print_table_start();
     php_info_print_table_header(2, "ogr support", "enabled");
-    php_info_print_table_row(2,    "PHP_OGR Version", PHP_OGR_VERSION);
-    php_info_print_table_row(2,    "GDAL/OGR Version", GDAL_RELEASE_NAME);
-    php_info_print_table_row(2,    "GDAL Build Info", GDALVersionInfo("BUILD_INFO"));
+    php_info_print_table_row(2, "PHP_OGR Version", PHP_OGR_VERSION);
+    php_info_print_table_row(2, "GDAL/OGR Version", GDAL_RELEASE_NAME);
+    php_info_print_table_row(2, "GDAL Build Info", GDALVersionInfo("BUILD_INFO"));
     php_info_print_table_end();
 
     /* Remove comments if you have entries in php.ini

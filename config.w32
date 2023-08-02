@@ -1,5 +1,3 @@
-// vim:ft=javascript
-
 ARG_WITH("ogr", "OGR support", "no");
 if (PHP_OGR != "no") {
   if(
