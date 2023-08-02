@@ -779,14 +779,14 @@ PHP_FUNCTION(gdalopen)
     GDALDatasetH hSrcDS = GDALOpenEx(ZSTR_VAL(pszSrcFilename), GDAL_OF_RASTER, NULL, NULL, NULL);
     if (hSrcDS != NULL){
         if(ZEND_NUM_ARGS() == 2){
-			OGRSpatialReferenceH *hTrgSRS = GDALGetSpatialRef(hSrcDS);
-			char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,NULL);
-			if(hTrgSRSCode != NULL){
-				ZEND_TRY_ASSIGN_REF_STRING(trgSRS, hTrgSRSCode);
-			} else {
-				php_error_docref(NULL, E_WARNING, "'%s' don't have any SRS Authority Code", ZSTR_VAL(pszSrcFilename));
-			}
-		}
+            OGRSpatialReferenceH *hTrgSRS = GDALGetSpatialRef(hSrcDS);
+            char *hTrgSRSCode = OSRGetAuthorityCode(hTrgSRS,NULL);
+            if(hTrgSRSCode != NULL){
+                ZEND_TRY_ASSIGN_REF_STRING(trgSRS, hTrgSRSCode);
+            } else {
+                php_error_docref(NULL, E_WARNING, "'%s' don't have any SRS Authority Code", ZSTR_VAL(pszSrcFilename));
+            }
+        }
         RETURN_RES(zend_register_resource(hSrcDS, le_Dataset));
     } else {
         char error[128];
