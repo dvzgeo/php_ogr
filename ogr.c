@@ -825,7 +825,7 @@ PHP_FUNCTION(gdal_ds_getsrscode)
 
 /* }}} */
 
-/* {{{ proto ressource gdal_ds_getsrscode(int srcSRS, int trgSRS)
+/* {{{ proto ressource gdal_tr_create(int srcSRS, int trgSRS)
     */
 PHP_FUNCTION(gdal_tr_create)
 {
@@ -4425,7 +4425,7 @@ PHP_FUNCTION(ogr_l_rollbacktransaction)
 
 /* }}} */
 
-/* {{{ proto void OGR_DS_Destroy(resource hDS)
+/* {{{ proto void ogr_ds_destroy(resource hDS)
     */
 PHP_FUNCTION(ogr_ds_destroy)
 {
@@ -4886,7 +4886,7 @@ PHP_FUNCTION(ogr_dr_createdatasource)
 
 /* }}} */
 
-/* {{{ proto resource OGROpen(string strName, boolean bUpdate,
+/* {{{ proto resource ogropen(string strName, boolean bUpdate,
    resource refhSFDriver)
     */
 PHP_FUNCTION(ogropen)
@@ -5801,7 +5801,7 @@ PHP_FUNCTION(osr_issamegeogcs)
 
 /* }}} */
 
-/* {{{ proto boolean osr_issamegeogcs(reference hsrs1, reference hsrs2)
+/* {{{ proto boolean osr_issame(reference hsrs1, reference hsrs2)
     */
 PHP_FUNCTION(osr_issame)
 {
@@ -6233,7 +6233,7 @@ PHP_FUNCTION(osr_getaxis)
 
 /* }}} */
 
-/* {{{ proto boolean osr_epsgtreatsaslatlong(reference hsrs)
+/* {{{ proto boolean is_osr(reference hsrs)
    */
 PHP_FUNCTION(is_osr)
 {
