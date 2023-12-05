@@ -871,6 +871,10 @@ PHP_FUNCTION(gdal_tr_create)
     */
 PHP_FUNCTION(gdal_locationinfo)
 {
+	/*
+	2023-09-24
+		https://github.com/OSGeo/gdal/commit/bb49e4140d83d15bba95f4265b4df58411adab96#diff-c1802686f4c5e9a80680f5c5ec2576ef19e1c223319bd69a48a7e10d95efeac2
+	*/
     double lonX, latY = 0;
     zval *zgdal, *zhct = NULL;
     
@@ -947,6 +951,11 @@ PHP_FUNCTION(gdal_locationinfo)
     int iLine = floor(adfInvGeoTransform[3] +
         adfInvGeoTransform[4] * lonX +
         adfInvGeoTransform[5] * latY);
+	/*
+	2023-02-05
+		https://github.com/OSGeo/gdal/commit/d2af066f908b782dd2a8437482da2b395241d3b9
+		https://github.com/OSGeo/gdal/issues/7183
+	*/
     double adfPixel[2] = {0, 0};
     const bool bIsComplex = GDALDataTypeIsComplex(GDALGetRasterDataType(hBand));
     char osValue[30];
