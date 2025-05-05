@@ -1,7 +1,7 @@
 ARG_WITH("ogr", "OGR support", "no");
 if (PHP_OGR != "no") {
   if(
-    CHECK_LIB("gdal.lib;gdal_i.lib", "ogr", PHP_OGR) && 
+    CHECK_LIB("gdal.lib;gdal_i.lib;libgdal.lib", "ogr", PHP_OGR) && 
     CHECK_HEADER_ADD_INCLUDE("ogr_srs_api.h", "CFLAGS_OGR", PHP_OGR + "\\include") &&
     CHECK_HEADER_ADD_INCLUDE("gdal.h", "CFLAGS_OGR", PHP_OGR + "\\include")
   ) {
