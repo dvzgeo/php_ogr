@@ -65,3 +65,15 @@ Finally, under `examples` there are some examples from the original OGR/PHP, whi
 ## Memory management
 
 Most of the memory management is performed automatically using the PHP reference counting and GC. In almost all cases any memory allocated by OGR and no longer referenced will be automatically freed when a variable is reassigned, unset or goes out of scope (or at the next subsequent garbage collection).
+
+## Note for 32-bit systems
+
+Users of this extension in a 32-bit PHP environment should be aware that some OGR functions return 64-bit integer values which cannot be represented in 32-bit PHP as integers.
+In the case that an out-of range value is detected then a PHP warning will be generated and the value automatically truncated to 32 bits, potentially causing
+information loss or even data corruption.
+
+The following functions are affected:
+- `OGR_F_GetFID()`
+- `OGR_L_GetFeatureCount()`
+
+It is recommended that any datasets used with 32-bit systems are checked in advance that they do not contain data which will cause problems.

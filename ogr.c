@@ -6,7 +6,7 @@
  *
  ******************************************************************************
  * Copyright (c) 2003, DM Solutions Group Inc
- * Copyright (c) 2019-2021, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
+ * Copyright (c) 2019-2026, DVZ Datenverarbeitungszentrum Mecklenburg-Vorpommern GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -3713,6 +3713,7 @@ PHP_FUNCTION(ogr_f_getfid)
 {
     int argc = ZEND_NUM_ARGS();
     int hfeature_id = -1;
+    GIntBig fid;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
 
@@ -3723,8 +3724,13 @@ PHP_FUNCTION(ogr_f_getfid)
         _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
                             "OGRFeature", le_Feature);
     }
-    if (hFeat)
-        RETURN_LONG(OGR_F_GetFID(hFeat));
+    if (hFeat) {
+        fid = OGR_F_GetFID(hFeat);
+        if (fid < (GIntBig)ZEND_LONG_MIN || fid > (GIntBig)ZEND_LONG_MAX) {
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "fid out of range %d - %d", ZEND_LONG_MIN, ZEND_LONG_MAX);
+        }
+        RETURN_LONG((zend_long)fid);
+    }
 
 }
 
@@ -4231,6 +4237,7 @@ PHP_FUNCTION(ogr_l_getfeaturecount)
 {
     int argc = ZEND_NUM_ARGS();
     int hlayer_id = -1;
+    GIntBig featurecount;
     zend_bool bforce;
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
@@ -4244,7 +4251,11 @@ PHP_FUNCTION(ogr_l_getfeaturecount)
                             "OGRLayer", le_Layer);
     }
     if (hLayerResource){
-        RETURN_LONG(OGR_L_GetFeatureCount(hLayerResource, bforce));
+        featurecount = OGR_L_GetFeatureCount(hLayerResource, bforce);
+        if (featurecount > (GIntBig)ZEND_LONG_MAX) {
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "feature count is greater than maximum integer %d", ZEND_LONG_MAX);
+        }
+        RETURN_LONG((zend_long)featurecount);
     }
 }
 
