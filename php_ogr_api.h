@@ -35,6 +35,11 @@ PHP_FUNCTION(cplerrorreset);
 PHP_FUNCTION(cplgetlasterrorno);
 PHP_FUNCTION(cplgetlasterrortype);
 PHP_FUNCTION(cplgetlasterrormsg);
+PHP_FUNCTION(gdalregisterall);
+PHP_FUNCTION(gdalopen);
+PHP_FUNCTION(gdal_locationinfo);
+PHP_FUNCTION(gdal_ds_getsrscode);
+PHP_FUNCTION(gdal_tr_create);
 PHP_FUNCTION(ogr_ds_destroy);
 PHP_FUNCTION(ogropen);
 PHP_FUNCTION(ogr_g_createfromwkb);
@@ -1098,6 +1103,30 @@ _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_is_osr, 0, 1, _IS_BOOL, NULL, 0
     ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_gdalregisterall, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
+_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_gdalopen, 0, 1, IS_RESOURCE, NULL, 1)
+    _ZEND_ARG_TYPE_INFO(0, pszSrcFilename, IS_STRING, 0)
+    _ZEND_ARG_TYPE_INFO(1, trgSRS, IS_RESOURCE, 1)
+ZEND_END_ARG_INFO()
+
+_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_gdal_locationinfo, 0, 3, IS_ARRAY, NULL, 1)
+    _ZEND_ARG_TYPE_INFO(0, zgdal, IS_RESOURCE, 1)
+    _ZEND_ARG_TYPE_INFO(0, lonX,  IS_DOUBLE, 0)
+    _ZEND_ARG_TYPE_INFO(0, latY,  IS_DOUBLE, 0)
+    _ZEND_ARG_TYPE_INFO(0, zhct,  IS_RESOURCE, 1)
+ZEND_END_ARG_INFO()
+
+_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_gdal_ds_getsrscode, 0, 1, IS_STRING, NULL, 1)
+    _ZEND_ARG_TYPE_INFO(0, zgdal, IS_RESOURCE, 1)
+ZEND_END_ARG_INFO()
+
+_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_gdal_tr_create, 0, 2, IS_RESOURCE, NULL, 1)
+    _ZEND_ARG_TYPE_INFO(0, srcSRS, IS_LONG, 0)
+    _ZEND_ARG_TYPE_INFO(0, trgSRS, IS_LONG, 0)
+ZEND_END_ARG_INFO()
+
 /*
  * Every user visible function must have an entry in ogr_functions[]
  */
@@ -1106,6 +1135,11 @@ static const zend_function_entry ogr_functions[] = {
     PHP_FE(cplgetlasterrorno, arginfo_cplgetlasterrorno)
     PHP_FE(cplgetlasterrortype, arginfo_cplgetlasterrortype)
     PHP_FE(cplgetlasterrormsg, arginfo_cplgetlasterrormsg)
+    PHP_FE(gdalregisterall, arginfo_gdalregisterall)
+    PHP_FE(gdalopen, arginfo_gdalopen)
+    PHP_FE(gdal_locationinfo, arginfo_gdal_locationinfo)
+    PHP_FE(gdal_ds_getsrscode, arginfo_gdal_ds_getsrscode)
+    PHP_FE(gdal_tr_create, arginfo_gdal_tr_create)
     PHP_FE(ogr_g_createfromwkb, arginfo_ogr_g_createfromwkb)
     PHP_FE(ogr_g_createfromwkt, arginfo_ogr_g_createfromwkt)
     PHP_FE(ogr_g_destroygeometry, arginfo_ogr_g_destroygeometry)
