@@ -95,11 +95,11 @@ function DumpPolygon( $hGeom )
     for( $iRing = 0; $iRing < $nRingCount; $iRing++ )
     {
         $hRing = OGR_G_GetGeometryRef($hGeom, $iRing);
-        $eErr = DumpLineString( $hRing, &$strRings );
+        $eErr = DumpLineString( $hRing, $strRings );
         if( $eErr != OGRERR_NONE )
             return $eErr;
     }
-    
+
     return OGRERR_NONE;
 }
 
@@ -175,12 +175,12 @@ function   DumpMultiPolygon($hGeom)
     {
         $hPolygon = OGR_G_GetGeometryRef($hGeom, $iLine);
 
-        $eErr = DumpPolygon($hPolygon, &$strPolygon );
-        
+        $eErr = DumpPolygon($hPolygon, $strPolygon );
+
         if( $eErr != OGRERR_NONE )
             return eErr;
     }
-    
+
     return OGRERR_NONE;
 }
 
@@ -223,7 +223,7 @@ function   DumpGeometryCollection( $hGeom)
  **********************************************************************/
 
 
-function OGR_G_DumpReadable($hGeom)
+function OGR_G_DumpReadableloc($hGeom)
 {
 
     switch (OGR_G_GetGeometryType($hGeom)) {
@@ -264,10 +264,9 @@ function OGR_G_DumpReadable($hGeom)
       default:
         $eErr = OGRERR_UNSUPPORTED_GEOMETRY_TYPE;
         break;
-    } 
+    }
 
 }
-
 
 /**********************************************************************
  *                      OGRCDump()
@@ -276,15 +275,15 @@ function OGR_G_DumpReadable($hGeom)
  *
  **********************************************************************/
 
- function OGR_F_DumpReadable( $hFeature)
+ function OGR_F_DumpReadableLoc( $hFeature)
 
 {
 
     $hFeatureDefn = OGR_F_GetDefnRef($hFeature);
 
 
-    printf( "OGRFeature(%s):%ld\n", 
-            OGR_FD_GetName($hFeatureDefn), 
+    printf( "OGRFeature(%s):%ld\n",
+            OGR_FD_GetName($hFeatureDefn),
             OGR_F_GetFID($hFeature) );
 
     $numFields = OGR_FD_GetFieldCount($hFeatureDefn);
@@ -303,15 +302,15 @@ function OGR_G_DumpReadable($hGeom)
            printf( "%s\n", OGR_F_GetFieldAsString( $hFeature, $iField ) );
        else
            printf( "(null)\n" );
-            
+
     }
 
     if( OGR_F_GetStyleString($hFeature) != NULL )
         printf( "  Style = %s\n", OGR_F_GetStyleString($hFeature) );
-    
+
 
     if( OGR_F_GetGeometryRef($hFeature) != NULL ){
-        OGR_G_DumpReadable( OGR_F_GetGeometryRef($hFeature) );
+        OGR_G_DumpReadableloc( OGR_F_GetGeometryRef($hFeature) );
     }
     printf("\n");
 }
@@ -320,7 +319,7 @@ function OGR_G_DumpReadable($hGeom)
 /**********************************************************************
  *                      Main
  *
- * 
+ *
  *
  **********************************************************************/
 
@@ -333,14 +332,14 @@ if (count($_SERVER["argv"]) >= 2)
 else
 {
     // Set your default test filename here (for use in web environment)
-    $strfilename ="test.tab";  
+    $strfilename ="test.tab";
 }
 
 
 // Register all drivers
    OGRRegisterAll();
 
-// Open data source 
+// Open data source
    $hSFDriver=NULL;
    $hDatasource = OGROpen($strfilename, 0, $hSFDriver);
 
@@ -373,31 +372,30 @@ else
      $numFields = OGR_FD_GetFieldCount( $hLayerDefn );
 
         printf("\n===================\n");
-        printf("Layer %d: '%s'\n\n", i, OGR_FD_GetName($hLayerDefn));
+        printf("Layer %d: '%s'\n\n", $i, OGR_FD_GetName($hLayerDefn));
 
 
- 
         for($j=0; $j<$numFields; $j++)
         {
 
             $hFieldDefn = OGR_FD_GetFieldDefn( $hLayerDefn, $j );
-            printf(" Field %d: %s (%s)\n", $j, 
-                   OGR_Fld_GetNameRef($hFieldDefn), 
+            printf(" Field %d: %s (%s)\n", $j,
+                   OGR_Fld_GetNameRef($hFieldDefn),
                    OGR_GetFieldTypeName(OGR_Fld_GetType($hFieldDefn)) );
         }
         printf("\n");
 
-        printf("Feature(s) count= %d", OGR_L_GetFeatureCount($hLayer, 
-                                                   TRUE /*bforce*/)); 
+        printf("Feature(s) count= %d", OGR_L_GetFeatureCount($hLayer,
+                                                   TRUE /*bforce*/));
         printf("\n\n");
 
         /* And dump each feature individually */
 
         while( ($hFeature = OGR_L_GetNextFeature( $hLayer )) != NULL )
         {
- 
 
-            OGR_F_DumpReadable( $hFeature);
+
+            OGR_F_DumpReadableloc( $hFeature);
             OGR_F_Destroy( $hFeature );
         }
 
