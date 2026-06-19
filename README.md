@@ -74,6 +74,8 @@ information loss or even data corruption.
 
 The following functions are affected:
 - `OGR_F_GetFID()`
+- `OGR_F_GetFieldAsInteger64()`
+- `OGR_F_GetFieldAsInteger64List()`
 - `OGR_L_GetFeatureCount()`
 
 It is recommended that any datasets used with 32-bit systems are checked in advance that they do not contain data which will cause problems.
