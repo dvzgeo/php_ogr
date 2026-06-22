@@ -829,6 +829,35 @@ function ogr_f_unsetfield($feature, $i)
 /**
  * @param resource $feature
  * @param int $i
+ * @return bool
+ */
+function ogr_f_isfieldnull($feature, $i)
+{
+}
+
+
+/**
+ * @param resource $feature
+ * @param int $i
+ * @return bool
+ */
+function ogr_f_isfieldsetandnotnull($feature, $i)
+{
+}
+
+
+/**
+ * @param resource $feature
+ * @param int $i
+ */
+function ogr_f_setfieldnull($feature, $i)
+{
+}
+
+
+/**
+ * @param resource $feature
+ * @param int $i
  * @return resource
  */
 function ogr_f_getrawfieldref($feature, $i)

@@ -113,6 +113,11 @@ PHP_FUNCTION(ogr_f_getfielddefnref);
 PHP_FUNCTION(ogr_f_getfieldindex);
 PHP_FUNCTION(ogr_f_isfieldset);
 PHP_FUNCTION(ogr_f_unsetfield);
+#if GDAL_VERSION_NUM >= 2020000
+PHP_FUNCTION(ogr_f_isfieldnull);
+PHP_FUNCTION(ogr_f_isfieldsetandnotnull);
+PHP_FUNCTION(ogr_f_setfieldnull);
+#endif
 PHP_FUNCTION(ogr_f_getrawfieldref);
 PHP_FUNCTION(ogr_f_getfieldasinteger);
 #if GDAL_VERSION_MAJOR >= 2
@@ -603,6 +608,25 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_ogr_f_unsetfield, 0, 0, 2)
     _ZEND_ARG_TYPE_INFO(0, feature, IS_RESOURCE, 0)
     _ZEND_ARG_TYPE_INFO(0, i, IS_LONG, 0)
 ZEND_END_ARG_INFO()
+
+#if GDAL_VERSION_NUM >= 2020000
+
+_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_ogr_f_isfieldnull, 0, 2, _IS_BOOL, NULL, 0)
+    _ZEND_ARG_TYPE_INFO(0, feature, IS_RESOURCE, 0)
+    _ZEND_ARG_TYPE_INFO(0, i, IS_LONG, 0)
+ZEND_END_ARG_INFO()
+
+_ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_ogr_f_isfieldsetandnotnull, 0, 2, _IS_BOOL, NULL, 0)
+    _ZEND_ARG_TYPE_INFO(0, feature, IS_RESOURCE, 0)
+    _ZEND_ARG_TYPE_INFO(0, i, IS_LONG, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_ogr_f_setfieldnull, 0, 0, 2)
+    _ZEND_ARG_TYPE_INFO(0, feature, IS_RESOURCE, 0)
+    _ZEND_ARG_TYPE_INFO(0, i, IS_LONG, 0)
+ZEND_END_ARG_INFO()
+
+#endif
 
 _ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_ogr_f_getrawfieldref, 0, 2, IS_RESOURCE, NULL, 1)
     _ZEND_ARG_TYPE_INFO(0, feature, IS_RESOURCE, 0)
@@ -1224,6 +1248,11 @@ static const zend_function_entry ogr_functions[] = {
     PHP_FE(ogr_f_getfieldindex, arginfo_ogr_f_getfieldindex)
     PHP_FE(ogr_f_isfieldset, arginfo_ogr_f_isfieldset)
     PHP_FE(ogr_f_unsetfield, arginfo_ogr_f_unsetfield)
+#if GDAL_VERSION_NUM >= 2020000
+    PHP_FE(ogr_f_isfieldnull, arginfo_ogr_f_isfieldnull)
+    PHP_FE(ogr_f_isfieldsetandnotnull, arginfo_ogr_f_isfieldsetandnotnull)
+    PHP_FE(ogr_f_setfieldnull, arginfo_ogr_f_setfieldnull)
+#endif
     PHP_FE(ogr_f_getrawfieldref, arginfo_ogr_f_getrawfieldref)
     PHP_FE(ogr_f_getfieldasinteger, arginfo_ogr_f_getfieldasinteger)
     PHP_FE(ogr_f_getfieldasinteger64, arginfo_ogr_f_getfieldasinteger64)
