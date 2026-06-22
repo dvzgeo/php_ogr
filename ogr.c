@@ -369,6 +369,13 @@ PHP_MINIT_FUNCTION(ogr)
     /*Register constants*/
 #define OGR_CONST_FLAG CONST_CS | CONST_PERSISTENT
 
+    REGISTER_LONG_CONSTANT("PHP_OGR_VERSION_NUM",
+                           PHP_OGR_VERSION_NUM,
+                           OGR_CONST_FLAG);
+    REGISTER_STRING_CONSTANT("PHP_OGR_VERSION",
+                           PHP_OGR_VERSION,
+                           OGR_CONST_FLAG);
+
     REGISTER_LONG_CONSTANT("OGR_VERSION_NUM",
                            GDAL_VERSION_NUM,
                            OGR_CONST_FLAG);
