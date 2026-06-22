@@ -1507,6 +1507,33 @@ function osr_validate($srs)
 
 /**
  * @param resource $srs
+ * @return int
+ */
+function osr_fixupordering($srs)
+{
+}
+
+
+/**
+ * @param resource $srs
+ * @return int
+ */
+function osr_fixup($srs)
+{
+}
+
+
+/**
+ * @param resource $srs
+ * @return int
+ */
+function osr_stripctparms($srs)
+{
+}
+
+
+/**
+ * @param resource $srs
  * @param int $code
  * @return int
  */
