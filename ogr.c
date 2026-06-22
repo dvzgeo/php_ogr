@@ -472,6 +472,14 @@ PHP_MINIT_FUNCTION(ogr)
     REGISTER_LONG_CONSTANT("OFTIntegerList",
                            OFTIntegerList,
                            OGR_CONST_FLAG);
+#if GDAL_VERSION_MAJOR >= 2
+    REGISTER_LONG_CONSTANT("OFTInteger64",
+                           OFTInteger64,
+                           OGR_CONST_FLAG);
+    REGISTER_LONG_CONSTANT("OFTInteger64List",
+                           OFTInteger64List,
+                           OGR_CONST_FLAG);
+#endif
     REGISTER_LONG_CONSTANT("OFTReal",
                            OFTReal,
                            OGR_CONST_FLAG);
@@ -2851,6 +2859,38 @@ PHP_FUNCTION(ogr_f_getfieldasinteger)
 
 /* }}} */
 
+#if GDAL_VERSION_MAJOR >= 2
+/* {{{ proto int ogr_f_getfieldasinteger64(resource hfeature, int ifield)
+    */
+PHP_FUNCTION(ogr_f_getfieldasinteger64)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    zend_long ifield;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+    GIntBig val;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
+        return;
+
+    if (hfeature) {
+        _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if(hFeat){
+        val = OGR_F_GetFieldAsInteger64(hFeat, ifield);
+        if (val < (GIntBig)ZEND_LONG_MIN || val > (GIntBig)ZEND_LONG_MAX) {
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "value out of range %d - %d", ZEND_LONG_MIN, ZEND_LONG_MAX);
+        }
+        RETURN_LONG(val);
+    }
+}
+
+/* }}} */
+#endif
+
 /* {{{ proto double ogr_f_getfieldasdouble(resource hfeature, int ifield)
     */
 PHP_FUNCTION(ogr_f_getfieldasdouble)
@@ -2993,6 +3033,57 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
 
 /* }}} */
 
+#if GDAL_VERSION_MAJOR >= 2
+/* {{{ proto array int ogr_f_getfieldasinteger64list(resource hfeature,
+   int ifield, int refncount)
+    */
+PHP_FUNCTION(ogr_f_getfieldasinteger64list)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    zend_long ifield;
+    zval *refncount;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+    int numelements = 0;
+    GIntBig *panList = NULL;
+    GIntBig val;
+    int ncount = 0;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlz/", &hfeature, &ifield,
+                              &refncount) == FAILURE)
+        return;
+
+    if (hfeature) {
+        _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if (hFeat)
+        panList = (GIntBig*)OGR_F_GetFieldAsInteger64List(hFeat, ifield, &ncount);
+
+    if ((!panList) || (ncount <= 0)){
+        php_report_ogr_error(E_WARNING);
+        RETURN_NULL();
+    }
+
+	array_init(return_value);
+
+    _ZVAL_PTR_DTOR(refncount);
+    ZVAL_LONG(refncount, ncount);
+
+	while (numelements < ncount) {
+        val = panList[numelements];
+        if (val < (GIntBig)ZEND_LONG_MIN || val > (GIntBig)ZEND_LONG_MAX) {
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "value out of range %d - %d", ZEND_LONG_MIN, ZEND_LONG_MAX);
+        }
+        add_next_index_long(return_value, panList[numelements]);
+        numelements++;
+	}
+}
+
+/* }}} */
+#endif
+
 /* {{{ proto array double ogr_f_getfieldasdoublelist(resource hfeature,
    int ifield, int refncount)
     */
@@ -3114,6 +3205,35 @@ PHP_FUNCTION(ogr_f_setfieldinteger)
 }
 
 /* }}} */
+
+#if GDAL_VERSION_MAJOR >= 2
+/* {{{ proto void ogr_f_setfieldinteger(resource hfeature, int ifield,
+   int nvalue)
+    */
+PHP_FUNCTION(ogr_f_setfieldinteger64)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    zend_long ifield;
+    zend_long nvalue;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rll", &hfeature, &ifield,
+                              &nvalue) == FAILURE)
+        return;
+
+    if (hfeature) {
+        _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if(hFeat){
+        OGR_F_SetFieldInteger64(hFeat, ifield, nvalue);
+    }
+}
+
+/* }}} */
+#endif
 
 /* {{{ proto void ogr_f_setfielddouble(resource hfeature, int ifield,
    double dfvalue)
@@ -3255,6 +3375,58 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
 }
 
 /* }}} */
+
+#if GDAL_VERSION_MAJOR >= 2
+/* {{{ proto void ogr_f_setfieldinteger64list(resource hfeature, int ifield,
+   int ncount, int refanvalues)
+    */
+PHP_FUNCTION(ogr_f_setfieldinteger64list)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    zend_long ifield;
+    zend_long ncount;
+    zval *refanvalues = NULL;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+    GIntBig *alTmp = NULL;
+    int numelements = 0;
+    zval_loop_iterator_t tmp = NULL;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rlla", &hfeature, &ifield,
+                              &ncount, &refanvalues) == FAILURE)
+        return;
+
+    if (hfeature) {
+        _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+
+	numelements = zend_hash_num_elements(Z_ARRVAL_P(refanvalues));
+
+    if ((numelements != ncount) || (numelements <= 0)){
+        php_report_ogr_error(E_WARNING);
+        RETURN_FALSE;
+    }
+	alTmp = (GIntBig *) CPLMalloc(sizeof(int)*ncount);
+
+    numelements = 0;
+
+    _ZVAL_SIMPLE_LOOP_START(refanvalues, tmp)
+
+        alTmp[numelements] = _ZVAL_LOOP_ITERATOR_LVAL(tmp);
+        numelements++;
+
+    _ZVAL_SIMPLE_LOOP_END(refanvalues)
+
+    if (hFeat)
+        OGR_F_SetFieldInteger64List(hFeat, ifield, ncount, (GIntBig *)alTmp);
+
+    CPLFree(alTmp);
+}
+
+/* }}} */
+#endif
 
 /* {{{ proto void ogr_f_setfielddoublelist(resource hfeature, int ifield,
    int ncount, double refadfvalues)
