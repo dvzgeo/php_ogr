@@ -28,6 +28,67 @@
  */
 
 /* following lines generated using _generator.php */
+declare('OGR_VERSION_NUM', 3060200);
+declare('OGR_RELEASE_NAME', '3.6.2');
+declare('OGRERR_NONE', 0);
+declare('OGRERR_NOT_ENOUGH_DATA', 1);
+declare('OGRERR_NOT_ENOUGH_MEMORY', 2);
+declare('OGRERR_UNSUPPORTED_GEOMETRY_TYPE', 3);
+declare('OGRERR_UNSUPPORTED_OPERATION', 4);
+declare('OGRERR_CORRUPT_DATA', 5);
+declare('OGRERR_FAILURE', 6);
+declare('OGRERR_UNSUPPORTED_SRS', 7);
+declare('wkb25DBit', 2147483648);
+declare('ogrZMarker', 554850065);
+declare('wkbXDR', 0);
+declare('wkbNDR', 1);
+declare('wkbUnknown', 0);
+declare('wkbPoint', 1);
+declare('wkbLineString', 2);
+declare('wkbPolygon', 3);
+declare('wkbMultiPoint', 4);
+declare('wkbMultiLineString', 5);
+declare('wkbMultiPolygon', 6);
+declare('wkbGeometryCollection', 7);
+declare('wkbNone', 100);
+declare('wkbLinearRing', 101);
+declare('wkbPoint25D', 2147483649);
+declare('wkbLineString25D', 2147483650);
+declare('wkbPolygon25D', 2147483651);
+declare('wkbMultiPoint25D', 2147483652);
+declare('wkbMultiLineString25D', 2147483653);
+declare('wkbMultiPolygon25D', 2147483654);
+declare('wkbGeometryCollection25D', 2147483655);
+declare('OFTInteger', 0);
+declare('OFTIntegerList', 1);
+declare('OFTInteger64', 12);
+declare('OFTInteger64List', 13);
+declare('OFTReal', 2);
+declare('OFTRealList', 3);
+declare('OFTString', 4);
+declare('OFTStringList', 5);
+declare('OFTWideString', 6);
+declare('OFTWideStringList', 7);
+declare('OFTBinary', 8);
+declare('OJUndefined', 0);
+declare('OJLeft', 1);
+declare('OJRight', 2);
+declare('OGRNullFID', -1);
+declare('OGRUnsetMarker', -21121);
+declare('OFTDate', 9);
+declare('OFTDateTime', 11);
+declare('OFTTime', 10);
+declare('OLCRandomRead', 'RandomRead');
+declare('OLCSequentialWrite', 'SequentialWrite');
+declare('OLCRandomWrite', 'RandomWrite');
+declare('OLCFastSpatialFilter', 'FastSpatialFilter');
+declare('OLCFastFeatureCount', 'FastFeatureCount');
+declare('OLCFastGetExtent', 'FastGetExtent');
+declare('OLCCreateField', 'CreateField');
+declare('OLCTransactions', 'Transactions');
+declare('ODsCCreateLayer', 'CreateLayer');
+declare('ODrCCreateDataSource', 'CreateDataSource');
+
 
 /**
  */

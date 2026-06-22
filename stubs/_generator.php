@@ -27,7 +27,30 @@
  ******************************************************************************
  */
 
+$sourceFile = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'ogr.c'));
 $apiDefs = implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'php_ogr_api.h'));
+
+$inputFile = fopen($sourceFile, 'rb');
+if (!$inputFile) {
+    echo 'Could not open ', $sourceFile, ' for reading';
+    exit(1);
+}
+
+while (false !== ($line = fgets($inputFile))) {
+    $line = trim($line);
+    if (preg_match('/REGISTER_(\w+)_CONSTANT\("(\w+)"/', $line, $matches)) {
+        $constType = $matches[1];
+        $constName = $matches[2];
+        if ($constType === 'LONG') {
+            $constVal = sprintf('%d', defined($constName) ? constant($constName) : 0);
+        } else {
+            $constVal = "'" . addslashes(defined($constName) ? constant($constName) : '') . "'";
+        }
+        echo 'declare(\'', $constName, '\', ', $constVal, ');', PHP_EOL;
+    }
+}
+
+fclose($inputFile);
 
 $inputFile = fopen($apiDefs, 'rb');
 if (!$inputFile) {
