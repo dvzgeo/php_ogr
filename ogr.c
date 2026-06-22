@@ -3811,7 +3811,7 @@ PHP_FUNCTION(ogr_l_setattributefilter)
     OGRLayerH hLayerResource = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-    if (zend_parse_parameters(argc TSRMLS_CC, "rs", &hlayer, &strquery,
+    if (zend_parse_parameters(argc TSRMLS_CC, "rs!", &hlayer, &strquery,
                               &strquery_len) == FAILURE)
         return;
 
