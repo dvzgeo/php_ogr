@@ -788,6 +788,16 @@ function ogr_f_getfieldasinteger($feature, $i)
 /**
  * @param resource $feature
  * @param int $i
+ * @return int
+ */
+function ogr_f_getfieldasinteger64($feature, $i)
+{
+}
+
+
+/**
+ * @param resource $feature
+ * @param int $i
  * @return double
  */
 function ogr_f_getfieldasdouble($feature, $i)
@@ -812,6 +822,17 @@ function ogr_f_getfieldasstring($feature, $i)
  * @return array
  */
 function ogr_f_getfieldasintegerlist($feature, $i, &$count = null)
+{
+}
+
+
+/**
+ * @param resource $feature
+ * @param int $i
+ * @param mixed $count (by reference)
+ * @return array
+ */
+function ogr_f_getfieldasinteger64list($feature, $i, &$count = null)
 {
 }
 
@@ -860,6 +881,16 @@ function ogr_f_setfieldinteger($feature, $i, $value)
 /**
  * @param resource $feature
  * @param int $i
+ * @param int $value
+ */
+function ogr_f_setfieldinteger64($feature, $i, $value)
+{
+}
+
+
+/**
+ * @param resource $feature
+ * @param int $i
  * @param double $value
  */
 function ogr_f_setfielddouble($feature, $i, $value)
@@ -883,6 +914,16 @@ function ogr_f_setfieldstring($feature, $i, $value)
  * @param int $count
  */
 function ogr_f_setfieldintegerlist($feature, $i, $count)
+{
+}
+
+
+/**
+ * @param resource $feature
+ * @param int $i
+ * @param int $count
+ */
+function ogr_f_setfieldinteger64list($feature, $i, $count)
 {
 }
 
