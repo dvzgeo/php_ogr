@@ -159,4 +159,32 @@ class OGRFeatureTest7 extends TestCase
             'Unexpected value after OGR_F_SetFieldInteger64'
         );
     }
+
+    public function testIsFieldNullAndSetFieldNull()
+    {
+        $driver = OGRGetDriverByName($this->strFormat);
+        $dataSource = OGROpen($this->strPathToData, false, $driver);
+        $layer = OGR_DS_GetLayerByName($dataSource, $this->strLayerName);
+        $layerDefn = OGR_L_GetLayerDefn($layer);
+        $fieldIndex = OGR_FD_GetFieldIndex($layerDefn, $this->strFieldInt64);
+        $feature = OGR_L_GetFeature($layer, $this->iFeatureIndex);
+        $field = OGR_F_GetFieldAsInteger64($feature, $fieldIndex);
+        self::assertNotSame(0, $field, 'Unexpected field value');
+        $isNull = OGR_F_IsFieldNull($feature, $fieldIndex);
+        self::assertFalse($isNull, 'Expected field to be not null');
+        $isSetAndNotNull = OGR_F_IsFieldSetAndNotNull($feature, $fieldIndex);
+        self::assertTrue($isSetAndNotNull, 'Expected field to be set and not null');
+        OGR_F_SetFieldNull($feature, $fieldIndex);
+        $isNull = OGR_F_IsFieldNull($feature, $fieldIndex);
+        self::assertTrue($isNull, 'Expected field to be null');
+        $isSetAndNotNull = OGR_F_IsFieldSetAndNotNull($feature, $fieldIndex);
+        self::assertFalse($isSetAndNotNull, 'Expected field to be null');
+        $field = OGR_F_GetFieldAsInteger64($feature, $fieldIndex);
+        self::assertSame(0, $field, 'Unexpected Integer64 value for null field');
+        OGR_F_UnsetField($feature, $fieldIndex);
+        $isNull = OGR_F_IsFieldNull($feature, $fieldIndex);
+        self::assertFalse($isNull, 'Unset field expected to not be null');;
+        $isSetAndNotNull = OGR_F_IsFieldSetAndNotNull($feature, $fieldIndex);
+        self::assertFalse($isSetAndNotNull, 'Expected field to be unset');
+    }
 }

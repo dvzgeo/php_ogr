@@ -2805,6 +2805,82 @@ PHP_FUNCTION(ogr_f_unsetfield)
 
 /* }}} */
 
+#if GDAL_VERSION_NUM >= 2020000
+
+/* {{{ proto bool ogr_f_isfieldnull(resource hfeature, int ifield)
+    */
+PHP_FUNCTION(ogr_f_isfieldnull)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    zend_long ifield;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
+        return;
+
+    if (hfeature) {
+        _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if (hFeat)
+        RETURN_BOOL(OGR_F_IsFieldNull(hFeat, ifield));
+}
+
+/* }}} */
+
+/* {{{ proto bool ogr_f_isfieldsetandnotnull(resource hfeature, int ifield)
+    */
+PHP_FUNCTION(ogr_f_isfieldsetandnotnull)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    zend_long ifield;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
+        return;
+
+    if (hfeature) {
+        _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if (hFeat)
+        RETURN_BOOL(OGR_F_IsFieldSetAndNotNull(hFeat, ifield));
+}
+
+/* }}} */
+
+/* {{{ proto void ogr_f_setfieldnull(resource hfeature, int ifield)
+    */
+PHP_FUNCTION(ogr_f_setfieldnull)
+{
+    int argc = ZEND_NUM_ARGS();
+    int hfeature_id = -1;
+    zend_long ifield;
+    zval *hfeature = NULL;
+    OGRFeatureH hFeat = NULL;
+
+    if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
+                              == FAILURE)
+        return;
+
+    if (hfeature) {
+        _ZEND_FETCH_RESOURCE(hFeat, OGRFeatureH, hfeature, hfeature_id,
+                            "OGRFeature", le_Feature);
+    }
+    if (hFeat)
+        OGR_F_SetFieldNull(hFeat, ifield);
+}
+
+/* }}} */
+
+#endif
+
 /* {{{ proto resource ogr_f_getrawfieldref(resource hfeature, int ifield)
     */
 PHP_FUNCTION(ogr_f_getrawfieldref)
