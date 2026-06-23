@@ -718,7 +718,6 @@ PHP_FUNCTION(ogr_g_createfromwkb)
 {
     int argc = ZEND_NUM_ARGS();
     int hsrs_id = -1;
-    int refhnewgeom_id = -1;
     unsigned char *strbydata = NULL;
     strsize_t strbydata_len;
     zval *hsrs = NULL;
@@ -759,7 +758,6 @@ PHP_FUNCTION(ogr_g_createfromwkt)
 {
     int argc = ZEND_NUM_ARGS();
     int hsrs_id = -1;
-    int refhnewgeom_id = -1;
     char *refstrdata = NULL;
     strsize_t refstrdata_len;
     zval *hsrs = NULL;
@@ -1000,9 +998,9 @@ PHP_FUNCTION(ogr_g_exporttowkb)
             "OGRGeometryH", le_Geometry, le_GeometryRef);
     }
     if (hGeometry) {
-    	isize = OGR_G_WkbSize(hGeometry);
-    	strwkb = emalloc(isize);
-   		eErr = OGR_G_ExportToWkb(hGeometry, ibyteorder, strwkb);
+        isize = OGR_G_WkbSize(hGeometry);
+        strwkb = emalloc(isize);
+        eErr = OGR_G_ExportToWkb(hGeometry, ibyteorder, (unsigned char *)strwkb);
     }
 
     if (eErr != OGRERR_NONE){
@@ -1015,7 +1013,7 @@ PHP_FUNCTION(ogr_g_exporttowkb)
     }
     efree(strwkb);
 
-     RETURN_LONG(eErr);
+    RETURN_LONG(eErr);
 }
 
 /* }}} */
@@ -1028,7 +1026,6 @@ PHP_FUNCTION(ogr_g_wkbsize)
     int hgeom_id = -1;
     zval *hgeom = NULL;
     OGRGeometryH hGeometry = NULL;
-    int wkbsize = -1;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r", &hgeom) == FAILURE)
         return;
@@ -1720,7 +1717,7 @@ PHP_FUNCTION(ogr_g_addgeometry)
     int hothergeom_id = -1;
     zval *hgeom = NULL;
     zval *hothergeom = NULL;
-    OGRGeometryH hGeometry = NULL, hOtherGeometry;
+    OGRGeometryH hGeometry = NULL, hOtherGeometry = NULL;
     OGRErr eErr = OGRERR_NONE;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rr", &hgeom, &hothergeom)
@@ -3008,8 +3005,6 @@ PHP_FUNCTION(ogr_f_getfieldasstring)
     zend_long ifield;
     zval *hfeature = NULL;
     OGRFeatureH hFeat = NULL;
-    int numelems = 0;
-    zval **tmp = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
                               == FAILURE)
@@ -3103,15 +3098,15 @@ PHP_FUNCTION(ogr_f_getfieldasintegerlist)
         RETURN_NULL();
     }
 
-	array_init(return_value);
+    array_init(return_value);
 
     _ZVAL_PTR_DTOR(refncount);
     ZVAL_LONG(refncount, ncount);
 
-	while (numelements < ncount) {
+    while (numelements < ncount) {
         add_next_index_long(return_value, panList[numelements]);
         numelements++;
-	}
+    }
 }
 
 /* }}} */
@@ -3149,19 +3144,19 @@ PHP_FUNCTION(ogr_f_getfieldasinteger64list)
         RETURN_NULL();
     }
 
-	array_init(return_value);
+    array_init(return_value);
 
     _ZVAL_PTR_DTOR(refncount);
     ZVAL_LONG(refncount, ncount);
 
-	while (numelements < ncount) {
+    while (numelements < ncount) {
         val = panList[numelements];
         if (val < (GIntBig)ZEND_LONG_MIN || val > (GIntBig)ZEND_LONG_MAX) {
             php_error_docref(NULL TSRMLS_CC, E_WARNING, "value out of range %ld - %ld", ZEND_LONG_MIN, ZEND_LONG_MAX);
         }
         add_next_index_long(return_value, panList[numelements]);
         numelements++;
-	}
+    }
 }
 
 /* }}} */
@@ -3199,15 +3194,15 @@ PHP_FUNCTION(ogr_f_getfieldasdoublelist)
         RETURN_NULL();
     }
 
-	array_init(return_value);
+    array_init(return_value);
 
     _ZVAL_PTR_DTOR(refncount);
     ZVAL_DOUBLE(refncount, ncount);
 
-	while (numelements < ncount) {
+    while (numelements < ncount) {
         add_next_index_double(return_value, padfList[numelements]);
         numelements++;
-	}
+    }
 
 }
 
@@ -3225,7 +3220,6 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
     OGRFeatureH hFeat = NULL;
     int numelements = 0;
     char **papszStrList = NULL;
-    zval **tmp = NULL;
     int ncount = 0;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "rl", &hfeature, &ifield)
@@ -3251,13 +3245,13 @@ PHP_FUNCTION(ogr_f_getfieldasstringlist)
         RETURN_NULL();
     }
 
-	array_init(return_value);
+    array_init(return_value);
 
-	while (numelements < ncount) {
+    while (numelements < ncount) {
         _ADD_NEXT_INDEX_STRING(return_value, (char *)
                               CSLGetField(papszStrList, numelements));
         numelements++;
-	}
+    }
 }
 
 /* }}} */
@@ -3403,7 +3397,7 @@ PHP_FUNCTION(ogr_f_setfielddatetime)
     }
     if(hFeat){
         OGR_F_SetFieldDateTime(hFeat, ifield, iYear, iMonth, iDay,
-        		iHour, iMinute, iSecond, iTZFlag);
+                               iHour, iMinute, iSecond, iTZFlag);
     }
 }
 
@@ -3434,13 +3428,13 @@ PHP_FUNCTION(ogr_f_setfieldintegerlist)
                             "OGRFeature", le_Feature);
     }
 
-	numelements = zend_hash_num_elements(Z_ARRVAL_P(refanvalues));
+    numelements = zend_hash_num_elements(Z_ARRVAL_P(refanvalues));
 
     if ((numelements != ncount) || (numelements <= 0)){
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
-	alTmp = (int *) CPLMalloc(sizeof(int)*ncount);
+    alTmp = (int *) CPLMalloc(sizeof(int)*ncount);
 
     numelements = 0;
 
@@ -3485,13 +3479,13 @@ PHP_FUNCTION(ogr_f_setfieldinteger64list)
                             "OGRFeature", le_Feature);
     }
 
-	numelements = zend_hash_num_elements(Z_ARRVAL_P(refanvalues));
+    numelements = zend_hash_num_elements(Z_ARRVAL_P(refanvalues));
 
     if ((numelements != ncount) || (numelements <= 0)){
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
-	alTmp = (GIntBig *) CPLMalloc(sizeof(int)*ncount);
+    alTmp = (GIntBig *) CPLMalloc(sizeof(int)*ncount);
 
     numelements = 0;
 
@@ -3536,14 +3530,14 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
                             "OGRFeature", le_Feature);
     }
 
-	numelements = zend_hash_num_elements(Z_ARRVAL_P(refadfvalues));
+    numelements = zend_hash_num_elements(Z_ARRVAL_P(refadfvalues));
 
     if ((numelements != ncount) || (numelements <= 0)){
         php_report_ogr_error(E_WARNING);
         RETURN_FALSE;
     }
 
-	adfTmp = (double *) CPLMalloc(sizeof(double)*ncount);
+    adfTmp = (double *) CPLMalloc(sizeof(double)*ncount);
 
     numelements = 0;
 
@@ -3554,10 +3548,11 @@ PHP_FUNCTION(ogr_f_setfielddoublelist)
 
     _ZVAL_SIMPLE_LOOP_END(refadfvalues)
 
-    if (hFeat)
+    if (hFeat) {
         OGR_F_SetFieldDoubleList(hFeat, ifield, ncount, (double *)adfTmp);
+    }
 
-        CPLFree ( adfTmp );
+    CPLFree ( adfTmp );
 }
 
 /* }}} */
@@ -3831,7 +3826,6 @@ PHP_FUNCTION(ogr_l_getspatialfilter)
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
     OGRGeometryH hGeom = NULL;
-    int eType = 0;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
@@ -4106,7 +4100,6 @@ PHP_FUNCTION(ogr_l_getlayerdefn)
     zval *hlayer = NULL;
     OGRLayerH hLayerResource = NULL;
     OGRFeatureDefnH hFeatureDefn = NULL;
-    int numFields =0;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r", &hlayer) == FAILURE)
         return;
@@ -5004,22 +4997,22 @@ PHP_FUNCTION(osr_newspatialreference)
     */
 PHP_FUNCTION(osr_destroyspatialreference)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	/* Actual destroy occurs when PHP doesn't hold any more references to SRS
-    	 * - see ogr_free_SpatialReference()
-    	 */
+        /* Actual destroy occurs when PHP doesn't hold any more references to SRS
+         * - see ogr_free_SpatialReference()
+         */
         _ZEND_FREE_RESOURCE(hsrs);
     }
 }
@@ -5027,80 +5020,80 @@ PHP_FUNCTION(osr_destroyspatialreference)
 /* }}} */
 
 /* {{{ proto int osr_reference(reference hsrs)
- 	*/
+     */
 PHP_FUNCTION(osr_reference)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference)
-    	RETURN_LONG(OSRReference(hSpatialReference));
+        RETURN_LONG(OSRReference(hSpatialReference));
 }
 
 /* }}} */
 
 /* {{{ proto int osr_dereference(reference hsrs)
- 	*/
+     */
 PHP_FUNCTION(osr_dereference)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference)
-    	RETURN_LONG(OSRDereference(hSpatialReference));
+        RETURN_LONG(OSRDereference(hSpatialReference));
 }
 
 /* }}} */
 
 /* {{{ proto void osr_release(reference hsrs)
- 	*/
+     */
 PHP_FUNCTION(osr_release)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
-	int refs;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
+    int refs;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-    	/* We don't want the reference to be deleted in the background as this
-    	 * leads to a segfault in PHP as it tries to delete it, so we simulate
-    	 * the behaviour of release, namely dereference the SRS and then destroy
-    	 * it if zero
-    	 *
-    	 * Actual destroy occurs when PHP doesn't hold any more references to SRS
-    	 * - see ogr_free_SpatialReference()
-    	 */
-		refs = OSRDereference(hSpatialReference);
-		if (refs == 0) { // provoke the destroy
-			_ZEND_FREE_RESOURCE(hsrs);
-		}
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        /* We don't want the reference to be deleted in the background as this
+         * leads to a segfault in PHP as it tries to delete it, so we simulate
+         * the behaviour of release, namely dereference the SRS and then destroy
+         * it if zero
+         *
+         * Actual destroy occurs when PHP doesn't hold any more references to SRS
+         * - see ogr_free_SpatialReference()
+         */
+        refs = OSRDereference(hSpatialReference);
+        if (refs == 0) { // provoke the destroy
+            _ZEND_FREE_RESOURCE(hsrs);
+        }
+    }
 }
 
 /* }}} */
@@ -5109,21 +5102,21 @@ PHP_FUNCTION(osr_release)
     */
 PHP_FUNCTION(osr_validate)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRValidate(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRValidate(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5134,21 +5127,21 @@ PHP_FUNCTION(osr_validate)
     */
 PHP_FUNCTION(osr_fixupordering)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRFixupOrdering(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRFixupOrdering(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5157,21 +5150,21 @@ PHP_FUNCTION(osr_fixupordering)
     */
 PHP_FUNCTION(osr_fixup)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRFixup(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRFixup(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5180,21 +5173,21 @@ PHP_FUNCTION(osr_fixup)
     */
 PHP_FUNCTION(osr_stripctparms)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRStripCTParms(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRStripCTParms(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5207,19 +5200,20 @@ PHP_FUNCTION(osr_importfromepsg)
 {
     int argc = ZEND_NUM_ARGS();
     zend_long nCode = -1;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!l", &hsrs, &nCode) == FAILURE)
         return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRImportFromEPSG(hSpatialReference, nCode));
-	}
+
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRImportFromEPSG(hSpatialReference, nCode));
+    }
 }
 
 /* }}} */
@@ -5230,19 +5224,20 @@ PHP_FUNCTION(osr_importfromepsga)
 {
     int argc = ZEND_NUM_ARGS();
     zend_long nCode = -1;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!l", &hsrs, &nCode) == FAILURE)
         return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRImportFromEPSGA(hSpatialReference, nCode));
-	}
+
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRImportFromEPSGA(hSpatialReference, nCode));
+    }
 }
 
 /* }}} */
@@ -5254,21 +5249,21 @@ PHP_FUNCTION(osr_importfromwkt)
     int argc = ZEND_NUM_ARGS();
     char *refstrdata = NULL;
     strsize_t refstrdata_len;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!s", &hsrs, &refstrdata,
-    		                  &refstrdata_len) == FAILURE)
+                              &refstrdata_len) == FAILURE)
         return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference && refstrdata){
-	    RETURN_LONG(OSRImportFromWkt(hSpatialReference, &refstrdata));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference && refstrdata){
+        RETURN_LONG(OSRImportFromWkt(hSpatialReference, &refstrdata));
+    }
 }
 
 /* }}} */
@@ -5280,21 +5275,21 @@ PHP_FUNCTION(osr_importfromproj4)
     int argc = ZEND_NUM_ARGS();
     char *refstrdata = NULL;
     strsize_t refstrdata_len;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!s", &hsrs, &refstrdata,
-    		                  &refstrdata_len) == FAILURE)
+                              &refstrdata_len) == FAILURE)
         return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference && refstrdata){
-	    RETURN_LONG(OSRImportFromProj4(hSpatialReference, refstrdata));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference && refstrdata){
+        RETURN_LONG(OSRImportFromProj4(hSpatialReference, refstrdata));
+    }
 }
 
 /* }}} */
@@ -5304,31 +5299,30 @@ PHP_FUNCTION(osr_importfromproj4)
 PHP_FUNCTION(osr_importfromesri)
 {
     int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *prjdata = NULL;
+    int hsrs_id = -1;
+    zval *prjdata = NULL;
     zval *hsrs = NULL;
     char **prjstrings = NULL;
-    int i = 0;
     int res = OGRERR_FAILURE;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!a!", &hsrs, &prjdata) == FAILURE)
         return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	/* OSRImportFromESRI requires a null-terminated list of strings as input */
-	if (prjdata) {
-		prjstrings = php_array2string(prjstrings, prjdata);
-	}
-	if (hSpatialReference && prjstrings){
-	    res = OSRImportFromESRI(hSpatialReference, prjstrings);
-	}
-	/* tidy up newly allocated string list */
-	CSLDestroy(prjstrings);
-	RETURN_LONG(res);
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    /* OSRImportFromESRI requires a null-terminated list of strings as input */
+    if (prjdata) {
+        prjstrings = php_array2string(prjstrings, prjdata);
+    }
+    if (hSpatialReference && prjstrings){
+        res = OSRImportFromESRI(hSpatialReference, prjstrings);
+    }
+    /* tidy up newly allocated string list */
+    CSLDestroy(prjstrings);
+    RETURN_LONG(res);
 }
 
 /* }}} */
@@ -5337,23 +5331,23 @@ PHP_FUNCTION(osr_importfromesri)
     */
 PHP_FUNCTION(osr_exporttowkt)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	char *refres = NULL;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    char *refres = NULL;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    eErr = OSRExportToWkt(hSpatialReference, &refres);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        eErr = OSRExportToWkt(hSpatialReference, &refres);
+    }
 
     if (refres) {
         RETURN_CPL_STRING(refres);
@@ -5367,24 +5361,24 @@ PHP_FUNCTION(osr_exporttowkt)
     */
 PHP_FUNCTION(osr_exporttoprettywkt)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zend_bool simplify = 0;
-	char *refres = NULL;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zend_bool simplify = 0;
+    char *refres = NULL;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!b", &hsrs, &simplify) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!b", &hsrs, &simplify) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    eErr = OSRExportToPrettyWkt(hSpatialReference, &refres, (int) simplify);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        eErr = OSRExportToPrettyWkt(hSpatialReference, &refres, (int) simplify);
+    }
 
     if (refres) {
         RETURN_CPL_STRING(refres);
@@ -5398,23 +5392,23 @@ PHP_FUNCTION(osr_exporttoprettywkt)
     */
 PHP_FUNCTION(osr_exporttoproj4)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	char *refres = NULL;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    char *refres = NULL;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    eErr = OSRExportToProj4(hSpatialReference, &refres);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        eErr = OSRExportToProj4(hSpatialReference, &refres);
+    }
 
     if (refres) {
         RETURN_CPL_STRING(refres);
@@ -5428,21 +5422,21 @@ PHP_FUNCTION(osr_exporttoproj4)
     */
 PHP_FUNCTION(osr_morphtoesri)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRMorphToESRI(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRMorphToESRI(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5451,143 +5445,143 @@ PHP_FUNCTION(osr_morphtoesri)
     */
 PHP_FUNCTION(osr_morphfromesri)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRMorphFromESRI(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRMorphFromESRI(hSpatialReference));
+    }
 }
 
 /* }}} */
 
 /* {{{ proto string osr_getattrvalue(reference hsrs, string refNodeName, int iAttr)
- 	*/
+     */
 PHP_FUNCTION(osr_getattrvalue)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
     char *refNodeName = NULL;
     const char *res = NULL;
     strsize_t refNodeName_len;
     zend_long iAttr = 0;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!s|l", &hsrs, &refNodeName,
-			                  &refNodeName_len, &iAttr) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!s|l", &hsrs, &refNodeName,
+                              &refNodeName_len, &iAttr) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference)
-    	res = OSRGetAttrValue(hSpatialReference, refNodeName, iAttr);
+        res = OSRGetAttrValue(hSpatialReference, refNodeName, iAttr);
     if (res) {
-    	_RETURN_DUPLICATED_STRING(res);
+        _RETURN_DUPLICATED_STRING(res);
     }
 }
 
 /* }}} */
 
 /* {{{ proto array osr_getangularunits(reference hsrs)
- 	*/
+     */
 PHP_FUNCTION(osr_getangularunits)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
     char *refName = NULL;
     double units = 0.0;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	units = OSRGetAngularUnits(hSpatialReference, &refName);
-    	array_init(return_value);
-    	add_assoc_double(return_value, "multiplier", units);
-    	if (refName) {
-    		_ADD_ASSOC_STRING(return_value, "name", refName);
-    	} else {
-    		add_assoc_null(return_value, "name");
-    	}
+        units = OSRGetAngularUnits(hSpatialReference, &refName);
+        array_init(return_value);
+        add_assoc_double(return_value, "multiplier", units);
+        if (refName) {
+            _ADD_ASSOC_STRING(return_value, "name", refName);
+        } else {
+            add_assoc_null(return_value, "name");
+        }
     }
 }
 
 /* }}} */
 
 /* {{{ proto array osr_getlinearunits(reference hsrs)
- 	*/
+     */
 PHP_FUNCTION(osr_getlinearunits)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
     char *refName = NULL;
     double units = 0.0;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	units = OSRGetLinearUnits(hSpatialReference, &refName);
-    	array_init(return_value);
-    	add_assoc_double(return_value, "multiplier", units);
-    	if (refName) {
-    		_ADD_ASSOC_STRING(return_value, "name", refName);
-     	} else {
-    		add_assoc_null(return_value, "name");
-    	}
+        units = OSRGetLinearUnits(hSpatialReference, &refName);
+        array_init(return_value);
+        add_assoc_double(return_value, "multiplier", units);
+        if (refName) {
+            _ADD_ASSOC_STRING(return_value, "name", refName);
+         } else {
+            add_assoc_null(return_value, "name");
+        }
     }
 }
 
 /* }}} */
 
 /* {{{ proto array osr_getprimemeridian(reference hsrs)
- 	*/
+     */
 PHP_FUNCTION(osr_getprimemeridian)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
     char *refName = NULL;
     double units = 0.0;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	units = OSRGetPrimeMeridian(hSpatialReference, &refName);
-    	array_init(return_value);
-    	add_assoc_double(return_value, "offset", units);
-    	if (refName) {
-    		_ADD_ASSOC_STRING(return_value, "name", refName);
-    	} else {
-    		add_assoc_null(return_value, "name");
-    	}
+        units = OSRGetPrimeMeridian(hSpatialReference, &refName);
+        array_init(return_value);
+        add_assoc_double(return_value, "offset", units);
+        if (refName) {
+            _ADD_ASSOC_STRING(return_value, "name", refName);
+        } else {
+            add_assoc_null(return_value, "name");
+        }
     }
 }
 
@@ -5597,21 +5591,21 @@ PHP_FUNCTION(osr_getprimemeridian)
     */
 PHP_FUNCTION(osr_isgeographic)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_BOOL(OSRIsGeographic(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_BOOL(OSRIsGeographic(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5620,21 +5614,21 @@ PHP_FUNCTION(osr_isgeographic)
     */
 PHP_FUNCTION(osr_islocal)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_BOOL(OSRIsLocal(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_BOOL(OSRIsLocal(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5643,21 +5637,21 @@ PHP_FUNCTION(osr_islocal)
     */
 PHP_FUNCTION(osr_isprojected)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_BOOL(OSRIsProjected(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_BOOL(OSRIsProjected(hSpatialReference));
+    }
 }
 
 /* }}} */
@@ -5668,21 +5662,21 @@ PHP_FUNCTION(osr_isprojected)
 PHP_FUNCTION(osr_isgeocentric)
 {
 #if GDAL_VERSION_NUM >= 1900
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_BOOL(OSRIsGeocentric(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_BOOL(OSRIsGeocentric(hSpatialReference));
+    }
 #endif
 }
 
@@ -5694,21 +5688,21 @@ PHP_FUNCTION(osr_isgeocentric)
 PHP_FUNCTION(osr_isvertical)
 {
 #if GDAL_VERSION_NUM >= 1730
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_BOOL(OSRIsVertical(hSpatialReference));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_BOOL(OSRIsVertical(hSpatialReference));
+    }
 #endif
 }
 
@@ -5718,26 +5712,26 @@ PHP_FUNCTION(osr_isvertical)
     */
 PHP_FUNCTION(osr_issamegeogcs)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs1_id = -1;
-	int hsrs2_id = -1;
-	zval *hsrs1 = NULL;
-	zval *hsrs2 = NULL;
-	OGRSpatialReferenceH hSpatialReference1 = NULL;
-	OGRSpatialReferenceH hSpatialReference2 = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs1_id = -1;
+    int hsrs2_id = -1;
+    zval *hsrs1 = NULL;
+    zval *hsrs2 = NULL;
+    OGRSpatialReferenceH hSpatialReference1 = NULL;
+    OGRSpatialReferenceH hSpatialReference2 = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!r!", &hsrs1, &hsrs2) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!r!", &hsrs1, &hsrs2) == FAILURE)
+        return;
 
-	if (hsrs1 && hsrs2) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference1, OGRSpatialReferenceH, hsrs1, hsrs1_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-		_ZEND_FETCH_RESOURCE2(hSpatialReference2, OGRSpatialReferenceH, hsrs2, hsrs2_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference1 && hSpatialReference2){
-	    RETURN_BOOL(OSRIsSameGeogCS(hSpatialReference1, hSpatialReference2));
-	}
+    if (hsrs1 && hsrs2) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference1, OGRSpatialReferenceH, hsrs1, hsrs1_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+        _ZEND_FETCH_RESOURCE2(hSpatialReference2, OGRSpatialReferenceH, hsrs2, hsrs2_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference1 && hSpatialReference2){
+        RETURN_BOOL(OSRIsSameGeogCS(hSpatialReference1, hSpatialReference2));
+    }
 }
 
 /* }}} */
@@ -5746,26 +5740,26 @@ PHP_FUNCTION(osr_issamegeogcs)
     */
 PHP_FUNCTION(osr_issame)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs1_id = -1;
-	int hsrs2_id = -1;
-	zval *hsrs1 = NULL;
-	zval *hsrs2 = NULL;
-	OGRSpatialReferenceH hSpatialReference1 = NULL;
-	OGRSpatialReferenceH hSpatialReference2 = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs1_id = -1;
+    int hsrs2_id = -1;
+    zval *hsrs1 = NULL;
+    zval *hsrs2 = NULL;
+    OGRSpatialReferenceH hSpatialReference1 = NULL;
+    OGRSpatialReferenceH hSpatialReference2 = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!r!", &hsrs1, &hsrs2) == FAILURE)
-		return;
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!r!", &hsrs1, &hsrs2) == FAILURE)
+        return;
 
-	if (hsrs1 && hsrs2) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference1, OGRSpatialReferenceH, hsrs1, hsrs1_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-		_ZEND_FETCH_RESOURCE2(hSpatialReference2, OGRSpatialReferenceH, hsrs2, hsrs2_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference1 && hSpatialReference2){
-	    RETURN_BOOL(OSRIsSame(hSpatialReference1, hSpatialReference2));
-	}
+    if (hsrs1 && hsrs2) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference1, OGRSpatialReferenceH, hsrs1, hsrs1_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+        _ZEND_FETCH_RESOURCE2(hSpatialReference2, OGRSpatialReferenceH, hsrs2, hsrs2_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference1 && hSpatialReference2){
+        RETURN_BOOL(OSRIsSame(hSpatialReference1, hSpatialReference2));
+    }
 }
 
 /* }}} */
@@ -5777,71 +5771,72 @@ PHP_FUNCTION(osr_setfromuserinput)
     int argc = ZEND_NUM_ARGS();
     char *refstrdata = NULL;
     strsize_t refstrdata_len;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!s", &hsrs, &refstrdata,
-    		                  &refstrdata_len) == FAILURE)
+                              &refstrdata_len) == FAILURE)
         return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference){
-	    RETURN_LONG(OSRSetFromUserInput(hSpatialReference, refstrdata));
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference){
+        RETURN_LONG(OSRSetFromUserInput(hSpatialReference, refstrdata));
+    }
 }
 
 /* }}} */
 
 /* {{{ proto mixed osr_gettowgs84(reference hsrs)
- 	*/
+     */
 PHP_FUNCTION(osr_gettowgs84)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
     double towgs[] = {NAN, NAN, NAN, NAN, NAN, NAN, NAN};
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_FAILURE;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	eErr = OSRGetTOWGS84(hSpatialReference, &towgs[0], 7);
-    	if (eErr == OGRERR_NONE) {
-			array_init(return_value);
-			add_assoc_double(return_value, "Dx_BF", towgs[0]);
-			add_assoc_double(return_value, "Dy_BF", towgs[1]);
-			add_assoc_double(return_value, "Dz_BF", towgs[2]);
-			// TOWGS84 has between 3 and 7 parameters...
-			if (!isnan(towgs[3])) {
-				add_assoc_double(return_value, "Rx_BF", towgs[3]);
-			} else {
-				add_assoc_null(return_value, "Rx_BF");
-			}
-			if (!isnan(towgs[4])) {
-				add_assoc_double(return_value, "Ry_BF", towgs[4]);
-			} else {
-				add_assoc_null(return_value, "Ry_BF");
-			}
-			if (!isnan(towgs[5])) {
-				add_assoc_double(return_value, "Rz_BF", towgs[5]);
-			} else {
-				add_assoc_null(return_value, "Rz_BF");
-			}
-			if (!isnan(towgs[6])) {
-				add_assoc_double(return_value, "M_BF", towgs[6]);
-			} else {
-				add_assoc_null(return_value, "M_BF");
-			}
-    	}
+        eErr = OSRGetTOWGS84(hSpatialReference, &towgs[0], 7);
+        if (eErr == OGRERR_NONE) {
+            array_init(return_value);
+            add_assoc_double(return_value, "Dx_BF", towgs[0]);
+            add_assoc_double(return_value, "Dy_BF", towgs[1]);
+            add_assoc_double(return_value, "Dz_BF", towgs[2]);
+            // TOWGS84 has between 3 and 7 parameters...
+            if (!isnan(towgs[3])) {
+                add_assoc_double(return_value, "Rx_BF", towgs[3]);
+            } else {
+                add_assoc_null(return_value, "Rx_BF");
+            }
+            if (!isnan(towgs[4])) {
+                add_assoc_double(return_value, "Ry_BF", towgs[4]);
+            } else {
+                add_assoc_null(return_value, "Ry_BF");
+            }
+            if (!isnan(towgs[5])) {
+                add_assoc_double(return_value, "Rz_BF", towgs[5]);
+            } else {
+                add_assoc_null(return_value, "Rz_BF");
+            }
+            if (!isnan(towgs[6])) {
+                add_assoc_double(return_value, "M_BF", towgs[6]);
+            } else {
+                add_assoc_null(return_value, "M_BF");
+            }
+        }
     }
 }
 
@@ -5851,24 +5846,24 @@ PHP_FUNCTION(osr_gettowgs84)
    */
 PHP_FUNCTION(osr_getsemimajor)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	double semiMajor;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    double semiMajor;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_NONE;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	semiMajor = OSRGetSemiMajor(hSpatialReference, &eErr);
-    	if (eErr != OGRERR_FAILURE) {
-    		RETURN_DOUBLE(semiMajor);
-    	}
+        semiMajor = OSRGetSemiMajor(hSpatialReference, &eErr);
+        if (eErr != OGRERR_FAILURE) {
+            RETURN_DOUBLE(semiMajor);
+        }
     }
 }
 
@@ -5878,24 +5873,24 @@ PHP_FUNCTION(osr_getsemimajor)
    */
 PHP_FUNCTION(osr_getsemiminor)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	double semiMinor;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    double semiMinor;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_NONE;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	semiMinor = OSRGetSemiMinor(hSpatialReference, &eErr);
-    	if (eErr != OGRERR_FAILURE) {
-    		RETURN_DOUBLE(semiMinor);
-    	}
+        semiMinor = OSRGetSemiMinor(hSpatialReference, &eErr);
+        if (eErr != OGRERR_FAILURE) {
+            RETURN_DOUBLE(semiMinor);
+        }
     }
 }
 
@@ -5905,24 +5900,24 @@ PHP_FUNCTION(osr_getsemiminor)
    */
 PHP_FUNCTION(osr_getinvflattening)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	double invFlattening;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    double invFlattening;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     OGRErr eErr = OGRERR_NONE;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	invFlattening = OSRGetInvFlattening(hSpatialReference, &eErr);
-    	if (eErr != OGRERR_FAILURE) {
-    		RETURN_DOUBLE(invFlattening);
-    	}
+        invFlattening = OSRGetInvFlattening(hSpatialReference, &eErr);
+        if (eErr != OGRERR_FAILURE) {
+            RETURN_DOUBLE(invFlattening);
+        }
     }
 }
 
@@ -5935,25 +5930,25 @@ PHP_FUNCTION(osr_getauthoritycode)
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
     strsize_t refTargetKey_len = 0;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     const char *res = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!s!", &hsrs, &refTargetKey,
-    		                  &refTargetKey_len) == FAILURE)
+                              &refTargetKey_len) == FAILURE)
         return;
 
     if (refTargetKey_len == 0) refTargetKey = NULL;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference) {
-		res = OSRGetAuthorityCode(hSpatialReference, refTargetKey);
-		if (res) _RETURN_DUPLICATED_STRING(res);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference) {
+        res = OSRGetAuthorityCode(hSpatialReference, refTargetKey);
+        if (res) _RETURN_DUPLICATED_STRING(res);
+    }
 }
 
 /* }}} */
@@ -5965,25 +5960,25 @@ PHP_FUNCTION(osr_getauthorityname)
     int argc = ZEND_NUM_ARGS();
     char *refTargetKey = NULL;
     strsize_t refTargetKey_len = 0;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     const char *res = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!s!", &hsrs, &refTargetKey,
-    		                  &refTargetKey_len) == FAILURE)
+                              &refTargetKey_len) == FAILURE)
         return;
 
     if (refTargetKey_len == 0) refTargetKey = NULL;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference) {
-		res = OSRGetAuthorityName(hSpatialReference, refTargetKey);
-		if (res) _RETURN_DUPLICATED_STRING(res);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference) {
+        res = OSRGetAuthorityName(hSpatialReference, refTargetKey);
+        if (res) _RETURN_DUPLICATED_STRING(res);
+    }
 }
 
 /* }}} */
@@ -5995,29 +5990,29 @@ PHP_FUNCTION(osr_getprojparm)
     int argc = ZEND_NUM_ARGS();
     char *refName = NULL;
     strsize_t refName_len;
-	int hsrs_id = -1;
-	double defaultValue = 0.0;
+    int hsrs_id = -1;
+    double defaultValue = 0.0;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     double res;
     OGRErr eErr = OGRERR_NONE;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!s|d", &hsrs, &refName,
-    		                  &refName_len, &defaultValue) == FAILURE)
+                              &refName_len, &defaultValue) == FAILURE)
         return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference) {
-		res = OSRGetProjParm(hSpatialReference, refName, defaultValue, &eErr);
-		if (eErr == OGRERR_NONE) {
-			RETURN_DOUBLE(res);
-		} else if (argc > 2) {
-			RETURN_DOUBLE(defaultValue);
-		}
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference) {
+        res = OSRGetProjParm(hSpatialReference, refName, defaultValue, &eErr);
+        if (eErr == OGRERR_NONE) {
+            RETURN_DOUBLE(res);
+        } else if (argc > 2) {
+            RETURN_DOUBLE(defaultValue);
+        }
+    }
 }
 
 /* }}} */
@@ -6029,29 +6024,29 @@ PHP_FUNCTION(osr_getnormprojparm)
     int argc = ZEND_NUM_ARGS();
     char *refName = NULL;
     strsize_t refName_len;
-	int hsrs_id = -1;
-	double defaultValue = 0.0;
+    int hsrs_id = -1;
+    double defaultValue = 0.0;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     double res;
     OGRErr eErr = OGRERR_NONE;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!s|d", &hsrs, &refName,
-    		                  &refName_len, &defaultValue) == FAILURE)
+                              &refName_len, &defaultValue) == FAILURE)
         return;
 
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
-	if (hSpatialReference) {
-		res = OSRGetNormProjParm(hSpatialReference, refName, defaultValue, &eErr);
-		if (eErr == OGRERR_NONE) {
-			RETURN_DOUBLE(res);
-		} else if (argc > 2) {
-			RETURN_DOUBLE(defaultValue);
-		}
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
+    if (hSpatialReference) {
+        res = OSRGetNormProjParm(hSpatialReference, refName, defaultValue, &eErr);
+        if (eErr == OGRERR_NONE) {
+            RETURN_DOUBLE(res);
+        } else if (argc > 2) {
+            RETURN_DOUBLE(defaultValue);
+        }
+    }
 }
 
 /* }}} */
@@ -6060,28 +6055,28 @@ PHP_FUNCTION(osr_getnormprojparm)
    */
 PHP_FUNCTION(osr_getutmzone)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	int utmZone;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    int utmZone;
+    OGRSpatialReferenceH hSpatialReference = NULL;
     int north = 0;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	utmZone = OSRGetUTMZone(hSpatialReference, &north);
-    	if (utmZone && !north) {
-    		/* SWIG bindings return negative in southern
-    		 * hemisphere instead of using flag so lets do the same
-    		 */
-    		utmZone = -utmZone;
-    	}
-    	if (utmZone) RETURN_LONG(utmZone);
+        utmZone = OSRGetUTMZone(hSpatialReference, &north);
+        if (utmZone && !north) {
+            /* SWIG bindings return negative in southern
+             * hemisphere instead of using flag so lets do the same
+             */
+            utmZone = -utmZone;
+        }
+        if (utmZone) RETURN_LONG(utmZone);
     }
 }
 
@@ -6091,21 +6086,21 @@ PHP_FUNCTION(osr_getutmzone)
    */
 PHP_FUNCTION(osr_autoidentifyepsg)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRErr res;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRErr res;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	res = OSRAutoIdentifyEPSG(hSpatialReference);
-    	RETURN_LONG(res);
+        res = OSRAutoIdentifyEPSG(hSpatialReference);
+        RETURN_LONG(res);
     }
 }
 
@@ -6115,19 +6110,19 @@ PHP_FUNCTION(osr_autoidentifyepsg)
    */
 PHP_FUNCTION(osr_epsgtreatsaslatlong)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	OGRSpatialReferenceH hSpatialReference = NULL;
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    OGRSpatialReferenceH hSpatialReference = NULL;
 
-	if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
-		return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (zend_parse_parameters(argc TSRMLS_CC, "r!", &hsrs) == FAILURE)
+        return;
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
-    	RETURN_BOOL(OSREPSGTreatsAsLatLong(hSpatialReference));
+        RETURN_BOOL(OSREPSGTreatsAsLatLong(hSpatialReference));
     }
 }
 
@@ -6141,7 +6136,7 @@ PHP_FUNCTION(osr_getaxis)
     char *refTargetKey = NULL;
     strsize_t refTargetKey_len;
     zend_long iAxis = 0;
-	int hsrs_id = -1;
+    int hsrs_id = -1;
     zval *hsrs = NULL;
     OGRSpatialReferenceH hSpatialReference = NULL;
     char *res = NULL;
@@ -6149,15 +6144,15 @@ PHP_FUNCTION(osr_getaxis)
     char *res_orient = NULL;
 
     if (zend_parse_parameters(argc TSRMLS_CC, "r!sl", &hsrs, &refTargetKey,
-    		                  &refTargetKey_len, &iAxis) == FAILURE)
+                              &refTargetKey_len, &iAxis) == FAILURE)
         return;
-	if (hsrs) {
-		_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-							 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-	}
+    if (hsrs) {
+        _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                             "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+    }
     if (hSpatialReference) {
         res = (char *) OSRGetAxis(hSpatialReference, refTargetKey, iAxis, &orientation);
-    	if (res) {
+        if (res) {
             array_init(return_value);
             _ADD_ASSOC_STRING(return_value, "name", res);
             if (orientation) {
@@ -6168,7 +6163,7 @@ PHP_FUNCTION(osr_getaxis)
             } else {
                 add_assoc_null(return_value, "orientation");
             }
-    	}
+        }
     }
 }
 
@@ -6178,22 +6173,22 @@ PHP_FUNCTION(osr_getaxis)
    */
 PHP_FUNCTION(is_osr)
 {
-	int argc = ZEND_NUM_ARGS();
-	int hsrs_id = -1;
-	zval *hsrs = NULL;
-	int zvalType = -1;
-	OGRSpatialReferenceH hSpatialReference = NULL;
-	zend_parse_parameters(argc TSRMLS_CC, "z!", &hsrs);
+    int argc = ZEND_NUM_ARGS();
+    int hsrs_id = -1;
+    zval *hsrs = NULL;
+    int zvalType = -1;
+    OGRSpatialReferenceH hSpatialReference = NULL;
+    zend_parse_parameters(argc TSRMLS_CC, "z!", &hsrs);
 
-	if (hsrs) {
-		if (Z_TYPE_P(hsrs) == IS_RESOURCE) {
-			_ZEND_LIST_FINDD(hsrs, zvalType);
-			if ((zvalType == le_SpatialReference) || (zvalType == le_SpatialReferenceRef)) {
-				_ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
-									 "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
-			}
-		}
-	}
+    if (hsrs) {
+        if (Z_TYPE_P(hsrs) == IS_RESOURCE) {
+            _ZEND_LIST_FINDD(hsrs, zvalType);
+            if ((zvalType == le_SpatialReference) || (zvalType == le_SpatialReferenceRef)) {
+                _ZEND_FETCH_RESOURCE2(hSpatialReference, OGRSpatialReferenceH, hsrs, hsrs_id,
+                                     "OGRSpatialReferenceH", le_SpatialReference, le_SpatialReferenceRef);
+            }
+        }
+    }
     RETURN_BOOL(hSpatialReference && 1);
 }
 

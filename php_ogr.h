@@ -55,12 +55,12 @@ PHP_RSHUTDOWN_FUNCTION(ogr);
 PHP_MINFO_FUNCTION(ogr);
 
 /* 
-  	Declare any global variables you may need between the BEGIN
-	and END macros here:     
+    Declare any global variables you may need between the BEGIN
+    and END macros here:
 
 ZEND_BEGIN_MODULE_GLOBALS(ogr)
-	int   global_value;
-	char *global_string;
+    int   global_value;
+    char *global_string;
 ZEND_END_MODULE_GLOBALS(ogr)
 */
 
