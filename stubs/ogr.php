@@ -28,8 +28,8 @@
  */
 
 /* following lines generated using _generator.php */
-declare('PHP_OGR_VERSION_NUM', 10700);
-declare('PHP_OGR_VERSION', '1.7.0');
+declare('PHP_OGR_VERSION_NUM', 10701);
+declare('PHP_OGR_VERSION', '1.7.1');
 declare('OGR_VERSION_NUM', 3060200);
 declare('OGR_RELEASE_NAME', '3.6.2');
 declare('OGRERR_NONE', 0);
