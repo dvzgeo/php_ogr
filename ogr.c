@@ -2965,7 +2965,7 @@ PHP_FUNCTION(ogr_f_getfieldasinteger64)
     if(hFeat){
         val = OGR_F_GetFieldAsInteger64(hFeat, ifield);
         if (val < (GIntBig)ZEND_LONG_MIN || val > (GIntBig)ZEND_LONG_MAX) {
-            php_error_docref(NULL TSRMLS_CC, E_WARNING, "value out of range %d - %d", ZEND_LONG_MIN, ZEND_LONG_MAX);
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "value out of range %ld - %ld", ZEND_LONG_MIN, ZEND_LONG_MAX);
         }
         RETURN_LONG(val);
     }
@@ -3157,7 +3157,7 @@ PHP_FUNCTION(ogr_f_getfieldasinteger64list)
 	while (numelements < ncount) {
         val = panList[numelements];
         if (val < (GIntBig)ZEND_LONG_MIN || val > (GIntBig)ZEND_LONG_MAX) {
-            php_error_docref(NULL TSRMLS_CC, E_WARNING, "value out of range %d - %d", ZEND_LONG_MIN, ZEND_LONG_MAX);
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "value out of range %ld - %ld", ZEND_LONG_MIN, ZEND_LONG_MAX);
         }
         add_next_index_long(return_value, panList[numelements]);
         numelements++;
@@ -3648,7 +3648,7 @@ PHP_FUNCTION(ogr_f_getfid)
     if (hFeat) {
         fid = OGR_F_GetFID(hFeat);
         if (fid < (GIntBig)ZEND_LONG_MIN || fid > (GIntBig)ZEND_LONG_MAX) {
-            php_error_docref(NULL TSRMLS_CC, E_WARNING, "fid out of range %d - %d", ZEND_LONG_MIN, ZEND_LONG_MAX);
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "fid out of range %ld - %ld", ZEND_LONG_MIN, ZEND_LONG_MAX);
         }
         RETURN_LONG((zend_long)fid);
     }
@@ -4174,7 +4174,7 @@ PHP_FUNCTION(ogr_l_getfeaturecount)
     if (hLayerResource){
         featurecount = OGR_L_GetFeatureCount(hLayerResource, bforce);
         if (featurecount > (GIntBig)ZEND_LONG_MAX) {
-            php_error_docref(NULL TSRMLS_CC, E_WARNING, "feature count is greater than maximum integer %d", ZEND_LONG_MAX);
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "feature count is greater than maximum integer %ld", ZEND_LONG_MAX);
         }
         RETURN_LONG((zend_long)featurecount);
     }
