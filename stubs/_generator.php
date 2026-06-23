@@ -46,7 +46,7 @@ while (false !== ($line = fgets($inputFile))) {
         } else {
             $constVal = "'" . addslashes(defined($constName) ? constant($constName) : '') . "'";
         }
-        echo 'declare(\'', $constName, '\', ', $constVal, ');', PHP_EOL;
+        echo 'define(\'', $constName, '\', ', $constVal, ');', PHP_EOL;
     }
 }
 
