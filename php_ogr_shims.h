@@ -183,3 +183,8 @@ typedef size_t strsize_t;
 #else
 #define OBJECT_INIT(_zval) object_init(_zval);
 #endif
+
+/* shim WRONG_PARAM_COUNT removed in PHP 8.6 using the recommended replacement */
+#ifndef WRONG_PARAM_COUNT
+#define WRONG_PARAM_COUNT { zend_wrong_param_count(); RETURN_THROWS(); }
+#endif
