@@ -15,7 +15,7 @@ if test "$PHP_OGR" != "no"; then
   if test -r $PHP_OGR/; then
     OGR_DIR=$PHP_OGR
   else # search default path list
-    AC_MSG_CHECKING([for ORG files in default path])
+    AC_MSG_CHECKING([for OGR files in default path])
     for i in $SEARCH_PATH ; do
       for j in $SEARCH_DIRS ; do
         if test -r $i/$j/$SEARCH_FOR; then
