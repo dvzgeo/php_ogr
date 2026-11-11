@@ -32,8 +32,8 @@
 #ifndef PHP_OGR_H
 #define PHP_OGR_H
 
-#define PHP_OGR_VERSION_NUM 10701
-#define PHP_OGR_VERSION "1.7.1"
+#define PHP_OGR_VERSION_NUM 10702
+#define PHP_OGR_VERSION "1.7.2"
 
 extern zend_module_entry ogr_module_entry;
 #define phpext_ogr_ptr &ogr_module_entry
